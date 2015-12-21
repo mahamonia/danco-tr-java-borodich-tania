@@ -43,5 +43,5 @@ Temporary Items
 .apdisk
 
 #DancoSoft
-.settings
-.class
+*.settings
+*.class
