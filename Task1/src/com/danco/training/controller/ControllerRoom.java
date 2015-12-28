@@ -7,6 +7,7 @@ import com.danco.training.comparators.SortRoomByNumber;
 import com.danco.training.comparators.SortRoomByPrice;
 import com.danco.training.comparators.SortRoomByStars;
 import com.danco.training.comparators.TypeSort;
+import com.danco.training.entity.Guest;
 import com.danco.training.entity.Room;
 import com.danco.training.entity.Status;
 
@@ -66,7 +67,8 @@ public class ControllerRoom implements IPrintRoom {
 		sortedRoom(roomsList, type);
 
 		for (int i = 0; i < roomsList.length - 1; i++) {
-			System.out.println(roomsList[i].getNumber()+" price "+roomsList[i].getPrice());
+			System.out.println(roomsList[i].getNumber() + " price "
+					+ roomsList[i].getPrice());
 		}
 	}
 
@@ -85,7 +87,7 @@ public class ControllerRoom implements IPrintRoom {
 	@Override
 	public int printAmountRoomFree(Room[] roomsList) {
 		int amountFree = 0;
-		for (int i = 0; i < roomsList.length - 1; i++) {
+		for (int i = 0; i < roomsList.length; i++) {
 			if (roomsList[i].getStatus() == Status.FREE) {
 				amountFree++;
 			}
@@ -99,8 +101,18 @@ public class ControllerRoom implements IPrintRoom {
 	}
 
 	@Override
-	public void printRoomThemGuestAndDateInSettle(Room[] rooms) {
+	public void printRoomThemGuestAndDateInSettle(Room room, Guest[] guestsList) {
 
+		int[] idGuest = room.getIdGuest();
+
+		for (int i = 0; i < guestsList.length; i++) {
+			for (int j = 0; j < idGuest.length; j++) {
+				if (guestsList[i].getId() == idGuest[j]) {
+					System.out.println(guestsList[i].getName() + " come "
+							+ guestsList[i].getDateInSettle());
+				}
+			}
+		}
 	}
 
 	@Override

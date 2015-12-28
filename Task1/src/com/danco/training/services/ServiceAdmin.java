@@ -27,19 +27,20 @@ public class ServiceAdmin {
 
 	}
 
-	public void inSettleGuestRoom(Guest guest, Room room, String dateInSettle, String dateOutSettle) {
+	public void inSettleGuestRoom(Guest guest, Room room, String dateInSettle,
+			String dateOutSettle) {
 
 		contGuest.createOrderForGuest(guest);
 
 		// add guest order with service residence in Room
 		Service service = contDailService.getService(1);
 		contGuest.addServiceForGuest(guest, service);
-		
-		//reserve a room
+
+		// reserve a room
 		contGuest.addDateInSettle(guest, dateInSettle);
 		contGuest.addDateOutSettle(guest, dateOutSettle);
-		
-// add id guest in room
+
+		// add id guest in room
 		contGuest.addRoomForGuest(guest, room);
 
 		contRoom.changeRoomStatus(room, Status.NOTFREE);
@@ -63,6 +64,7 @@ public class ServiceAdmin {
 	public int getSumOrderGuest(Guest guest) {
 		int[] services = contGuest.getGuestThemService(guest);
 		int sumOrder = contDailService.getServicesSumPriceById(services);
+
 		return sumOrder += contAdditionalService
 				.getServicesSumPriceById(services);
 
@@ -71,6 +73,11 @@ public class ServiceAdmin {
 	public void printGuestsThemRoom(Guest[] guestsList, Room[] roomsList,
 			TypeSort type) {
 		contGuest.printGuestsThemRoom(guestsList, roomsList, type);
+	}
+
+	public int amountGuest(Guest[] guestsList) {
+		return contGuest.amountGuests(guestsList);
+
 	}
 
 	public void printRooms(Room[] roomsList, TypeSort type) {
@@ -82,6 +89,16 @@ public class ServiceAdmin {
 	public void printRoomFree(Room[] roomsList, TypeSort type) {
 		System.out.println("free room");
 		contRoom.printRoomFree(roomsList, type);
+	}
+
+	public int amountFreeRoom(Room[] roomsList) {
+		return contRoom.printAmountRoomFree(roomsList);
+
+	}
+
+	public void printRoomThemGuests(Room room, Guest[] guestsList) {
+		contRoom.printRoomThemGuestAndDateInSettle(room, guestsList);
+
 	}
 
 	public void printServices(Service[] dailServicesList,

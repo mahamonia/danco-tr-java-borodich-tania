@@ -118,6 +118,18 @@ public class ControllerGuest implements IPrintGuest {
 
 		}
 	}
+	
+	public int amountGuests(Guest[] guestsList) {
+		int amountGuests=0;
+
+		for (int i = 0; i < guestsList.length; i++) {
+			if (guestsList[i].getIdOrder()!=0){
+			amountGuests++;}
+
+		}
+		return amountGuests;
+	}
+	
 
 	@Override
 	public void printGuestsThemRoom(Guest[] guestsList, Room[] roomsList,
@@ -144,15 +156,6 @@ public class ControllerGuest implements IPrintGuest {
 			}
 		}
 		System.out.println();
-	}
-
-	public int amountGuest(Guest[] guestsList) {
-		int amountGuest = 0;
-		for (int i = 0; i < guestsList.length - 1; i++) {
-			amountGuest++;
-			;
-		}
-		return amountGuest;
 	}
 
 	public int[] getGuestThemService(Guest guest) {

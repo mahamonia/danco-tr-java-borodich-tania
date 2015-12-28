@@ -34,14 +34,21 @@ public class Run {
 				contDailService, contAddService);
 
 		admin.printRooms(roomsList, TypeSort.BY_PRICE);
-
 		admin.printRoomFree(roomsList, TypeSort.BY_NUMBER);
+		admin.printGuestsThemRoom(guestsList, roomsList, TypeSort.BY_NAME);
 
-		// admin.inSettleGuestRoom(guestsList[0], roomsList[0], "02.12.2014",
-		// "03.12.2014");
+		System.out.println(admin.amountFreeRoom(roomsList));
+		System.out.println(admin.amountGuest(guestsList));
+
+		System.out.println(admin.getSumOrderGuest(guestsList[1]));
+
+		admin.printRoomThemGuests(roomsList[2], guestsList);
+
+		admin.printGuestThemServiceList(guestsList[1]);
+
+		admin.inSettleGuestRoom(guestsList[0], roomsList[0], "02.12.2014",
+				"03.12.2014");
 		admin.printGuestsThemRoom(guestsList, roomsList, TypeSort.BY_DATE);
-		// System.out.println(ordersList.length);
-		// System.out.println(guestsList[4]);
 
 		utility.setGuests(guestsList);
 		utility.setRooms(roomsList);

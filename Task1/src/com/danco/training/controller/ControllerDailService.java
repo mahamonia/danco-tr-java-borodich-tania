@@ -90,8 +90,8 @@ public class ControllerDailService implements IPrintService {
 	}
 
 	public void printServicesThemPriceById(int[] IdService) { // uses for guest
-		for (int i = 0; i < servicesList.length - 1; i++) {
-			for (int j = 0; j < IdService.length - 1; j++) {
+		for (int i = 0; i < servicesList.length; i++) {
+			for (int j = 0; j < IdService.length; j++) {
 				if (servicesList[i].getId() == IdService[j]) {
 					System.out.println(servicesList[i].getName() + " cost "
 							+ servicesList[i].getPrice());
@@ -111,8 +111,6 @@ public class ControllerDailService implements IPrintService {
 		}
 		return sum;
 	}
-	
-	
 
 	public void changePrice(Service service, int price) {
 		service.setPrice(price);
