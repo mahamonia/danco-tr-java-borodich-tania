@@ -1,5 +1,0 @@
-11;lunch;8;double lunch;3
-12;animals;3;walk the dog;2
-13;animals;3;feed the dog;5
-14;transport;5;taxi;2
-15;transport;5;put on the parking;6
