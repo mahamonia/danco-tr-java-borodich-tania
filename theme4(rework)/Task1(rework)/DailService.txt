@@ -1,4 +1,0 @@
-1;Room;20
-2;breakfast;3
-3;dinner;5
-4;supper;6
