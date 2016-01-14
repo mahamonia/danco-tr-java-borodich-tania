@@ -11,21 +11,27 @@ import com.danco.training.comparator.Comparator;
 import com.danco.training.entity.AdditionalService;
 import com.danco.training.entity.Service;
 
-public class ControllerAdditionalService implements IPrintService {
+public class ControllerAdditionalService  {
 
 	private static Logger logger = LogManager
 			.getLogger(ControllerAdditionalService.class);
 
-	private List<Service> servicesList;
+	private List<AdditionalService> servicesList;
 
-	public ControllerAdditionalService(List<Service> servicesList) {
+	public ControllerAdditionalService(List<AdditionalService> servicesList) {
 		this.servicesList = servicesList;
 
 	}
 
-	public void createService(Service service) {
+	public void createService(AdditionalService service) {
 
 		servicesList.add(service);
+	}
+	
+	public void updateService(AdditionalService service) {
+		int i = getIndexService(service);
+		servicesList.set(i, service);
+		
 	}
 
 	public void deleteService(Service service) {
@@ -60,9 +66,16 @@ public class ControllerAdditionalService implements IPrintService {
 		}
 		return null;
 	}
+	
+	public List<AdditionalService> getListAddService() {
 
-	@Override
-	public List<Service> printServicesSortedByPrice(List<Service> servicesList) {
+
+		return this.servicesList;
+
+	}
+
+	
+	public List<AdditionalService> printServicesSortedByPrice(List<AdditionalService> servicesList) {
 		try {
 			Collections.sort(servicesList, Comparator.SERVICE_BY_PRICE);
 		} catch (RuntimeException e) {
@@ -71,8 +84,9 @@ public class ControllerAdditionalService implements IPrintService {
 		return servicesList;
 	}
 
-	@Override
-	public List<Service> printServicesSortedByName(List<Service> servicesList) {
+
+	public List<AdditionalService> printServicesSortedByName(List<AdditionalService> servicesList) {
+		
 		try {
 			Collections.sort(servicesList, Comparator.SERVICE_BY_NAME);
 		} catch (RuntimeException e) {

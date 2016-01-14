@@ -17,6 +17,8 @@ import com.danco.training.entity.Status;
 
 public class ServiceAdmin {
 
+	private static ServiceAdmin admin;
+
 	private final int RESIDENTCE_IN_ROOM = 1;
 
 	private ControllerRoom contRoom;
@@ -24,18 +26,59 @@ public class ServiceAdmin {
 	private ControllerDailService contDailService;
 	private ControllerAdditionalService contAdditionalService;
 
-	public ServiceAdmin(ControllerGuest contGuest, ControllerRoom contRoom,
-			ControllerDailService contDailService,
+	private ServiceAdmin(ControllerGuest contGuest,
+			ControllerRoom contRoom, ControllerDailService contDailService,
 			ControllerAdditionalService contAdditionalService) {
+		this.contGuest= contGuest;
 		this.contRoom = contRoom;
-		this.contGuest = contGuest;
 		this.contDailService = contDailService;
 		this.contAdditionalService = contAdditionalService;
 
 	}
 
+	public static ServiceAdmin getInstance(ControllerGuest contGuest,
+			ControllerRoom contRoom, ControllerDailService contDailService,
+			ControllerAdditionalService contAdditionalService) {
+		
+
+		if (admin == null) {
+			admin = new ServiceAdmin(contGuest,
+					contRoom, contDailService,
+					contAdditionalService);
+		}
+		return admin;
+	}
+
+	public void createGuest(Guest guest) {
+		contGuest.createGuest(guest);
+	}
+
 	public Guest getGuestById(int id) {
 		return contGuest.getGuestById(id);
+
+	}
+
+	public int getIdForNewGuest() {
+		int newId = contGuest.getIdForNewGuest();
+		return newId;
+
+	}
+
+	public int getIdForNewOrder() {
+		int newId = contGuest.getIdForNewOrder();
+		return newId;
+
+	}
+
+	public List<Guest> getListGuest() {
+
+		List<Guest> guestsList = contGuest.getListGuest();
+		return guestsList;
+
+	}
+
+	public void updateGuest(Guest guest) {
+		contGuest.updateGuest(guest);
 
 	}
 
@@ -44,13 +87,57 @@ public class ServiceAdmin {
 
 	}
 
+	public List<Room> getListRoom() {
+
+		List<Room> roomsList = contRoom.getListRoom();
+		return roomsList;
+
+	}
+
+	public void updateRoom(Room room) {
+		contRoom.updateRoom(room);
+
+	}
+
 	public Service getServiceById(int id) {
 
 		if (contDailService.getService(id) != null) {
 			return contDailService.getService(id);
-		} else if (contAdditionalService.getService(id)!=null){
-			return contAdditionalService.getService(id);}
-		else return null;
+		} else if (contAdditionalService.getService(id) != null) {
+			return contAdditionalService.getService(id);
+		} else
+			return null;
+
+	}
+
+	public List<Service> getListDailService() {
+
+		List<Service> servicesList = contDailService.getListDailService();
+		return servicesList;
+	}
+
+	public List<AdditionalService> getListAdditionalService() {
+
+		List<AdditionalService> servicesList = contAdditionalService.getListAddService();
+		return servicesList;
+	}
+
+	public void updateDailService(Service service) {
+
+		contDailService.updateService(service);
+	}
+
+	public void updateAdditionalService(AdditionalService service) {
+
+		contAdditionalService.updateService(service);
+	}
+
+	public void updateService(Service service) {
+
+		if (service instanceof DailService) {
+			updateDailService(service);
+		} else
+			updateAdditionalService( (AdditionalService)service);
 
 	}
 
@@ -82,12 +169,21 @@ public class ServiceAdmin {
 		throw new RuntimeException();
 	}
 
-	public void settleGuestOutRoom(Guest guest, Room room) throws IOException {
+	public void settleGuestOutRoom(Guest guest) throws IOException {
 
 		// 1. guest pay the order
 		// 2. change room status
+		List<Room> roomsList = contRoom.getListRoom();
+		Room room = contGuest.getRoomInLiveGuest(guest, roomsList);
 		contRoom.changeRoomStatus(room, Status.FREE);
 		throw new RuntimeException();
+	}
+
+	public Room getRoomInLiveGuest(Guest guest) {
+		List<Room> roomsList = contRoom.getListRoom();
+		Room room = contGuest.getRoomInLiveGuest(guest, roomsList);
+		return room;
+
 	}
 
 	public int getSumOrderGuest(Guest guest) throws IOException {
@@ -102,13 +198,15 @@ public class ServiceAdmin {
 
 	}
 
-	public void printGuestsThemRoom(List<Guest> guestsList, List<Room> roomsList)
-			throws IOException {
+	public void printGuestsThemRoom() throws IOException {
+		List<Guest> guestsList = contGuest.getListGuest();
+		List<Room> roomsList = contRoom.getListRoom();
 		contGuest.printGuestsThemRoom(guestsList, roomsList);
 		// throw new RuntimeException();
 	}
 
-	public int getAmountGuest(List<Guest> guestsList) throws IOException {
+	public int getAmountGuest() throws IOException {
+		List<Guest> guestsList = contGuest.getListGuest();
 		if (contGuest.getAmountGuests(guestsList) == 0) {
 			throw new RuntimeException();
 		}
@@ -116,8 +214,8 @@ public class ServiceAdmin {
 
 	}
 
-	public List<Room> printSortetdRoomsByContent(List<Room> roomsList)
-			throws IOException {
+	public List<Room> printSortedRoomsByContent() throws IOException {
+		List<Room> roomsList = contRoom.getListRoom();
 		if (contRoom.printRoomSortedByContetn(roomsList) == null) {
 			throw new RuntimeException();
 		}
@@ -125,8 +223,8 @@ public class ServiceAdmin {
 
 	}
 
-	public List<Room> printSortetdRoomsByNumber(List<Room> roomsList)
-			throws IOException {
+	public List<Room> printSortedRoomsByNumber() throws IOException {
+		List<Room> roomsList = contRoom.getListRoom();
 		if (contRoom.printRoomSortedByNumber(roomsList) == null) {
 			throw new RuntimeException();
 		}
@@ -134,8 +232,8 @@ public class ServiceAdmin {
 
 	}
 
-	public List<Room> printSortetdRoomsByPrice(List<Room> roomsList)
-			throws IOException {
+	public List<Room> printSortedRoomsByPrice() throws IOException {
+		List<Room> roomsList = contRoom.getListRoom();
 		if (contRoom.printRoomSortedByPrice(roomsList) == null) {
 			throw new RuntimeException();
 		}
@@ -143,8 +241,17 @@ public class ServiceAdmin {
 
 	}
 
-	public List<Room> printRoomFreeSortetdByContent(List<Room> roomsList)
-			throws IOException {
+	public List<Room> printSortedRoomByStars() throws IOException {
+		List<Room> roomsList = contRoom.getListRoom();
+		if (contRoom.printRoomSortedByStars(roomsList) == null) {
+			throw new RuntimeException();
+		}
+		return contRoom.printRoomSortedByStars(roomsList);
+
+	}
+
+	public List<Room> printRoomFreeSortetdByContent() throws IOException {
+		List<Room> roomsList = contRoom.getListRoom();
 		roomsList = contRoom.printRoomFree(roomsList);
 		if (roomsList == null) {
 			throw new RuntimeException();
@@ -153,8 +260,8 @@ public class ServiceAdmin {
 
 	}
 
-	public List<Room> printRoomFreeSortetdByPrice(List<Room> roomsList)
-			throws IOException {
+	public List<Room> printRoomFreeSortetdByPrice() throws IOException {
+		List<Room> roomsList = contRoom.getListRoom();
 		roomsList = contRoom.printRoomFree(roomsList);
 		if (roomsList == null) {
 			throw new RuntimeException();
@@ -163,8 +270,8 @@ public class ServiceAdmin {
 
 	}
 
-	public List<Room> printRoomFreeSortetdByNumber(List<Room> roomsList)
-			throws IOException {
+	public List<Room> printRoomFreeSortetdByNumber() throws IOException {
+		List<Room> roomsList = contRoom.getListRoom();
 		roomsList = contRoom.printRoomFree(roomsList);
 		if (roomsList == null) {
 			throw new RuntimeException();
@@ -173,8 +280,8 @@ public class ServiceAdmin {
 
 	}
 
-	public List<Room> printRoomFreeSortetdByStars(List<Room> roomsList)
-			throws IOException {
+	public List<Room> printRoomFreeSortetdByStars() throws IOException {
+		List<Room> roomsList = contRoom.getListRoom();
 		roomsList = contRoom.printRoomFree(roomsList);
 		if (roomsList == null) {
 			throw new RuntimeException();
@@ -183,7 +290,8 @@ public class ServiceAdmin {
 
 	}
 
-	public int getAmountFreeRoom(List<Room> roomsList) throws IOException {
+	public int getAmountFreeRoom() throws IOException {
+		List<Room> roomsList = contRoom.getListRoom();
 		if (contRoom.printAmountRoomFree(roomsList) == 0) {
 			throw new RuntimeException();
 		}
@@ -191,8 +299,9 @@ public class ServiceAdmin {
 
 	}
 
-	public List<Guest> printRoomThemGuestsAndDateInSettle(Room room,
-			List<Guest> guestsList) throws IOException {
+	public List<Guest> printRoomThemGuestsAndDateInSettle(Room room)
+			throws IOException {
+		List<Guest> guestsList = contGuest.getListGuest();
 		if (contRoom.printRoomThemGuestsAndDateInSettle(room, guestsList) == null) {
 			throw new RuntimeException();
 		}
@@ -200,48 +309,52 @@ public class ServiceAdmin {
 
 	}
 
-	private List<Service> concatenateServicesList(
-			List<Service> dailServicesList, List<Service> additionalServicesList) {
 
-		List<Service> services = new ArrayList<Service>();
-
-		services.addAll(dailServicesList);
-		services.addAll(additionalServicesList);
-
-		return services;
-
-	}
-
-	public List<Service> printServicesSortedByName(
-			List<Service> dailServicesList, List<Service> additionalServicesList)
-			throws IOException {
-
+	public List<Service> printDailServicesSortedByName() throws IOException {
+		List<Service> dailServicesList = contDailService.getListDailService();
 		contDailService.printServicesSortedByName(dailServicesList);
-		contAdditionalService.printServicesSortedByName(additionalServicesList);
 
-		if (concatenateServicesList(dailServicesList, additionalServicesList) == null) {
+		if (dailServicesList == null) {
 			throw new RuntimeException();
 		}
-
-		return concatenateServicesList(dailServicesList, additionalServicesList);
-
+		return dailServicesList;
 	}
 
-	public List<Service> printServicesSortedByPrice(
-			List<Service> dailServicesList, List<Service> additionalServicesList)
+	public List<AdditionalService> printAdditionalServicesSortedByName()
 			throws IOException {
+		List<AdditionalService> additionalServicesList =contAdditionalService
+				.getListAddService();
+		additionalServicesList = contAdditionalService.printServicesSortedByName(additionalServicesList);
 
+		if (additionalServicesList == null) {
+			throw new RuntimeException();
+		}
+		return additionalServicesList;
+	}
+
+	public List<Service> printDailServicesSortedByPrice() throws IOException {
+		List<Service> dailServicesList = contDailService.getListDailService();
 		contDailService.printServicesSortedByPrice(dailServicesList);
+
+		if (dailServicesList == null) {
+			throw new RuntimeException();
+		}
+		return dailServicesList;
+	}
+
+	public List<AdditionalService> printAdditionalServicesSortedByPrice()
+			throws IOException {
+		List<AdditionalService> additionalServicesList = contAdditionalService
+				.getListAddService();
+		
 		contAdditionalService
 				.printServicesSortedByPrice(additionalServicesList);
 
-		if (concatenateServicesList(dailServicesList, additionalServicesList) == null) {
+		if (additionalServicesList == null) {
 			throw new RuntimeException();
 		}
-		return concatenateServicesList(dailServicesList, additionalServicesList);
+		return additionalServicesList;
 	}
-
-
 
 	public void changeRoomStatus(Room room, Status status) throws IOException {
 		contRoom.changeRoomStatus(room, status);

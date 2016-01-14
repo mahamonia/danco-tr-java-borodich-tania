@@ -24,9 +24,15 @@ public class ControllerGuest implements IPrintGuest {
 
 	}
 
-	public void createGuests(Guest guest) {
+	public void createGuest(Guest guest) {
 
 		guestsList.add(guest);
+	}
+	
+	public void updateGuest(Guest guest) {
+		int i = getIndexGuest(guest);
+		guestsList.set(i, guest);
+		
 	}
 
 	public void deleteGuest(Guest guest) {
@@ -40,6 +46,17 @@ public class ControllerGuest implements IPrintGuest {
 
 		int indexGuest = getIndexGuestById(guest.getId());
 		return indexGuest;
+	}
+	
+	public int getIdForNewGuest() {
+
+		for (int i = 0; i < guestsList.size(); i++) {
+			if (guestsList.get(i) == null) {
+				int newId = guestsList.get(i-1).getId()+1;
+				return newId;
+			}
+		}
+		return -1;
 	}
 
 	private int getIndexGuestById(int Id) {
@@ -58,8 +75,24 @@ public class ControllerGuest implements IPrintGuest {
 				return guestsList.get(i);
 			}
 		}return null;
+
+	}
+	
+	public List<Guest> getListGuest() {
 		
+		return this.guestsList;
 		
+	}
+	
+	public int getIdForNewOrder() {
+
+		for (int i = 0; i < orderList.size(); i++) {
+			if (orderList.get(i) == null) {
+				int newId = orderList.get(i-1).getId()+1;
+				return newId;
+			}
+		}
+		return -1;
 	}
 
 	@Override
@@ -170,6 +203,17 @@ public class ControllerGuest implements IPrintGuest {
 		}
 
 		return amountGuests;
+	}
+	
+	public Room getRoomInLiveGuest(Guest guest, List<Room> roomsList) {
+		Room room;
+		for (int i = 0; i < roomsList.size(); i++) {
+			int[] laterGuests = roomsList.get(i).getIdGuest();
+			if (laterGuests[laterGuests.length - 1] == guest.getId()){
+				return room = roomsList.get(i);
+			}
+		}
+		return null;		
 	}
 
 	public List<Guest> printGuestsThemRoom(List<Guest> guestsList,

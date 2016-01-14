@@ -208,10 +208,10 @@ public class ParseUtility {
 		// 
 	}
 	
-	public List<Service> getAdditionalServices() {
+	public List<AdditionalService> getAdditionalServices() {
 		
 		String[][] tempServices = getArrayEntity(fileAdditionalService);
-		List<Service> additionalServicesList = new ArrayList<>();
+		List<AdditionalService> additionalServicesList = new ArrayList<>();
 		
 		for (int i = 0; i < tempServices.length; i++) {
 			int Id = Integer.valueOf(tempServices[i][0]);
@@ -220,7 +220,7 @@ public class ParseUtility {
 			String description = tempServices[i][3];
 			int addPrice = Integer.valueOf(tempServices[i][4]);		
 			
-			Service newService= new AdditionalService(Id, name, price, description, addPrice);
+			AdditionalService newService= new AdditionalService(Id, name, price, description, addPrice);
 			
 			additionalServicesList.add(newService); 
 		}

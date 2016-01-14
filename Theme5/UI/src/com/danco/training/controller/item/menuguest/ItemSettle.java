@@ -7,21 +7,23 @@ import java.io.InputStreamReader;
 import com.danco.training.controller.item.itemmenu.AbstractItemEmpty;
 import com.danco.training.controller.menu.AbstractMenu;
 import com.danco.training.entity.Guest;
-import com.danco.training.entity.Service;
+import com.danco.training.entity.Room;
 import com.danco.training.services.ServiceAdmin;
 
-public class ItemAddService extends AbstractItemEmpty{
+public class ItemSettle extends AbstractItemEmpty{
 	
-	public  final String MESSAGE_1 = "Id guest";
-	public  final String MESSAGE_2 ="Id service";
+	public final String MESSAGE_1 ="Id guest";
+	public final String MESSAGE_2 ="Id room";
+	public final String MESSAGE_3 ="Date in settle";
+	public final String MESSAGE_4 ="Date out settle";
 
-	public ItemAddService(String name, ServiceAdmin admin) {
+	public ItemSettle(String name, ServiceAdmin admin) {
 		super(name, admin);
+
 	}
 
 	@Override
-	public AbstractMenu work()  {
-		
+	public AbstractMenu work() {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				System.in));
 		try {
@@ -31,13 +33,20 @@ public class ItemAddService extends AbstractItemEmpty{
 			
 			System.out.println(MESSAGE_2);
 			line = reader.readLine();
-			int idService = Integer.parseInt(line);
+			int idRoom = Integer.parseInt(line);
+			
+			System.out.println(MESSAGE_3);
+			String dateInSettle = reader.readLine();
+			
+			System.out.println(MESSAGE_4);
+			String dateOutSettle = reader.readLine();
 			
 			Guest guest = admin.getGuestById(idGuest);
-			Service service = admin.getServiceById(idService);
+			Room room = admin.getRoomByNumber(idRoom);
 			
-			admin.addServiceForGuest(guest, service);
+			admin.settleGuestInRoom(guest, room, dateInSettle, dateOutSettle);;
 			admin.updateGuest(guest);
+			admin.updateRoom(room);
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -50,7 +59,7 @@ public class ItemAddService extends AbstractItemEmpty{
             }
 		}	
 		return this.getMenu();
+		
 	}
-
 
 }

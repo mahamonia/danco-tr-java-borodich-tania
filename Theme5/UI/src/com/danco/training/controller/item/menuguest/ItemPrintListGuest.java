@@ -1,14 +1,13 @@
 package com.danco.training.controller.item.menuguest;
 
-import com.danco.training.controller.factory.itemmenu.AbstractItem;
+
+import com.danco.training.controller.item.itemmenu.ItemInsert;
 
 
-public class ItemPrintListGuest extends AbstractItem{
+public class ItemPrintListGuest extends ItemInsert{
 
-	@Override
-	public void work() {
-		System.out.println("working...");
-		
+	public ItemPrintListGuest(String name) {
+		super(name);
 	}
 
 }

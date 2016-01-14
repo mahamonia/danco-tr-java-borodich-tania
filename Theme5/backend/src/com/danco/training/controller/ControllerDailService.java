@@ -11,7 +11,7 @@ import com.danco.training.comparator.Comparator;
 import com.danco.training.entity.DailService;
 import com.danco.training.entity.Service;
 
-public class ControllerDailService implements IPrintService {
+public class ControllerDailService{
 
 	private static Logger logger = LogManager
 			.getLogger(ControllerDailService.class);
@@ -28,6 +28,12 @@ public class ControllerDailService implements IPrintService {
 
 		servicesList.add(service);
 
+	}
+	
+	public void updateService(Service service) {
+		int i = getIndexService(service);
+		servicesList.set(i, service);
+		
 	}
 
 	public void deleteService(Service service) {
@@ -62,8 +68,14 @@ public class ControllerDailService implements IPrintService {
 		}
 		return null;
 	}
+	
+	public List<Service> getListDailService() {
 
-	@Override
+		return this.servicesList;
+
+	}
+
+	
 	public List<Service> printServicesSortedByPrice(List<Service> servicesList) {
 		try {
 			Collections.sort(servicesList, Comparator.SERVICE_BY_PRICE);
@@ -73,7 +85,7 @@ public class ControllerDailService implements IPrintService {
 		return servicesList;
 	}
 
-	@Override
+
 	public List<Service> printServicesSortedByName(List<Service> servicesList) {
 		try {
 			Collections.sort(servicesList, Comparator.SERVICE_BY_NAME);

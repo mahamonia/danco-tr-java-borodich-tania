@@ -1,22 +1,23 @@
-package com.danco.training.controller.item.menuguest;
+package com.danco.training.controller.item.menuroom;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
 import com.danco.training.controller.item.itemmenu.AbstractItemEmpty;
 import com.danco.training.controller.menu.AbstractMenu;
 import com.danco.training.entity.Guest;
+import com.danco.training.entity.Room;
 import com.danco.training.services.ServiceAdmin;
 
-public class ItemGetSumOrderGuest extends AbstractItemEmpty{
+public class ItemLastThreeGuestsRoom extends AbstractItemEmpty{
 	
-	public final String MESSAGE_1 = "Id guest..";
-	public final String MESSAGE_2 = "Sum order guest = ";
+	public final String MESSAGE_1 = "Id room";
+	public final String MESSAGE_2 =" settel ";
 
-	public ItemGetSumOrderGuest(String name, ServiceAdmin admin) {
+	public ItemLastThreeGuestsRoom(String name, ServiceAdmin admin) {
 		super(name, admin);
-
 	}
 
 	@Override
@@ -26,15 +27,19 @@ public class ItemGetSumOrderGuest extends AbstractItemEmpty{
 		try {
 			System.out.println(MESSAGE_1);
 			String line = reader.readLine();
-			int idGuest = Integer.parseInt(line);
+			int idRoom = Integer.parseInt(line);
 			
-			Guest guest = admin.getGuestById(idGuest);
-			int sum = admin.getSumOrderGuest(guest);
+			Room room = admin.getRoomByNumber(idRoom);
 			
-			System.out.println(MESSAGE_2+ sum);
+			List<Guest> guestList = admin.printRoomThemGuestsAndDateInSettle(room);
+			System.out.println("");
 			
-		} catch (Exception e) {
+			for (int i = 0; i < guestList.size(); i++) {
+				System.out.println(guestList.get(i).getName()+MESSAGE_2+ guestList.get(i).getDateInSettle());
+			}
 
+		} catch (IOException e) {
+			e.printStackTrace();
 		}finally{
 			if(reader != null){
 		}
@@ -43,7 +48,6 @@ public class ItemGetSumOrderGuest extends AbstractItemEmpty{
             } catch (IOException e) {
             }
 		}	
-
 		return this.getMenu();
 	}
 

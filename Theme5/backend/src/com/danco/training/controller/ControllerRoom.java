@@ -26,6 +26,12 @@ public class ControllerRoom implements IPrintRoom {
 
 		roomsList.add(room);
 	}
+	
+	public void updateRoom(Room room) {
+		int i = getIndexRoom(room);
+		roomsList.set(i, room);
+		
+	}
 
 	public void deleteRoom(Room room) {
 		int i = getIndexRoom(room);
@@ -49,7 +55,7 @@ public class ControllerRoom implements IPrintRoom {
 		}
 		return -1;
 	}
-	
+
 	public Room getRoomByNumber(int number) {
 		for (int i = 0; i < this.roomsList.size() - 1; i++) {
 			if (roomsList.get(i) != null
@@ -58,7 +64,13 @@ public class ControllerRoom implements IPrintRoom {
 			}
 		}
 		return null;
-		
+
+	}
+
+	public List<Room> getListRoom() {
+
+		return roomsList;
+
 	}
 
 	@Override
@@ -141,7 +153,7 @@ public class ControllerRoom implements IPrintRoom {
 		}
 
 		return amountFree;
-		
+
 	}
 
 	@Override
@@ -154,7 +166,8 @@ public class ControllerRoom implements IPrintRoom {
 		try {
 			for (int i = 0; i < guestsList.size(); i++) {
 				for (int j = 0; j < idGuest.length; j++) {
-					if ((guestsList.get(i).getId() == idGuest[j])&& (room.getStatus()==Status.NOTFREE)) {
+					if ((guestsList.get(i).getId() == idGuest[j])
+							&& (room.getStatus() == Status.NOTFREE)) {
 						newGuestList.add(guestsList.get(i));
 
 					}
