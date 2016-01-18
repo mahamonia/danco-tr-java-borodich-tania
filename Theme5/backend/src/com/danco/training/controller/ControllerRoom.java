@@ -23,54 +23,76 @@ public class ControllerRoom implements IPrintRoom {
 	}
 
 	public void createRoom(Room room) {
-
-		roomsList.add(room);
-	}
-	
-	public void updateRoom(Room room) {
-		int i = getIndexRoom(room);
-		roomsList.set(i, room);
-		
-	}
-
-	public void deleteRoom(Room room) {
-		int i = getIndexRoom(room);
-		if (i != -1) {
-			roomsList.remove(i);
+		try {
+			
+			roomsList.add(room);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 	}
 
-	private int getIndexRoom(Room room) {
+	public void updateRoom(Room room) {
+		try {
+			int i = getIndexRoom(room);
+			roomsList.set(i, room);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+	}
 
-		int indexRoom = getIndexRoomByNumber(room.getNumber());
+	public void deleteRoom(Room room) {
+		try {
+			int i = getIndexRoom(room);
+			if (i != -1) {
+				roomsList.remove(i);
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+
+	}
+
+	private int getIndexRoom(Room room) {
+		int indexRoom = 0;
+		try {
+			indexRoom = getIndexRoomByNumber(room.getNumber());
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
 		return indexRoom;
 	}
 
 	private int getIndexRoomByNumber(int number) {
-		for (int i = 0; i < this.roomsList.size() - 1; i++) {
-			if (roomsList.get(i) != null
-					&& roomsList.get(i).getNumber() == number) {
-				return i;
+		try {
+			for (int i = 0; i < this.roomsList.size() - 1; i++) {
+				if (roomsList.get(i) != null
+						&& roomsList.get(i).getNumber() == number) {
+					return i;
+				}
 			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 		return -1;
 	}
 
 	public Room getRoomByNumber(int number) {
-		for (int i = 0; i < this.roomsList.size() - 1; i++) {
-			if (roomsList.get(i) != null
-					&& roomsList.get(i).getNumber() == number) {
-				return roomsList.get(i);
+		try {
+			for (int i = 0; i < this.roomsList.size() - 1; i++) {
+				if (roomsList.get(i) != null
+						&& roomsList.get(i).getNumber() == number) {
+					return roomsList.get(i);
+				}
 			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 		return null;
-
 	}
 
 	public List<Room> getListRoom() {
 
 		return roomsList;
-
 	}
 
 	@Override
@@ -78,10 +100,9 @@ public class ControllerRoom implements IPrintRoom {
 
 		try {
 			Collections.sort(roomsList, Comparator.ROOM_BY_CONTENT);
-		} catch (RuntimeException e) {
-			logger.info("RuntimeException");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
-
 		return roomsList;
 	}
 
@@ -89,10 +110,9 @@ public class ControllerRoom implements IPrintRoom {
 	public List<Room> printRoomSortedByNumber(List<Room> roomsList) {
 		try {
 			Collections.sort(roomsList, Comparator.ROOM_BY_NUMBER);
-		} catch (RuntimeException e) {
-			logger.info("RuntimeException");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
-
 		return roomsList;
 	}
 
@@ -101,10 +121,9 @@ public class ControllerRoom implements IPrintRoom {
 
 		try {
 			Collections.sort(roomsList, Comparator.ROOM_BY_PRICE);
-		} catch (RuntimeException e) {
-			logger.info("RuntimeException");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
-
 		return roomsList;
 	}
 
@@ -113,10 +132,9 @@ public class ControllerRoom implements IPrintRoom {
 
 		try {
 			Collections.sort(roomsList, Comparator.ROOM_BY_STARS);
-		} catch (RuntimeException e) {
-			logger.info("RuntimeException");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
-
 		return roomsList;
 	}
 
@@ -131,10 +149,9 @@ public class ControllerRoom implements IPrintRoom {
 					newRoomList.add(roomsList.get(i));
 				}
 			}
-		} catch (RuntimeException e) {
-			logger.info("RuntimeException");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
-
 		return newRoomList;
 	}
 
@@ -148,12 +165,10 @@ public class ControllerRoom implements IPrintRoom {
 					amountFree++;
 				}
 			}
-		} catch (RuntimeException e) {
-			logger.info("RuntimeException");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
-
 		return amountFree;
-
 	}
 
 	@Override
@@ -173,18 +188,17 @@ public class ControllerRoom implements IPrintRoom {
 					}
 				}
 			}
-		} catch (RuntimeException e) {
-			logger.info("RuntimeException");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
-
 		return newGuestList;
 	}
 
 	public void changeRoomStatus(Room room, Status status) {
 		try {
 			room.setStatus(status);
-		} catch (RuntimeException e) {
-			logger.info("RuntimeException");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 
 	}
@@ -193,9 +207,31 @@ public class ControllerRoom implements IPrintRoom {
 
 		try {
 			room.setPrice(price);
-		} catch (RuntimeException e) {
-			logger.info("RuntimeException");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
+	}
+	
+	public Room cloneRoom(Room room) {
+		Room clon = room;
+		try {
+			clon = room.clone();
+			int number = getNumberForNewRoom();
+			clon.setNumber(number);
+		} catch (CloneNotSupportedException e) {
+			logger.error(e.getMessage());
+		}		
+		return clon;		
+	}
+	
+	private int getNumberForNewRoom() {
+
+		for (int i = 0; i < roomsList.size(); i++) {
+			if (roomsList.get(i) == null) {
+				return i+1;
+			}
+		}
+		return -1;
 	}
 
 }

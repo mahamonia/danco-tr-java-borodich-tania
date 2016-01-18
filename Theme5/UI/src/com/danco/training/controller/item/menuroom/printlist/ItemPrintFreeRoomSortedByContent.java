@@ -3,12 +3,12 @@ package com.danco.training.controller.item.menuroom.printlist;
 import java.io.IOException;
 import java.util.List;
 
-import com.danco.training.controller.item.itemmenu.AbstractItemEmpty;
-import com.danco.training.controller.menu.AbstractMenu;
+import com.danco.training.controller.item.itemmenu.ItemOperating;
+import com.danco.training.controller.menu.Menu;
 import com.danco.training.entity.Room;
 import com.danco.training.services.ServiceAdmin;
 
-public class ItemPrintFreeRoomSortedByContent extends AbstractItemEmpty {
+public class ItemPrintFreeRoomSortedByContent extends ItemOperating {
 
 	public final String MESSAGE_1 = "List room";
 	public final String MESSAGE_2 = " contains ";
@@ -19,7 +19,7 @@ public class ItemPrintFreeRoomSortedByContent extends AbstractItemEmpty {
 	}
 
 	@Override
-	public AbstractMenu work() {
+	public Menu work() {
 
 		try {
 			List<Room> roomList = admin.printRoomFreeSortetdByContent();
@@ -29,6 +29,8 @@ public class ItemPrintFreeRoomSortedByContent extends AbstractItemEmpty {
 						+ roomList.get(i).getContent() + MESSAGE_3);
 			}
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 

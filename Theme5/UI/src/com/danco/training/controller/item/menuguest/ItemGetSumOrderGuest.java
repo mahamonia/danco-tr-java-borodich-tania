@@ -4,12 +4,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import com.danco.training.controller.item.itemmenu.AbstractItemEmpty;
-import com.danco.training.controller.menu.AbstractMenu;
+import com.danco.training.controller.item.itemmenu.ItemOperating;
+import com.danco.training.controller.menu.Menu;
 import com.danco.training.entity.Guest;
 import com.danco.training.services.ServiceAdmin;
 
-public class ItemGetSumOrderGuest extends AbstractItemEmpty{
+public class ItemGetSumOrderGuest extends ItemOperating{
 	
 	public final String MESSAGE_1 = "Id guest..";
 	public final String MESSAGE_2 = "Sum order guest = ";
@@ -20,7 +20,7 @@ public class ItemGetSumOrderGuest extends AbstractItemEmpty{
 	}
 
 	@Override
-	public AbstractMenu work() {
+	public Menu work() {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				System.in));
 		try {

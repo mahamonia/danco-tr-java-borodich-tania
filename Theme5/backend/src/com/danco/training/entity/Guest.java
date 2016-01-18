@@ -1,13 +1,20 @@
 package com.danco.training.entity;
 
-public class Guest {
+import java.io.Serializable;
+
+public class Guest implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2154910180085017753L;
 	private int Id;
 	private String name;
 	private String pasport;
 	private String dateInSettle;
 	private String dateOutSettle;
 	private int IdOrder;
+	private Order order;
 
 	public Guest(int Id, String name, String pasport, String dateInSettle, String dateOutSettle, int IdOrder) {
 		this.Id = Id;

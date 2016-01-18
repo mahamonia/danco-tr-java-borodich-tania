@@ -3,14 +3,13 @@ package com.danco.training.controller.item.menuservice.printlist;
 import java.io.IOException;
 import java.util.List;
 
-import com.danco.training.controller.item.itemmenu.AbstractItemEmpty;
-import com.danco.training.controller.menu.AbstractMenu;
+import com.danco.training.controller.item.itemmenu.ItemOperating;
+import com.danco.training.controller.menu.Menu;
 import com.danco.training.entity.Service;
 import com.danco.training.services.ServiceAdmin;
 
-public class ItemPrintDailServiceThemPriceSortedByPrice extends
-		AbstractItemEmpty {
-	public final String MESSAGE_1 ="List dail service";
+public class ItemPrintDailServiceThemPriceSortedByPrice extends ItemOperating {
+	public final String MESSAGE_1 = "List dail service";
 	public final String MESSAGE_2 = " cost ";
 
 	public ItemPrintDailServiceThemPriceSortedByPrice(String name,
@@ -19,7 +18,7 @@ public class ItemPrintDailServiceThemPriceSortedByPrice extends
 	}
 
 	@Override
-	public AbstractMenu work() {
+	public Menu work() {
 		try {
 			List<Service> serviceList = admin.printDailServicesSortedByPrice();
 			System.out.println(MESSAGE_1);
@@ -28,6 +27,8 @@ public class ItemPrintDailServiceThemPriceSortedByPrice extends
 						+ serviceList.get(i).getPrice());
 			}
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 

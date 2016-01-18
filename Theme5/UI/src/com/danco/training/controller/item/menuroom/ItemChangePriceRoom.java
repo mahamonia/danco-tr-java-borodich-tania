@@ -4,12 +4,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import com.danco.training.controller.item.itemmenu.AbstractItemEmpty;
-import com.danco.training.controller.menu.AbstractMenu;
+import com.danco.training.controller.item.itemmenu.ItemOperating;
+import com.danco.training.controller.menu.Menu;
 import com.danco.training.entity.Room;
 import com.danco.training.services.ServiceAdmin;
 
-public class ItemChangePriceRoom extends AbstractItemEmpty {
+public class ItemChangePriceRoom extends ItemOperating {
 	public final String MESSAGE_1 ="Id room";
 	public final String MESSAGE_2 ="price..";
 
@@ -19,7 +19,7 @@ public class ItemChangePriceRoom extends AbstractItemEmpty {
 	}
 
 	@Override
-	public AbstractMenu work() {
+	public Menu work() {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				System.in));
 		try {
@@ -36,6 +36,8 @@ public class ItemChangePriceRoom extends AbstractItemEmpty {
 			admin.updateRoom(room);
 
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			if (reader != null) {

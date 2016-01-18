@@ -1,6 +1,8 @@
 package com.danco.training.entity;
 
-public enum Status {
+import java.io.Serializable;
+
+public enum Status implements Serializable{
 	FREE,
 	NOTFREE,
 	ONREPAIR

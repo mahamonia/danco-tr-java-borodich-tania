@@ -15,7 +15,6 @@ public class ControllerGuest implements IPrintGuest {
 	private static Logger logger = LogManager.getLogger(ControllerGuest.class);
 
 	private List<Guest> guestsList;
-
 	private List<Order> orderList;
 
 	public ControllerGuest(List<Guest> guestsList, List<Order> orderList) {
@@ -25,72 +24,110 @@ public class ControllerGuest implements IPrintGuest {
 	}
 
 	public void createGuest(Guest guest) {
-
-		guestsList.add(guest);
+		try {
+			guestsList.add(guest);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
 	}
-	
+
 	public void updateGuest(Guest guest) {
-		int i = getIndexGuest(guest);
-		guestsList.set(i, guest);
-		
+		try {
+			int i = getIndexGuest(guest);
+			guestsList.set(i, guest);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
 	}
 
 	public void deleteGuest(Guest guest) {
-		int i = getIndexGuest(guest);
-		if (i != -1) {
-			guestsList.remove(i);
+		try {
+			int i = getIndexGuest(guest);
+			if (i != -1) {
+				guestsList.remove(i);
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
+
 	}
 
 	private int getIndexGuest(Guest guest) {
-
-		int indexGuest = getIndexGuestById(guest.getId());
+		int indexGuest = 0;
+		try {
+			indexGuest = getIndexGuestById(guest.getId());
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
 		return indexGuest;
 	}
-	
-	public int getIdForNewGuest() {
 
-		for (int i = 0; i < guestsList.size(); i++) {
-			if (guestsList.get(i) == null) {
-				int newId = guestsList.get(i-1).getId()+1;
-				return newId;
+	public int getIdForNewGuest() {
+		int newId = 0;
+		try {
+			for (int i = 0; i <= guestsList.size(); i++) {
+
+				if (guestsList.get(i) == null) {
+					if (i == 0) {
+						newId = 1;
+					} else
+						newId = guestsList.get(i - 1).getId() + 1;
+					return newId;
+				}
 			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
-		return -1;
+		return newId;
+
 	}
 
 	private int getIndexGuestById(int Id) {
-		for (int i = 0; i < this.guestsList.size(); i++) {
-			if (guestsList.get(i) != null && guestsList.get(i).getId() == Id) {
-				return i;
+		try {
+			for (int i = 0; i < this.guestsList.size(); i++) {
+				if (guestsList.get(i) != null
+						&& guestsList.get(i).getId() == Id) {
+					return i;
+				}
 			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
+
 		return -1;
 	}
-	
+
 	public Guest getGuestById(int id) {
-		
-		for (int i = 0; i < this.guestsList.size(); i++) {
-			if (guestsList.get(i) != null && guestsList.get(i).getId() == id) {
-				return guestsList.get(i);
+		try {
+			for (int i = 0; i < this.guestsList.size(); i++) {
+				if (guestsList.get(i) != null
+						&& guestsList.get(i).getId() == id) {
+					return guestsList.get(i);
+				}
 			}
-		}return null;
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+		return null;
 
 	}
-	
+
 	public List<Guest> getListGuest() {
-		
-		return this.guestsList;
-		
-	}
-	
-	public int getIdForNewOrder() {
 
-		for (int i = 0; i < orderList.size(); i++) {
-			if (orderList.get(i) == null) {
-				int newId = orderList.get(i-1).getId()+1;
-				return newId;
+		return this.guestsList;
+
+	}
+
+	public int getIdForNewOrder() {
+		try {
+			for (int i = 0; i < orderList.size(); i++) {
+				if (orderList.get(i) == null) {
+					int newId = orderList.get(i - 1).getId() + 1;
+					return newId;
+				}
 			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 		return -1;
 	}
@@ -99,8 +136,8 @@ public class ControllerGuest implements IPrintGuest {
 	public List<Guest> printGuestsSortedByName(List<Guest> guestsList) {
 		try {
 			Collections.sort(guestsList, Comparator.GUEST_BY_NAME);
-		} catch (RuntimeException e) {
-			logger.info("RuntimeException");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 
 		return guestsList;
@@ -110,10 +147,9 @@ public class ControllerGuest implements IPrintGuest {
 	public List<Guest> printGuestsSortedByDateOutSettle(List<Guest> guestsList) {
 		try {
 			Collections.sort(guestsList, Comparator.GUEST_BY_DATE);
-		} catch (RuntimeException e) {
-			logger.info("RuntimeException");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
-
 		return guestsList;
 	}
 
@@ -128,8 +164,8 @@ public class ControllerGuest implements IPrintGuest {
 				laterGuestsRoom[laterGuestsRoom.length - 1] = guest.getId();
 			}
 			room.setIdGuest(laterGuestsRoom);
-		} catch (RuntimeException e) {
-			logger.info("RuntimeException");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 
 	}
@@ -152,8 +188,8 @@ public class ControllerGuest implements IPrintGuest {
 					}
 				}
 			}
-		} catch (RuntimeException e) {
-			logger.info("RuntimeException");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 
 	}
@@ -161,8 +197,8 @@ public class ControllerGuest implements IPrintGuest {
 	public void addDateInSettle(Guest guest, String dateInSettle) {
 		try {
 			guest.setDateInSettle(dateInSettle);
-		} catch (RuntimeException e) {
-			logger.info("RuntimeException");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 
 	}
@@ -170,8 +206,8 @@ public class ControllerGuest implements IPrintGuest {
 	public void addDateOutSettle(Guest guest, String dateOutSettle) {
 		try {
 			guest.setDateOutSettle(dateOutSettle);
-		} catch (RuntimeException e) {
-			logger.info("RuntimeException");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 
 	}
@@ -183,8 +219,8 @@ public class ControllerGuest implements IPrintGuest {
 					guest.setIdOrder(orderList.get(i).getId());
 				}
 			}
-		} catch (RuntimeException e) {
-			logger.info("RuntimeException");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 
 	}
@@ -198,22 +234,26 @@ public class ControllerGuest implements IPrintGuest {
 				}
 
 			}
-		} catch (RuntimeException e) {
-			logger.info("");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 
 		return amountGuests;
 	}
-	
+
 	public Room getRoomInLiveGuest(Guest guest, List<Room> roomsList) {
 		Room room;
-		for (int i = 0; i < roomsList.size(); i++) {
-			int[] laterGuests = roomsList.get(i).getIdGuest();
-			if (laterGuests[laterGuests.length - 1] == guest.getId()){
-				return room = roomsList.get(i);
+		try {
+			for (int i = 0; i < roomsList.size(); i++) {
+				int[] laterGuests = roomsList.get(i).getIdGuest();
+				if (laterGuests[laterGuests.length - 1] == guest.getId()) {
+					return room = roomsList.get(i);
+				}
 			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
-		return null;		
+		return null;
 	}
 
 	public List<Guest> printGuestsThemRoom(List<Guest> guestsList,
@@ -239,10 +279,9 @@ public class ControllerGuest implements IPrintGuest {
 					}
 				}
 			}
-		} catch (RuntimeException e) {
-			logger.info(" ");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
-
 		return newGuestList;
 	}
 
@@ -254,8 +293,8 @@ public class ControllerGuest implements IPrintGuest {
 					return orderList.get(i).getIdServices();
 				}
 			}
-		} catch (RuntimeException e) {
-			logger.info("  ");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 		return null;
 	}

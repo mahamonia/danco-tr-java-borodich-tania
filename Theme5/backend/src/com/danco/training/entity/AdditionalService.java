@@ -1,7 +1,13 @@
 package com.danco.training.entity;
 
-public class AdditionalService extends Service{
+import java.io.Serializable;
+
+public class AdditionalService extends Service implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7034860416131383102L;
 	private String description;
 	private int addPrice;
 

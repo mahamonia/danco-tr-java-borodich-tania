@@ -1,11 +1,20 @@
 package com.danco.training.entity;
 
-public class Order {
+import java.io.Serializable;
+
+public class Order implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3299762870887211471L;
 	private int Id;
 	private int idGuest;
 	private int [] idServices;
 	private final int MAX_SERVICES;
 	private int sumPrice;
+	private Guest guest;
+	private DailService dailService;
+	private AdditionalService addService;
 	
 	public Order (int Id, int idGuest, int [] idServices, int sumPrice){
 		

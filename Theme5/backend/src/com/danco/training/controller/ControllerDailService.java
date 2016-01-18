@@ -11,7 +11,7 @@ import com.danco.training.comparator.Comparator;
 import com.danco.training.entity.DailService;
 import com.danco.training.entity.Service;
 
-public class ControllerDailService{
+public class ControllerDailService {
 
 	private static Logger logger = LogManager
 			.getLogger(ControllerDailService.class);
@@ -25,79 +25,99 @@ public class ControllerDailService{
 	}
 
 	public void createService(Service service) {
-
-		servicesList.add(service);
-
+		try {
+			servicesList.add(service);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
 	}
-	
+
 	public void updateService(Service service) {
-		int i = getIndexService(service);
-		servicesList.set(i, service);
-		
+		try {
+			int i = getIndexService(service);
+			servicesList.set(i, service);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
 	}
 
 	public void deleteService(Service service) {
-		int i = getIndexService(service);
-		if (i != -1) {
-			servicesList.remove(i);
+		try {
+			int i = getIndexService(service);
+			if (i != -1) {
+				servicesList.remove(i);
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 	}
 
 	private int getIndexService(Service service) {
+		int indexService = 0;
+		try {
+			indexService = getIndexServiceById(service.getId());
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
 
-		int indexService = getIndexServiceById(service.getId());
 		return indexService;
 	}
 
 	private int getIndexServiceById(int Id) {
-		for (int i = 0; i < this.servicesList.size(); i++) {
-			if (servicesList.get(i) != null
-					&& servicesList.get(i).getId() == Id) {
-				return i;
+		try {
+			for (int i = 0; i < this.servicesList.size(); i++) {
+				if (servicesList.get(i) != null
+						&& servicesList.get(i).getId() == Id) {
+					return i;
+				}
 			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 		return -1;
 	}
 
 	public Service getService(int Id) {
-
-		for (int i = 0; i < servicesList.size(); i++) {
-			if (servicesList.get(i).getId() == Id) {
-				return servicesList.get(i);
+		try {
+			for (int i = 0; i < servicesList.size(); i++) {
+				if (servicesList.get(i).getId() == Id) {
+					return servicesList.get(i);
+				}
 			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 		return null;
 	}
-	
+
 	public List<Service> getListDailService() {
 
 		return this.servicesList;
 
 	}
 
-	
 	public List<Service> printServicesSortedByPrice(List<Service> servicesList) {
 		try {
 			Collections.sort(servicesList, Comparator.SERVICE_BY_PRICE);
-		} catch (RuntimeException e) {
-			logger.info("RuntimeException");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 		return servicesList;
 	}
-
 
 	public List<Service> printServicesSortedByName(List<Service> servicesList) {
 		try {
 			Collections.sort(servicesList, Comparator.SERVICE_BY_NAME);
-		} catch (RuntimeException e) {
-			logger.info("RuntimeException");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
-
 		return servicesList;
 
 	}
 
-	public List<DailService> printServicesThemPriceById(int[] IdService) { // uses for guest 
+	public List<DailService> printServicesThemPriceById(int[] IdService) { // uses
+																			// for
+																			// guest
 
 		List<DailService> newServiceList = new ArrayList<DailService>();
 
@@ -109,14 +129,14 @@ public class ControllerDailService{
 					}
 				}
 			}
-		} catch (RuntimeException e) {
-			logger.info("RuntimeException");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 		return newServiceList;
 	}
 
 	public int getServicesSumPriceById(int[] IdService) {
-		
+
 		int sum = 0;
 		try {
 			for (int i = 0; i < servicesList.size(); i++) {
@@ -126,8 +146,9 @@ public class ControllerDailService{
 					}
 				}
 			}
-		} catch (RuntimeException e) {
-			logger.info("RuntimeException");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			;
 		}
 		return sum;
 	}
@@ -135,9 +156,8 @@ public class ControllerDailService{
 	public void changePrice(Service service, int price) {
 		try {
 			service.setPrice(price);
-		} catch (RuntimeException e) {
-			logger.info("RuntimeException");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
-
 	}
 }

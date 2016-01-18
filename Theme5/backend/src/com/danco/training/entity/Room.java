@@ -1,23 +1,31 @@
 package com.danco.training.entity;
 
-public class Room  {
+import java.io.Serializable;
+
+public class Room  implements Cloneable, Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3265164475946260575L;
 	private int number;
 	private int content;
 	private Status status;
 	private int stars;
 	private int price;
 	private int [] IdGuest;
+	private final int MAX_ID_GUEST;
+	private Guest guest;
 
 	public Room(int number, int content, Status status, int stars, int price, int [] IdGuest
 			) {
+		MAX_ID_GUEST =  IdGuest.length;
 		this.number = number;
 		this.content = content;
 		this.status = status;
 		this.stars = stars;
-		this.price =price;
-		
+		this.price = price;
 		this.setIdGuest(IdGuest);
-
+		
 	}
 
 	public int getNumber() {
@@ -67,5 +75,13 @@ public class Room  {
 	public void setIdGuest(int [] idGuest) {
 		IdGuest = idGuest;
 	}
+
+	public int getMAX_ID_GUEST() {
+		return MAX_ID_GUEST;
+	}
+	@Override
+	public Room clone() throws CloneNotSupportedException {
+        return (Room)super.clone();
+  }
 
 }

@@ -11,7 +11,7 @@ import com.danco.training.comparator.Comparator;
 import com.danco.training.entity.AdditionalService;
 import com.danco.training.entity.Service;
 
-public class ControllerAdditionalService  {
+public class ControllerAdditionalService {
 
 	private static Logger logger = LogManager
 			.getLogger(ControllerAdditionalService.class);
@@ -24,73 +24,100 @@ public class ControllerAdditionalService  {
 	}
 
 	public void createService(AdditionalService service) {
-
-		servicesList.add(service);
+		try {
+			servicesList.add(service);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
 	}
-	
+
 	public void updateService(AdditionalService service) {
-		int i = getIndexService(service);
-		servicesList.set(i, service);
-		
+		try {
+			int i = getIndexService(service);
+			servicesList.set(i, service);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+
 	}
 
 	public void deleteService(Service service) {
-		int i = getIndexService(service);
-		if (i != -1) {
-			servicesList.remove(i);
+		try {
+			int i = getIndexService(service);
+			if (i != -1) {
+				servicesList.remove(i);
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+
 		}
 	}
 
 	private int getIndexService(Service service) {
+		int indexService = 0;
+		try {
+			indexService = getIndexServiceById(service.getId());
 
-		int indexService = getIndexServiceById(service.getId());
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
 		return indexService;
+
 	}
 
 	private int getIndexServiceById(int Id) {
-		for (int i = 0; i < this.servicesList.size(); i++) {
-			if (servicesList.get(i) != null
-					&& servicesList.get(i).getId() == Id) {
-				return i;
+		try {
+			for (int i = 0; i < this.servicesList.size(); i++) {
+				if (servicesList.get(i) != null
+						&& servicesList.get(i).getId() == Id) {
+					return i;
+				}
 			}
+
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 		return -1;
 	}
 
 	public Service getService(int Id) {
-
-		for (int i = 0; i < servicesList.size(); i++) {
-			if (servicesList.get(i).getId() == Id) {
-				return servicesList.get(i);
+		try {
+			for (int i = 0; i < servicesList.size(); i++) {
+				if (servicesList.get(i).getId() == Id) {
+					return servicesList.get(i);
+				}
 			}
+
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 		return null;
-	}
-	
-	public List<AdditionalService> getListAddService() {
 
+	}
+
+	public List<AdditionalService> getListAddService() {
 
 		return this.servicesList;
 
 	}
 
-	
-	public List<AdditionalService> printServicesSortedByPrice(List<AdditionalService> servicesList) {
+	public List<AdditionalService> printServicesSortedByPrice(
+			List<AdditionalService> servicesList) {
 		try {
 			Collections.sort(servicesList, Comparator.SERVICE_BY_PRICE);
-		} catch (RuntimeException e) {
-			logger.info("RuntimeException");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 		return servicesList;
 	}
 
+	public List<AdditionalService> printServicesSortedByName(
+			List<AdditionalService> servicesList) {
 
-	public List<AdditionalService> printServicesSortedByName(List<AdditionalService> servicesList) {
-		
 		try {
 			Collections.sort(servicesList, Comparator.SERVICE_BY_NAME);
-		} catch (RuntimeException e) {
-			logger.info("RuntimeException");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 		return servicesList;
 	}
@@ -108,8 +135,8 @@ public class ControllerAdditionalService  {
 					}
 				}
 			}
-		} catch (RuntimeException e) {
-			logger.info("RuntimeException");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 		return newServiceList;
 	}
@@ -132,8 +159,8 @@ public class ControllerAdditionalService  {
 					}
 				}
 			}
-		} catch (RuntimeException e) {
-			logger.info("RuntimeException");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 
 		return sum;
@@ -143,8 +170,8 @@ public class ControllerAdditionalService  {
 
 		try {
 			service.setPrice(price);
-		} catch (RuntimeException e) {
-			logger.info("RuntimeException");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
 
 	}

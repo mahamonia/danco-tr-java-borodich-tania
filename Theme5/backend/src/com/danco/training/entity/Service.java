@@ -1,7 +1,13 @@
 package com.danco.training.entity;
 
-public abstract class Service{
+import java.io.Serializable;
+
+public abstract class Service implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4763230708974893196L;
 	private int Id;
 	private String name;
 	private int price;

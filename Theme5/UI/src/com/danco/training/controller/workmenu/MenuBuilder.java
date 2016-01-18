@@ -3,28 +3,23 @@ package com.danco.training.controller.workmenu;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.danco.training.controller.item.itemmenu.AbstractItem;
+import com.danco.training.controller.item.itemmenu.Item;
+import com.danco.training.controller.item.itemmenu.ItemExit;
 import com.danco.training.controller.item.menuguest.ItemAddService;
 import com.danco.training.controller.item.menuguest.ItemAmountGuest;
 import com.danco.training.controller.item.menuguest.ItemGetSumOrderGuest;
+import com.danco.training.controller.item.menuguest.ItemImportGuestsList;
 import com.danco.training.controller.item.menuguest.ItemOutSettle;
-import com.danco.training.controller.item.menuguest.ItemPrintListGuest;
 import com.danco.training.controller.item.menuguest.ItemRegistry;
 import com.danco.training.controller.item.menuguest.ItemSettle;
-import com.danco.training.controller.item.menuguest.printlist.ItemBackMenuGuest;
+import com.danco.training.controller.item.menuguest.printlist.ItemPrintGuestSortedById;
 import com.danco.training.controller.item.menuguest.printlist.ItemPrintGuestThemRoomSortedByDate;
 import com.danco.training.controller.item.menuguest.printlist.ItemPrintGuestThemRoomSortedByName;
-import com.danco.training.controller.item.menumain.ItemBackMainMenu;
-import com.danco.training.controller.item.menumain.ItemExit;
-import com.danco.training.controller.item.menumain.ItemMenuGuest;
-import com.danco.training.controller.item.menumain.ItemMenuRoom;
-import com.danco.training.controller.item.menumain.ItemMenuService;
 import com.danco.training.controller.item.menuroom.ItemAmountFreeRoom;
 import com.danco.training.controller.item.menuroom.ItemChangePriceRoom;
 import com.danco.training.controller.item.menuroom.ItemChangeStatusRoom;
+import com.danco.training.controller.item.menuroom.ItemForCloningRoom;
 import com.danco.training.controller.item.menuroom.ItemLastThreeGuestsRoom;
-import com.danco.training.controller.item.menuroom.ItemPrintListRoom;
-import com.danco.training.controller.item.menuroom.printlist.ItemBackMenuRoom;
 import com.danco.training.controller.item.menuroom.printlist.ItemPrintFreeRoomSortedByContent;
 import com.danco.training.controller.item.menuroom.printlist.ItemPrintFreeRoomSortedByPrice;
 import com.danco.training.controller.item.menuroom.printlist.ItemPrintFreeRoomSortedByStars;
@@ -32,20 +27,11 @@ import com.danco.training.controller.item.menuroom.printlist.ItemPrintRoomSorted
 import com.danco.training.controller.item.menuroom.printlist.ItemPrintRoomSortedByPrice;
 import com.danco.training.controller.item.menuroom.printlist.ItemPrintRoomSortedByStars;
 import com.danco.training.controller.item.menuservice.ItemChangePriceService;
-import com.danco.training.controller.item.menuservice.ItemPrintListService;
-import com.danco.training.controller.item.menuservice.printlist.ItemBackMenuService;
 import com.danco.training.controller.item.menuservice.printlist.ItemPrintAdditionalServiceThemPriceSortedByName;
 import com.danco.training.controller.item.menuservice.printlist.ItemPrintAdditionalServiceThemPriceSortedByPrice;
 import com.danco.training.controller.item.menuservice.printlist.ItemPrintDailServiceThemPriceSortedByName;
 import com.danco.training.controller.item.menuservice.printlist.ItemPrintDailServiceThemPriceSortedByPrice;
-import com.danco.training.controller.menu.AbstractMenu;
-import com.danco.training.controller.menu.MenuGuest;
-import com.danco.training.controller.menu.MenuGuestForPrint;
-import com.danco.training.controller.menu.MenuMain;
-import com.danco.training.controller.menu.MenuRoom;
-import com.danco.training.controller.menu.MenuRoomForPrint;
-import com.danco.training.controller.menu.MenuService;
-import com.danco.training.controller.menu.MenuServiceForPrint;
+import com.danco.training.controller.menu.Menu;
 import com.danco.training.services.ServiceAdmin;
 
 public class MenuBuilder {
@@ -66,9 +52,11 @@ public class MenuBuilder {
 	public final String ITEM_ADD_SERVICE = "Add service for guest";
 	public final String ITEM_AMOUNT_GUEST = "Show amount guest";
 	public final String ITEM_SUM_ORDER = "Get sum order guest";
+	public final String ITEM_IMPORT_LIST_GUEST ="Import list guest";
 	public final String ITEM_BACK_IN_MAIN_MENU = "Back in main menu";
 
 	public final String TITLE_MENU_PRINT_GUEST = "  Menu for print list guest";
+	public final String ITEM_PRINT_LIST_GUESTS_SORTED_BY_NAME = "Print Guest";
 	public final String ITEM_PRINT_LIST_GUEST_SORTED_BY_NAME = "Print Guest Them Room Sorted By Name";
 	public final String ITEM_PRINT_LIST_GUEST_SORTED_BY_DATE = "Print Guest Them Room Sorted By Date";
 	public final String ITEM_BACK_IN_MENU_GUEST = "Back in menu guest";
@@ -80,6 +68,7 @@ public class MenuBuilder {
 	public final String ITEM_THREE_GUEST_ROOM = "Show the last three guests of room";
 	public final String ITEM_CHANGE_PRICE_ROOM = "Change price room";
 	public final String ITEM_CHANGE_STATUS_ROOM = "Change status room";
+	public final String ITEM_CLONE_ROOM = "Clone room";
 
 	public final String TITLE_MENU_PRINT_ROOM = "Menu for print list room";
 	public final String ITEM_PRINT_ROOM_SORTED_BY_CONTENT = "Print room sorted by content";
@@ -109,42 +98,38 @@ public class MenuBuilder {
 
 	}
 
-	public AbstractMenu buildMenu() {
+	public Menu buildMenu() {
 
 		// ITEM MAIN MENU
-		AbstractItem itemMenuGuest = new ItemMenuGuest(ITEM_MENU_GUEST);
-		AbstractItem itemMenuRoom = new ItemMenuRoom(ITEM_MENU_ROOM);
-		AbstractItem itemMenuService = new ItemMenuService(ITEM_MENU_SERVICE);
-		AbstractItem itemExit = new ItemExit(ITEM_EXIT);
+		Item itemMenuGuest = new Item(ITEM_MENU_GUEST);
+		Item itemMenuRoom = new Item(ITEM_MENU_ROOM);
+		Item itemMenuService = new Item(ITEM_MENU_SERVICE);
+		Item itemExit = new ItemExit(ITEM_EXIT);
 
 		// List items main menu
-		List<AbstractItem> itemsMenuMain = new ArrayList<AbstractItem>();
+		List<Item> itemsMenuMain = new ArrayList<Item>();
 		itemsMenuMain.add(itemMenuGuest);
 		itemsMenuMain.add(itemMenuRoom);
 		itemsMenuMain.add(itemMenuService);
 		itemsMenuMain.add(itemExit);
 
 		// === MENU MAIN ===
-		AbstractMenu menuMain = new MenuMain(TITLE_MAIN_MENU, itemsMenuMain);
+		Menu menuMain = new Menu(TITLE_MAIN_MENU, itemsMenuMain);
 
 		// Guest ============================
 
 		// ITEMS MENU FOR WORK GUEST
-		AbstractItem itemRegistry = new ItemRegistry(ITEM_REGISTRY, admin);
-		AbstractItem itemSettle = new ItemSettle(ITEM_SETTLE, admin);
-		AbstractItem itemOutSettle = new ItemOutSettle(ITEM_OUT_SETTLE, admin);
-		AbstractItem itemPrintListGuest = new ItemPrintListGuest(
-				ITEM_PRINT_LIST_GUEST);
-		AbstractItem itemAddService = new ItemAddService(ITEM_ADD_SERVICE,
-				admin);
-		AbstractItem itemAmountGuest = new ItemAmountGuest(ITEM_AMOUNT_GUEST,
-				admin);
-		AbstractItem itemGetSumOrder = new ItemGetSumOrderGuest(ITEM_SUM_ORDER,
-				admin);
-		AbstractItem itemBackMainMenu = new ItemBackMainMenu(
-				ITEM_BACK_IN_MAIN_MENU);
+		Item itemRegistry = new ItemRegistry(ITEM_REGISTRY, admin);
+		Item itemSettle = new ItemSettle(ITEM_SETTLE, admin);
+		Item itemOutSettle = new ItemOutSettle(ITEM_OUT_SETTLE, admin);
+		Item itemPrintListGuest = new Item(ITEM_PRINT_LIST_GUEST);
+		Item itemAddService = new ItemAddService(ITEM_ADD_SERVICE, admin);
+		Item itemAmountGuest = new ItemAmountGuest(ITEM_AMOUNT_GUEST, admin);
+		Item itemGetSumOrder = new ItemGetSumOrderGuest(ITEM_SUM_ORDER, admin);
+		Item itemImportListGuest = new ItemImportGuestsList(ITEM_IMPORT_LIST_GUEST, admin);
+		Item itemBackMainMenu = new Item(ITEM_BACK_IN_MAIN_MENU);
 
-		List<AbstractItem> itemsMenuGuest = new ArrayList<AbstractItem>();
+		List<Item> itemsMenuGuest = new ArrayList<Item>();
 		itemsMenuGuest.add(itemRegistry);
 		itemsMenuGuest.add(itemSettle);
 		itemsMenuGuest.add(itemOutSettle);
@@ -152,10 +137,11 @@ public class MenuBuilder {
 		itemsMenuGuest.add(itemAddService);
 		itemsMenuGuest.add(itemAmountGuest);
 		itemsMenuGuest.add(itemGetSumOrder);
+		itemsMenuGuest.add(itemImportListGuest);
 		itemsMenuGuest.add(itemBackMainMenu);
 
 		// == MENU GUEST ==
-		AbstractMenu menuGuest = new MenuGuest(TITLE_MENU_GUEST, itemsMenuGuest);
+		Menu menuGuest = new Menu(TITLE_MENU_GUEST, itemsMenuGuest);
 
 		for (int i = 0; i < itemsMenuGuest.size(); i++) {
 			itemsMenuGuest.get(i).setMenu(menuGuest);
@@ -165,21 +151,22 @@ public class MenuBuilder {
 		itemBackMainMenu.setMenu(menuMain);
 
 		// ITEMS MENU PRINT LIST GUEST
-		AbstractItem itemPrintGuestThemRoomSortedByDate = new ItemPrintGuestThemRoomSortedByDate(
+		Item itemPrintGuestsList = new ItemPrintGuestSortedById(ITEM_PRINT_LIST_GUESTS_SORTED_BY_NAME, admin);
+		Item itemPrintGuestThemRoomSortedByDate = new ItemPrintGuestThemRoomSortedByDate(
 				ITEM_PRINT_LIST_GUEST_SORTED_BY_DATE, admin);
-		AbstractItem itemPrintGuestThemRoomSortedByName = new ItemPrintGuestThemRoomSortedByName(
+		Item itemPrintGuestThemRoomSortedByName = new ItemPrintGuestThemRoomSortedByName(
 				ITEM_PRINT_LIST_GUEST_SORTED_BY_NAME, admin);
-		AbstractItem itemBackMenuGuest = new ItemBackMenuGuest(
-				ITEM_BACK_IN_MENU_GUEST);
+		Item itemBackMenuGuest = new Item(ITEM_BACK_IN_MENU_GUEST);
 
-		List<AbstractItem> itemsMenuPrintGuest = new ArrayList<AbstractItem>();
+		List<Item> itemsMenuPrintGuest = new ArrayList<Item>();
+		itemsMenuPrintGuest.add(itemPrintGuestsList);
 		itemsMenuPrintGuest.add(itemPrintGuestThemRoomSortedByName);
 		itemsMenuPrintGuest.add(itemPrintGuestThemRoomSortedByDate);
 		itemsMenuPrintGuest.add(itemBackMenuGuest);
 
 		// == MENU PRINT GUEST ==
-		AbstractMenu menuPrintGuest = new MenuGuestForPrint(
-				TITLE_MENU_PRINT_GUEST, itemsMenuPrintGuest);
+		Menu menuPrintGuest = new Menu(TITLE_MENU_PRINT_GUEST,
+				itemsMenuPrintGuest);
 
 		for (int i = 0; i < itemsMenuPrintGuest.size() - 1; i++) {
 			itemsMenuPrintGuest.get(i).setMenu(menuPrintGuest);
@@ -191,27 +178,28 @@ public class MenuBuilder {
 		// Room ==================================
 
 		// ITEMS MENU FOR WORK ROOM
-		AbstractItem itemPrintListRoom = new ItemPrintListRoom(
-				ITEM_PRINT_LIST_ROOM);
-		AbstractItem itemAmountFreeRoom = new ItemAmountFreeRoom(
-				ITEM_AMOUNT_FREE_ROOM, admin);
-		AbstractItem itemLastThreeGuest = new ItemLastThreeGuestsRoom(
+		Item itemPrintListRoom = new Item(ITEM_PRINT_LIST_ROOM);
+		Item itemAmountFreeRoom = new ItemAmountFreeRoom(ITEM_AMOUNT_FREE_ROOM,
+				admin);
+		Item itemLastThreeGuest = new ItemLastThreeGuestsRoom(
 				ITEM_THREE_GUEST_ROOM, admin);
-		AbstractItem itemChangePriceRoom = new ItemChangePriceRoom(
+		Item itemChangePriceRoom = new ItemChangePriceRoom(
 				ITEM_CHANGE_PRICE_ROOM, admin);
-		AbstractItem itemChangeStatus = new ItemChangeStatusRoom(
+		Item itemChangeStatus = new ItemChangeStatusRoom(
 				ITEM_CHANGE_STATUS_ROOM, admin);
+		Item itemCloneRoom = new ItemForCloningRoom(ITEM_CLONE_ROOM, admin);
 
-		List<AbstractItem> itemsMenuRoom = new ArrayList<AbstractItem>();
+		List<Item> itemsMenuRoom = new ArrayList<Item>();
 		itemsMenuRoom.add(itemPrintListRoom);
 		itemsMenuRoom.add(itemAmountFreeRoom);
 		itemsMenuRoom.add(itemLastThreeGuest);
 		itemsMenuRoom.add(itemChangePriceRoom);
 		itemsMenuRoom.add(itemChangeStatus);
+		itemsMenuRoom.add(itemCloneRoom);
 		itemsMenuRoom.add(itemBackMainMenu);
 
 		// == MENU ROOM ==
-		AbstractMenu menuRoom = new MenuRoom(TITLE_MENU_ROOM, itemsMenuRoom);
+		Menu menuRoom = new Menu(TITLE_MENU_ROOM, itemsMenuRoom);
 
 		for (int i = 0; i < itemsMenuRoom.size() - 1; i++) {
 			itemsMenuRoom.get(i).setMenu(menuRoom);
@@ -220,22 +208,21 @@ public class MenuBuilder {
 		itemMenuRoom.setMenu(menuRoom);// item go to menu room
 
 		// ITEMS MENU PRINT LIST ROOM
-		AbstractItem itemPrintRoomSortedByContent = new ItemPrintRoomSortedByContent(
+		Item itemPrintRoomSortedByContent = new ItemPrintRoomSortedByContent(
 				ITEM_PRINT_ROOM_SORTED_BY_CONTENT, admin);
-		AbstractItem itemPrintRoomSortedByPrice = new ItemPrintRoomSortedByPrice(
+		Item itemPrintRoomSortedByPrice = new ItemPrintRoomSortedByPrice(
 				ITEM_PRINT_ROOM_SORTED_BY_PRICE, admin);
-		AbstractItem itemPrintRoomSortedByStars = new ItemPrintRoomSortedByStars(
+		Item itemPrintRoomSortedByStars = new ItemPrintRoomSortedByStars(
 				ITEM_PRINT_ROOM_SORTED_BY_STARS, admin);
-		AbstractItem itemPrintFreeRoomSortedByContent = new ItemPrintFreeRoomSortedByContent(
+		Item itemPrintFreeRoomSortedByContent = new ItemPrintFreeRoomSortedByContent(
 				ITEM_PRINT_FREE_ROOM_SORTED_BY_CONTENT, admin);
-		AbstractItem itemPrintFreeRoomSortedByPrice = new ItemPrintFreeRoomSortedByPrice(
+		Item itemPrintFreeRoomSortedByPrice = new ItemPrintFreeRoomSortedByPrice(
 				ITEM_PRINT_FREE_ROOM_SORTED_BY_PRICE, admin);
-		AbstractItem itemPrintFreeRoomSortedByStars = new ItemPrintFreeRoomSortedByStars(
+		Item itemPrintFreeRoomSortedByStars = new ItemPrintFreeRoomSortedByStars(
 				ITEM_PRINT_FREE_ROOM_SORTED_BY_STARS, admin);
-		AbstractItem itemBackMenuRoom = new ItemBackMenuRoom(
-				ITEM_BACK_IN_MENU_ROOM);
+		Item itemBackMenuRoom = new Item(ITEM_BACK_IN_MENU_ROOM);
 
-		List<AbstractItem> itemsMenuPrintRoom = new ArrayList<AbstractItem>();
+		List<Item> itemsMenuPrintRoom = new ArrayList<Item>();
 		itemsMenuPrintRoom.add(itemPrintRoomSortedByContent);
 		itemsMenuPrintRoom.add(itemPrintRoomSortedByPrice);
 		itemsMenuPrintRoom.add(itemPrintRoomSortedByStars);
@@ -245,8 +232,7 @@ public class MenuBuilder {
 		itemsMenuPrintRoom.add(itemBackMenuRoom);
 
 		// == MENU PRINT ROOM ==
-		AbstractMenu menuPrintRoom = new MenuRoomForPrint(
-				TITLE_MENU_PRINT_ROOM, itemsMenuPrintRoom);
+		Menu menuPrintRoom = new Menu(TITLE_MENU_PRINT_ROOM, itemsMenuPrintRoom);
 
 		for (int i = 0; i < itemsMenuPrintRoom.size() - 1; i++) {
 			itemsMenuPrintRoom.get(i).setMenu(menuPrintRoom);
@@ -258,19 +244,17 @@ public class MenuBuilder {
 		// Service ============================
 
 		// ITEMS MENU FOR WOR SERVICE
-		AbstractItem itemChangePriceService = new ItemChangePriceService(
+		Item itemChangePriceService = new ItemChangePriceService(
 				ITEM_CHANGE_PRICE_SERVICE, admin);
-		AbstractItem itemPrintListService = new ItemPrintListService(
-				ITEM_PRINT_LIST_SERVICE);
+		Item itemPrintListService = new Item(ITEM_PRINT_LIST_SERVICE);
 
-		List<AbstractItem> itemsMenuService = new ArrayList<AbstractItem>();
+		List<Item> itemsMenuService = new ArrayList<Item>();
 		itemsMenuService.add(itemChangePriceService);
 		itemsMenuService.add(itemPrintListService);
 		itemsMenuService.add(itemBackMainMenu);
 
 		// == MENU SERVICE ==
-		AbstractMenu menuService = new MenuService(TITLE_MENU_SERVICE,
-				itemsMenuService);
+		Menu menuService = new Menu(TITLE_MENU_SERVICE, itemsMenuService);
 
 		for (int i = 0; i < itemsMenuService.size() - 1; i++) {
 			itemsMenuService.get(i).setMenu(menuService);
@@ -279,18 +263,17 @@ public class MenuBuilder {
 		itemMenuService.setMenu(menuService);// item go to menu service
 
 		// ITEMS MENU PRINT LIST SERVICE
-		AbstractItem itemPrintDailServiceThemPriceSortedByName = new ItemPrintDailServiceThemPriceSortedByName(
+		Item itemPrintDailServiceThemPriceSortedByName = new ItemPrintDailServiceThemPriceSortedByName(
 				ITEM_PRINT_DAIL_SERVICE_SORTED_BY_NAME, admin);
-		AbstractItem itemPrintDailServiceThemPriceSortedByPrice = new ItemPrintDailServiceThemPriceSortedByPrice(
+		Item itemPrintDailServiceThemPriceSortedByPrice = new ItemPrintDailServiceThemPriceSortedByPrice(
 				ITEM_PRINT_DAIL_SERVICE_SORTED_BY_PRICE, admin);
-		AbstractItem itemPrintAdditionalServiceThemPriceSortedByName = new ItemPrintAdditionalServiceThemPriceSortedByName(
+		Item itemPrintAdditionalServiceThemPriceSortedByName = new ItemPrintAdditionalServiceThemPriceSortedByName(
 				ITEM_PRINT_ADD_SERVICE_SORTED_BY_NAME, admin);
-		AbstractItem itemPrintAdditionalServiceThemPriceSortedByPrice = new ItemPrintAdditionalServiceThemPriceSortedByPrice(
+		Item itemPrintAdditionalServiceThemPriceSortedByPrice = new ItemPrintAdditionalServiceThemPriceSortedByPrice(
 				ITEM_PRINT_ADD_SERVICE_SORTED_BY_PRICE, admin);
-		AbstractItem itemBackMenuService = new ItemBackMenuService(
-				ITEM_BACK_IN_MENU_SERVICE);
+		Item itemBackMenuService = new Item(ITEM_BACK_IN_MENU_SERVICE);
 
-		List<AbstractItem> itemsMenuPrintService = new ArrayList<AbstractItem>();
+		List<Item> itemsMenuPrintService = new ArrayList<Item>();
 		itemsMenuPrintService.add(itemPrintDailServiceThemPriceSortedByName);
 		itemsMenuPrintService.add(itemPrintDailServiceThemPriceSortedByPrice);
 		itemsMenuPrintService
@@ -300,8 +283,8 @@ public class MenuBuilder {
 		itemsMenuPrintService.add(itemBackMenuService);
 
 		// == MENU PRINT SERVICE ==
-		AbstractMenu menuPrintService = new MenuServiceForPrint(
-				TITLE_MENU_PRINT_SERVICE, itemsMenuPrintService);
+		Menu menuPrintService = new Menu(TITLE_MENU_PRINT_SERVICE,
+				itemsMenuPrintService);
 
 		for (int i = 0; i < itemsMenuPrintService.size() - 1; i++) {
 			itemsMenuPrintService.get(i).setMenu(menuPrintService);
