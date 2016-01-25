@@ -1,13 +1,19 @@
 package com.danco.config;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.Properties;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 public class PropertyProgramm {
 	private static PropertyProgramm config;
 	private Properties properties;
 	private FileInputStream fileInputStream;
+	
+	private static Logger logger = LogManager
+			.getLogger(PropertyProgramm.class);
 	
 	
 	private PropertyProgramm() {
@@ -18,13 +24,15 @@ public class PropertyProgramm {
 			fileInputStream = new FileInputStream(file);
 			properties.load(fileInputStream);
 
-		} catch (IOException e) {
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}finally{
 			if (fileInputStream != null) {
 			}
 			try {
 				fileInputStream.close();
-			} catch (IOException e) {
+			} catch (Exception e) {
+				logger.error(e.getMessage());
 			}
 		}
 
