@@ -1,8 +1,10 @@
 package com.danco.training.controller.item.menuguest;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.danco.training.controller.item.itemmenu.ItemOperating;
 import com.danco.training.controller.menu.Menu;
@@ -10,16 +12,16 @@ import com.danco.training.entity.Guest;
 import com.danco.training.services.ServiceAdmin;
 
 public class ItemRegistry extends ItemOperating {
-	public final String MESSAGE_1 = "Name...";
-	public final String MESSAGE_2 = "Pasport...";
-	public final String MESSAGE_3 = "Date in settle...";
-	public final String OPEN_DATE = "";
+	private final String MESSAGE_1 = "Name...";
+	private final String MESSAGE_2 = "Pasport...";
+	private final String MESSAGE_3 = "Date in settle...";
+	private final String OPEN_DATE = "";
+	private static final Logger LOGGER = LogManager.getLogger(ItemRegistry.class);
 
 	public ItemRegistry(String name, ServiceAdmin admin) {
 		super(name, admin);
 	}
 
-	@Override
 	public Menu work() {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				System.in));
@@ -32,19 +34,13 @@ public class ItemRegistry extends ItemOperating {
 			System.out.println(MESSAGE_3);
 			String dateInSettle = reader.readLine();
 
-			int id = admin.getIdForNewGuest();
 			String dateOutSettle = OPEN_DATE;
-			int idOrder = admin.getIdForNewOrder();
-			Guest guest = new Guest(id, name, pasport, dateInSettle,
-					dateOutSettle, idOrder);
+			Guest guest = new Guest(0, name, pasport, dateInSettle,
+					dateOutSettle);
 
 			admin.createGuest(guest);
-
-		} catch (IOException e) {
-			e.printStackTrace();
 		} catch (Exception e) {
-
-			e.printStackTrace();
+			LOGGER.error(e.getMessage());
 		}
 		return this.getMenu();
 

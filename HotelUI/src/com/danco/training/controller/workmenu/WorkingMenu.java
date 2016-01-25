@@ -1,8 +1,10 @@
 package com.danco.training.controller.workmenu;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.danco.training.controller.item.itemmenu.Item;
 import com.danco.training.controller.menu.Menu;
@@ -10,10 +12,12 @@ import com.danco.training.services.ServiceAdmin;
 
 public class WorkingMenu {
 
-	private Menu currentMenu; // текущее меню
+	private Menu currentMenu;
 	private Item currentItemMenu;
-
 	private Menu mainMenu;
+
+	private static final Logger LOGGER = LogManager
+			.getLogger(WorkingMenu.class);
 
 	public WorkingMenu() {
 
@@ -26,13 +30,13 @@ public class WorkingMenu {
 		mainMenu = builder.buildMenu();
 
 		currentMenu = mainMenu;
+		try {
+			while (currentMenu != null) {
+				currentMenu.display();
 
-		while (currentMenu != null) {
-			currentMenu.display();
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(System.in));
 
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					System.in));
-			try {
 				String line = reader.readLine(); // read what input the user
 				int choiceItem = Integer.parseInt(line);// translate to the item
 
@@ -40,10 +44,12 @@ public class WorkingMenu {
 				currentItemMenu = currentMenu.getMenuList().get(choiceItem - 1);
 				currentMenu = currentItemMenu.work();// item menu is executed
 														// and return menu
+			}
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
 
-			} catch (Exception e) {
-				e.printStackTrace();
-			} 
-		}admin.saveData();
+		} finally {
+			admin.saveData();
+		}
 	}
 }

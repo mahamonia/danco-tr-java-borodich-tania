@@ -16,7 +16,7 @@ public class ItemPrintGuestSortedById extends ItemOperating{
 
 	public Menu work() {
 		
-		List<Guest>  guestsList = admin.printGuestList();
+		List<Guest>  guestsList = admin.getListGuest();
 		for (int i = 0; i < guestsList.size(); i++) {
 			System.out.println(guestsList.get(i).getId() +"-"+guestsList.get(i).getName());
 		}

@@ -1,7 +1,9 @@
 package com.danco.training.controller.item.menuroom;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.danco.training.controller.item.itemmenu.ItemOperating;
 import com.danco.training.controller.menu.Menu;
@@ -11,6 +13,8 @@ import com.danco.training.services.ServiceAdmin;
 public class ItemForCloningRoom extends ItemOperating{
 	public final String MESSAGE_1 ="Id room..";
 	public final String MESSAGE_2 ="Clone create!";
+	private static final Logger LOGGER = LogManager
+			.getLogger(ItemForCloningRoom.class);
 
 	public ItemForCloningRoom(String name, ServiceAdmin admin) {
 		super(name, admin);
@@ -26,22 +30,13 @@ public class ItemForCloningRoom extends ItemOperating{
 
 			Room room = admin.getRoomByNumber(idRoom);
 			admin.cloneRoom(room);	
-			admin.createRoom(room);
+
 			
 			System.out.println(MESSAGE_2);
 
-		} catch (IOException e) {
-			e.printStackTrace();
 		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (reader != null) {
-			}
-			try {
-				reader.close();
-			} catch (IOException e) {
-			}
-		}
+			LOGGER.error(e.getMessage());
+		} 
 		return this.getMenu();
 	}
 

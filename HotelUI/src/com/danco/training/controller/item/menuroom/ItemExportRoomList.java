@@ -1,4 +1,4 @@
-package com.danco.training.controller.item.menuguest;
+package com.danco.training.controller.item.menuroom;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -7,24 +7,25 @@ import com.danco.training.controller.item.itemmenu.ItemOperating;
 import com.danco.training.controller.menu.Menu;
 import com.danco.training.services.ServiceAdmin;
 
-public class ItemAmountGuest extends ItemOperating {
-	public final String MESSAGE = "Amount guest = ";
-	private static final Logger LOGGER = LogManager.getLogger(ItemAmountGuest.class);
+public class ItemExportRoomList extends ItemOperating{
+	private static final Logger LOGGER = LogManager
+			.getLogger(ItemExportRoomList.class);
 
-	public ItemAmountGuest(String name, ServiceAdmin admin) {
+	public ItemExportRoomList(String name, ServiceAdmin admin) {
 		super(name, admin);
-
 	}
-
-	@Override
+	
 	public Menu work() {
+
 		try {
-			int amount = admin.getAmountGuest();
-			System.out.println(MESSAGE + amount);
+			admin.exportRoomsList();
+			System.out.println("Import ok!");
+
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
 		return this.getMenu();
+		
 	}
 
 }

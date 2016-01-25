@@ -1,7 +1,9 @@
 package com.danco.training.controller.item.menuservice.printlist;
 
-import java.io.IOException;
 import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.danco.training.controller.item.itemmenu.ItemOperating;
 import com.danco.training.controller.menu.Menu;
@@ -13,6 +15,8 @@ public class ItemPrintAdditionalServiceThemPriceSortedByPrice extends
 	public final String MESSAGE_1 = "List additional service";
 	public final String MESSAGE_2 = " cost ";
 	public final String MESSAGE_3 = " + ";
+	private static final Logger LOGGER = LogManager
+			.getLogger(ItemPrintAdditionalServiceThemPriceSortedByPrice.class);
 
 	public ItemPrintAdditionalServiceThemPriceSortedByPrice(String name,
 			ServiceAdmin admin) {
@@ -31,10 +35,8 @@ public class ItemPrintAdditionalServiceThemPriceSortedByPrice extends
 						+ serviceList.get(i).getPrice() + MESSAGE_3
 						+ serviceList.get(i).getAddPrice());
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage());
 		}
 		return this.getMenu();
 	}

@@ -1,8 +1,10 @@
 package com.danco.training.controller.item.menuguest;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.danco.training.controller.item.itemmenu.ItemOperating;
 import com.danco.training.controller.menu.Menu;
@@ -16,6 +18,7 @@ public class ItemSettle extends ItemOperating {
 	public final String MESSAGE_2 = "Id room";
 	public final String MESSAGE_3 = "Date in settle";
 	public final String MESSAGE_4 = "Date out settle";
+	private static final Logger LOGGER = LogManager.getLogger(ItemSettle.class);
 
 	public ItemSettle(String name, ServiceAdmin admin) {
 		super(name, admin);
@@ -47,10 +50,8 @@ public class ItemSettle extends ItemOperating {
 			admin.updateGuest(guest);
 			admin.updateRoom(room);
 
-		} catch (IOException e) {
-			e.printStackTrace();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage());
 		}
 		return this.getMenu();
 

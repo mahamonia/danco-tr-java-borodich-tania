@@ -7,6 +7,7 @@ import com.danco.training.controller.item.itemmenu.Item;
 import com.danco.training.controller.item.itemmenu.ItemExit;
 import com.danco.training.controller.item.menuguest.ItemAddService;
 import com.danco.training.controller.item.menuguest.ItemAmountGuest;
+import com.danco.training.controller.item.menuguest.ItemExportGuestsList;
 import com.danco.training.controller.item.menuguest.ItemGetSumOrderGuest;
 import com.danco.training.controller.item.menuguest.ItemImportGuestsList;
 import com.danco.training.controller.item.menuguest.ItemOutSettle;
@@ -18,7 +19,10 @@ import com.danco.training.controller.item.menuguest.printlist.ItemPrintGuestThem
 import com.danco.training.controller.item.menuroom.ItemAmountFreeRoom;
 import com.danco.training.controller.item.menuroom.ItemChangePriceRoom;
 import com.danco.training.controller.item.menuroom.ItemChangeStatusRoom;
+import com.danco.training.controller.item.menuroom.ItemCreateRoom;
+import com.danco.training.controller.item.menuroom.ItemExportRoomList;
 import com.danco.training.controller.item.menuroom.ItemForCloningRoom;
+import com.danco.training.controller.item.menuroom.ItemImportRoomList;
 import com.danco.training.controller.item.menuroom.ItemLastThreeGuestsRoom;
 import com.danco.training.controller.item.menuroom.printlist.ItemPrintFreeRoomSortedByContent;
 import com.danco.training.controller.item.menuroom.printlist.ItemPrintFreeRoomSortedByPrice;
@@ -27,6 +31,12 @@ import com.danco.training.controller.item.menuroom.printlist.ItemPrintRoomSorted
 import com.danco.training.controller.item.menuroom.printlist.ItemPrintRoomSortedByPrice;
 import com.danco.training.controller.item.menuroom.printlist.ItemPrintRoomSortedByStars;
 import com.danco.training.controller.item.menuservice.ItemChangePriceService;
+import com.danco.training.controller.item.menuservice.ItemCreateAdditionalService;
+import com.danco.training.controller.item.menuservice.ItemCreateDailService;
+import com.danco.training.controller.item.menuservice.ItemExportAdditionalService;
+import com.danco.training.controller.item.menuservice.ItemExportDailService;
+import com.danco.training.controller.item.menuservice.ItemImportAdditionalService;
+import com.danco.training.controller.item.menuservice.ItemImportDailServiceList;
 import com.danco.training.controller.item.menuservice.printlist.ItemPrintAdditionalServiceThemPriceSortedByName;
 import com.danco.training.controller.item.menuservice.printlist.ItemPrintAdditionalServiceThemPriceSortedByPrice;
 import com.danco.training.controller.item.menuservice.printlist.ItemPrintDailServiceThemPriceSortedByName;
@@ -53,6 +63,7 @@ public class MenuBuilder {
 	public final String ITEM_AMOUNT_GUEST = "Show amount guest";
 	public final String ITEM_SUM_ORDER = "Get sum order guest";
 	public final String ITEM_IMPORT_LIST_GUEST ="Import list guest";
+	public final String ITEM_EXPORT_LIST_GUEST ="Export list guest";
 	public final String ITEM_BACK_IN_MAIN_MENU = "Back in main menu";
 
 	public final String TITLE_MENU_PRINT_GUEST = "  Menu for print list guest";
@@ -63,12 +74,15 @@ public class MenuBuilder {
 
 	public final String TITLE_MENU_ROOM = "Menu for work room";
 
+	public final String ITEM_CREATE_ROOM = "Create room ";
 	public final String ITEM_PRINT_LIST_ROOM = "Print list room ...";
 	public final String ITEM_AMOUNT_FREE_ROOM = "Show amount free room";
 	public final String ITEM_THREE_GUEST_ROOM = "Show the last three guests of room";
 	public final String ITEM_CHANGE_PRICE_ROOM = "Change price room";
 	public final String ITEM_CHANGE_STATUS_ROOM = "Change status room";
 	public final String ITEM_CLONE_ROOM = "Clone room";
+	public final String ITEM_IMPORT_LIST_ROOM = "Import list room";
+	public final String ITEM_EXPORT_LIST_ROOM = "Export list room";
 
 	public final String TITLE_MENU_PRINT_ROOM = "Menu for print list room";
 	public final String ITEM_PRINT_ROOM_SORTED_BY_CONTENT = "Print room sorted by content";
@@ -80,9 +94,15 @@ public class MenuBuilder {
 	public final String ITEM_BACK_IN_MENU_ROOM = "Back in menu room";
 
 	public final String TITLE_MENU_SERVICE = " Menu for work service";
-
+	
+	public final String ITEM_CREATE_DAIL_SERVICE = "Create dail service ";
+	public final String ITEM_CREATE_ADDITIONAL_SERVICE = "Create additional service ";
 	public final String ITEM_CHANGE_PRICE_SERVICE = "Change price service";
 	public final String ITEM_PRINT_LIST_SERVICE = "Print list service ...";
+	public final String ITEM_DAIL_SERVICE_IMPORT = "Dail service list import";
+	public final String ITEM_DAIL_SERVICE_EXPORT = "Dail service list export";
+	public final String ITEM_ADDITIONAL_SERVICE_IMPORT = "Additional service list import";
+	public final String ITEM_ADDITIONAL_SERVICE_EXPORT = "Additional service list export";
 
 	public final String TITLE_MENU_PRINT_SERVICE = "  Menu for print list service";
 	public final String ITEM_PRINT_DAIL_SERVICE_SORTED_BY_NAME = "Print dail service them price sorted by name";
@@ -127,6 +147,7 @@ public class MenuBuilder {
 		Item itemAmountGuest = new ItemAmountGuest(ITEM_AMOUNT_GUEST, admin);
 		Item itemGetSumOrder = new ItemGetSumOrderGuest(ITEM_SUM_ORDER, admin);
 		Item itemImportListGuest = new ItemImportGuestsList(ITEM_IMPORT_LIST_GUEST, admin);
+		Item itemExportListGuest = new ItemExportGuestsList(ITEM_EXPORT_LIST_GUEST, admin);
 		Item itemBackMainMenu = new Item(ITEM_BACK_IN_MAIN_MENU);
 
 		List<Item> itemsMenuGuest = new ArrayList<Item>();
@@ -138,6 +159,7 @@ public class MenuBuilder {
 		itemsMenuGuest.add(itemAmountGuest);
 		itemsMenuGuest.add(itemGetSumOrder);
 		itemsMenuGuest.add(itemImportListGuest);
+		itemsMenuGuest.add(itemExportListGuest);
 		itemsMenuGuest.add(itemBackMainMenu);
 
 		// == MENU GUEST ==
@@ -178,6 +200,7 @@ public class MenuBuilder {
 		// Room ==================================
 
 		// ITEMS MENU FOR WORK ROOM
+		Item itemCreateRoom = new ItemCreateRoom(ITEM_CREATE_ROOM, admin);
 		Item itemPrintListRoom = new Item(ITEM_PRINT_LIST_ROOM);
 		Item itemAmountFreeRoom = new ItemAmountFreeRoom(ITEM_AMOUNT_FREE_ROOM,
 				admin);
@@ -188,14 +211,19 @@ public class MenuBuilder {
 		Item itemChangeStatus = new ItemChangeStatusRoom(
 				ITEM_CHANGE_STATUS_ROOM, admin);
 		Item itemCloneRoom = new ItemForCloningRoom(ITEM_CLONE_ROOM, admin);
+		Item itemImportRoom = new ItemImportRoomList(ITEM_IMPORT_LIST_ROOM, admin);
+		Item itemExportRoom = new ItemExportRoomList(ITEM_EXPORT_LIST_ROOM, admin);
 
 		List<Item> itemsMenuRoom = new ArrayList<Item>();
+		itemsMenuRoom.add(itemCreateRoom);
 		itemsMenuRoom.add(itemPrintListRoom);
 		itemsMenuRoom.add(itemAmountFreeRoom);
 		itemsMenuRoom.add(itemLastThreeGuest);
 		itemsMenuRoom.add(itemChangePriceRoom);
 		itemsMenuRoom.add(itemChangeStatus);
 		itemsMenuRoom.add(itemCloneRoom);
+		itemsMenuRoom.add(itemImportRoom);
+		itemsMenuRoom.add(itemExportRoom);
 		itemsMenuRoom.add(itemBackMainMenu);
 
 		// == MENU ROOM ==
@@ -244,13 +272,26 @@ public class MenuBuilder {
 		// Service ============================
 
 		// ITEMS MENU FOR WOR SERVICE
+		Item itemCreateDailService = new ItemCreateDailService(ITEM_CREATE_DAIL_SERVICE, admin);
+		Item itemCeateAdditionalService = new ItemCreateAdditionalService(ITEM_CREATE_ADDITIONAL_SERVICE, admin);
 		Item itemChangePriceService = new ItemChangePriceService(
 				ITEM_CHANGE_PRICE_SERVICE, admin);
 		Item itemPrintListService = new Item(ITEM_PRINT_LIST_SERVICE);
+		Item itemImportDailServiceList = new ItemImportDailServiceList(ITEM_DAIL_SERVICE_IMPORT, admin);
+		Item itemExportDailServiceList = new ItemExportDailService(ITEM_DAIL_SERVICE_EXPORT, admin);
+		Item itemImportAdditionalServiceList = new ItemImportAdditionalService(ITEM_ADDITIONAL_SERVICE_IMPORT, admin);
+		Item itemExportAdditionalServiceList = new ItemExportAdditionalService(ITEM_ADDITIONAL_SERVICE_EXPORT, admin);
 
 		List<Item> itemsMenuService = new ArrayList<Item>();
+		itemsMenuService.add(itemCreateDailService);
+		itemsMenuService.add(itemCeateAdditionalService);
 		itemsMenuService.add(itemChangePriceService);
 		itemsMenuService.add(itemPrintListService);
+		itemsMenuService.add(itemImportDailServiceList);
+		itemsMenuService.add(itemExportDailServiceList);
+		itemsMenuService.add(itemImportAdditionalServiceList);
+		itemsMenuService.add(itemExportAdditionalServiceList);
+		
 		itemsMenuService.add(itemBackMainMenu);
 
 		// == MENU SERVICE ==

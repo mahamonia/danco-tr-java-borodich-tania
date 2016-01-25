@@ -1,8 +1,10 @@
 package com.danco.training.controller.item.menuroom;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.danco.training.controller.item.itemmenu.ItemOperating;
 import com.danco.training.controller.menu.Menu;
@@ -15,6 +17,8 @@ public class ItemChangeStatusRoom extends ItemOperating {
 	public final String MESSAGE_1 = "Id room";
 	public final String MESSAGE_2 = "status..";
 	public final String MESSAGE_3 = "You enter the wrong data";
+	private static final Logger LOGGER = LogManager
+			.getLogger(ItemChangeStatusRoom.class);
 
 	public ItemChangeStatusRoom(String name, ServiceAdmin admin) {
 		super(name, admin);
@@ -37,17 +41,8 @@ public class ItemChangeStatusRoom extends ItemOperating {
 			admin.changeRoomStatus(room, status);
 			admin.updateRoom(room);
 
-		} catch (IOException e) {
-			e.printStackTrace();
 		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (reader != null) {
-			}
-			try {
-				reader.close();
-			} catch (IOException e) {
-			}
+			LOGGER.error(e.getMessage());
 		}
 		return this.getMenu();
 	}
