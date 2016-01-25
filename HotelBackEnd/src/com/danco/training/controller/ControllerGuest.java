@@ -7,18 +7,20 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.danco.config.PropertyProgramm;
 import com.danco.training.comparator.Comparator;
 import com.danco.training.entity.*;
-import com.danco.training.utility.ParseUtilityCSV;
+import com.danco.training.utility.ParseUtilityCSVForGuest;
 
-public class ControllerGuest implements IPrintGuest {
+public class ControllerGuest implements IControllerGuest {
 
-	private static Logger logger = LogManager.getLogger(ControllerGuest.class);
+	private static final Logger LOGGER = LogManager.getLogger(ControllerGuest.class);
 
 	private List<Guest> guestsList;
 	private List<Order> orderList;
-	
-	private ParseUtilityCSV utility = ParseUtilityCSV.getInstance();
+
+	private ParseUtilityCSVForGuest utility = ParseUtilityCSVForGuest.getInstance();
+	private PropertyProgramm config = PropertyProgramm.getInstance();
 
 	public ControllerGuest(List<Guest> guestsList, List<Order> orderList) {
 		this.guestsList = guestsList;
@@ -26,31 +28,37 @@ public class ControllerGuest implements IPrintGuest {
 
 	}
 
+	@Override
 	public void createGuest(Guest guest) {
+		int idOrder = getIdForNewOrder();
+		Order order = new Order(idOrder, 0, guest);
+		guest.setOrder(order);
 		try {
-			guestsList.add(guest);
+			this.guestsList.add(guest);
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 		}
 	}
 
+	@Override
 	public void updateGuest(Guest guest) {
 		try {
 			int i = getIndexGuest(guest);
-			guestsList.set(i, guest);
+			this.guestsList.set(i, guest);
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 		}
 	}
 
+	@Override
 	public void deleteGuest(Guest guest) {
 		try {
 			int i = getIndexGuest(guest);
 			if (i != -1) {
-				guestsList.remove(i);
+				this.guestsList.remove(i);
 			}
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 		}
 
 	}
@@ -60,18 +68,19 @@ public class ControllerGuest implements IPrintGuest {
 		try {
 			indexGuest = getIndexGuestById(guest.getId());
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 		}
 		return indexGuest;
 	}
 
+	@Override
 	public int getIdForNewGuest() {
 		int newId = 0;
 
 		try {
-				newId = guestsList.size()+1;
+			newId = this.guestsList.size() + 1;
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 		}
 		return newId;
 
@@ -80,64 +89,83 @@ public class ControllerGuest implements IPrintGuest {
 	private int getIndexGuestById(int Id) {
 		try {
 			for (int i = 0; i < this.guestsList.size(); i++) {
-				if (guestsList.get(i) != null
-						&& guestsList.get(i).getId() == Id) {
+				if (this.guestsList.get(i).getId() == Id) {
 					return i;
 				}
 			}
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 		}
 
 		return -1;
 	}
 
+	@Override
 	public Guest getGuestById(int id) {
 		try {
 			for (int i = 0; i < this.guestsList.size(); i++) {
-				if (guestsList.get(i) != null
-						&& guestsList.get(i).getId() == id) {
-					return guestsList.get(i);
+				if (this.guestsList.get(i).getId() == id) {
+					return this.guestsList.get(i);
 				}
 			}
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 		}
 		return null;
 
 	}
 
+	@Override
 	public List<Guest> getListGuest() {
 
 		return this.guestsList;
-
+	}
+	@Override
+	public void setListGuest(List<Guest> guestsList) {
+		
+		this.guestsList = guestsList;
 	}
 	
+	@Override
 	public List<Order> getListOrder() {
-		return orderList;
-		
+
+		return this.orderList;
 	}
 
+
+	@Override
 	public int getIdForNewOrder() {
+		int newId = 0;
+
 		try {
-			for (int i = 0; i < orderList.size(); i++) {
-				if (orderList.get(i) == null) {
-					int newId = orderList.get(i - 1).getId() + 1;
-					return newId;
+			newId = this.orderList.size() + 1;
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+		return newId;
+	}
+	@Override
+	public Order getOrderById(int id) {
+		try {
+			for (int i = 0; i < this.orderList.size(); i++) {
+				if (this.orderList.get(i).getId() == id) {
+					return this.orderList.get(i);
 				}
 			}
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 		}
-		return -1;
+		return null;
+
 	}
+	
 
 	@Override
 	public List<Guest> printGuestsSortedByName(List<Guest> guestsList) {
 		try {
 			Collections.sort(guestsList, Comparator.GUEST_BY_NAME);
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 		}
 
 		return guestsList;
@@ -148,166 +176,128 @@ public class ControllerGuest implements IPrintGuest {
 		try {
 			Collections.sort(guestsList, Comparator.GUEST_BY_DATE);
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 		}
 		return guestsList;
 	}
 
+	@Override
 	public void addRoomForGuest(Guest guest, Room room) {
 
 		try {
-			// array later Guests
-			int[] laterGuestsRoom = room.getIdGuest();
-			// record Id new guest
-			for (int i = 0; i < laterGuestsRoom.length - 1; i++) {
-				laterGuestsRoom[i] = laterGuestsRoom[i + 1];
-				laterGuestsRoom[laterGuestsRoom.length - 1] = guest.getId();
-			}
-			room.setIdGuest(laterGuestsRoom);
+			List<Guest> guestList = room.getGuestList();
+			if (guestList.size() == config.getConfigHistoryRoom("amount")){
+				for (int i = 0; i < guestList.size(); i++) {
+					guestList.set(i, guestList.get(i+1));
+				}
+			}guestList.add(guest);
+			room.setGuestList(guestList);
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 		}
 
 	}
 
+	@Override
 	public void addServiceForGuest(Guest guest, Service service) {
 
 		try {
-			for (int i = 0; i < orderList.size(); i++) {
-				// find order of guest
-				if (guest.getId() == orderList.get(i).getIdGuest()) {
-					// get array id services
-					for (int j = 0; j < orderList.get(i).getIdServices().length - 1; j++) {
-						int[] arrayService = orderList.get(i).getIdServices();
-						// write id service in array
-						if (arrayService[j] == 0) {
-							arrayService[j] = service.getId();
-							orderList.get(i).setIdServices(arrayService);
-							break;
-						}
-					}
-				}
-			}
+			Order order = guest.getOrder();
+			List<Service> serviceList = order.getServiceList();
+			serviceList.add(service);
+			order.setServiceList(serviceList);
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 		}
 
 	}
 
+	@Override
 	public void addDateInSettle(Guest guest, String dateInSettle) {
 		try {
 			guest.setDateInSettle(dateInSettle);
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 		}
 
 	}
 
+	@Override
 	public void addDateOutSettle(Guest guest, String dateOutSettle) {
 		try {
 			guest.setDateOutSettle(dateOutSettle);
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 		}
-
 	}
 
-	public void createOrderForGuest(Guest guest) {
-		try {
-			if (orderList.size()==0){
-				Service service = new DailService(1, "Room", 2);
-				int []idService = {service.getId(),0,0};
-				Order order = new Order(1, guest.getId(),idService , 0);
-				orderList.add(order);
-				guest.setIdOrder(1);
-			}else
-			for (int i = 0; i < orderList.size(); i++) {
-				if (orderList.get(i).getIdGuest() == 0) {
-					guest.setIdOrder(orderList.get(i).getId());
-				}
-			}
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-		}
-
-	}
-
-	public int getAmountGuests(List<Guest> guestsList) {
-		int amountGuests = 0;
-		try {
-			for (int i = 0; i < guestsList.size(); i++) {
-				if (guestsList.get(i).getIdOrder() != 0) {
-					amountGuests++;
-				}
-
-			}
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-		}
-
-		return amountGuests;
-	}
-
+	@Override
 	public Room getRoomInLiveGuest(Guest guest, List<Room> roomsList) {
-		Room room;
 		try {
 			for (int i = 0; i < roomsList.size(); i++) {
-				int[] laterGuests = roomsList.get(i).getIdGuest();
-				if (laterGuests[laterGuests.length - 1] == guest.getId()) {
-					return room = roomsList.get(i);
-				}
-			}
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-		}
-		return null;
-	}
-
-	public List<Guest> printGuestsThemRoom(List<Guest> guestsList,
-			List<Room> roomsList) {
-
-		List<Guest> newGuestList = new ArrayList<Guest>();
-		try {
-			for (int i = 0; i < roomsList.size(); i++) {
-				int[] laterGuests = roomsList.get(i).getIdGuest();
-				// get array later Guests lived in room [i]
-
 				if (roomsList.get(i).getStatus() == Status.NOTFREE) {
+					List<Guest> guestList = roomsList.get(i).getGuestList();
+					for (int j = guestList.size(); j > 0; j--) {
+						if (guestList.get(j).equals(guest)) {
+							return roomsList.get(i);
 
-					for (int j = 0; j < guestsList.size() - 1; j++) {
-
-						// compare the last entry in room and Id guest[j]
-						if (laterGuests[laterGuests.length - 1] == guestsList
-								.get(j).getId()) {
-							newGuestList.add(guestsList.get(j));
-							// guestsList[j].getName()+ " live in " +
-							// roomsList[j].getNumber()+ " room"
 						}
 					}
 				}
+				break;
 			}
 		} catch (Exception e) {
-			logger.error(e.getMessage());
-		}
-		return newGuestList;
-	}
-
-	public int[] getGuestThemServices(Guest guest) {
-
-		try {
-			for (int i = 0; i < orderList.size(); i++) {
-				if (guest.getIdOrder() == orderList.get(i).getId()) {
-					return orderList.get(i).getIdServices();
-				}
-			}
-		} catch (Exception e) {
-			logger.error(e.getMessage());
+			LOGGER.error(e.getMessage());
 		}
 		return null;
 	}
-	
-	public void	importGuestsList(List<Guest> guestsList) {
-		utility.importDate(guestsList);
+
+	@Override
+	public List<Service> getGuestThemServices(Guest guest) {
+		List<Service> serviceList = new ArrayList<>();
+
+		try {
+			serviceList = guest.getOrder().getServiceList();
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+		return serviceList;
+	}
+
+	@Override
+	public int getSumOrderGuest(Guest guest) {
+		int sum = 0;
+		try {
+			return guest.getOrder().getSumPrice();
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+		return sum;
+
+	}
+
+	@Override
+	public int getAmountGuest() {
+
+		int amountGuest = 0;
+		try {
+			for (int i = 0; i < this.guestsList.size(); i++) {
+				amountGuest++;
+			}
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+		return amountGuest;
+
+	}
+
+	@Override
+	public List<Guest> importGuestsList() {		
+		return utility.importData();
+	}
+	@Override
+	public void exportGuestsList(List<Guest> guestsList) {
+		utility.exportData(guestsList);
 	}
 
 }

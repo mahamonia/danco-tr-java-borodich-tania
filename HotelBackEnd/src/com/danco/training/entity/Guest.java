@@ -13,16 +13,23 @@ public class Guest implements Serializable{
 	private String pasport;
 	private String dateInSettle;
 	private String dateOutSettle;
-	private int IdOrder;
 	private Order order;
 
-	public Guest(int Id, String name, String pasport, String dateInSettle, String dateOutSettle, int IdOrder) {
+	public Guest(int Id, String name, String pasport, String dateInSettle, String dateOutSettle) {
 		this.Id = Id;
 		this.name = name;
 		this.pasport = pasport;
 		this.dateInSettle = dateInSettle;
 		this.dateOutSettle = dateOutSettle;
-		this.setIdOrder(IdOrder);
+		this.order = null;
+	}
+
+	public int getId() {
+		return Id;
+	}
+
+	public void setId(int id) {
+		Id = id;
 	}
 
 	public String getName() {
@@ -41,18 +48,6 @@ public class Guest implements Serializable{
 		this.pasport = pasport;
 	}
 
-	public int getIdOrder() {
-		return IdOrder;
-	}
-
-	public void setIdOrder(int idOrder) {
-		IdOrder = idOrder;
-	}
-
-	public int getId() {
-		return Id;
-	}
-
 	public String getDateInSettle() {
 		return dateInSettle;
 	}
@@ -68,5 +63,15 @@ public class Guest implements Serializable{
 	public void setDateOutSettle(String dateOutSettle) {
 		this.dateOutSettle = dateOutSettle;
 	}
+
+	public Order getOrder() {
+		return order;
+	}
+
+	public void setOrder(Order order) {
+		this.order = order;
+	}
+
+
 	
 }

@@ -1,39 +1,49 @@
 package com.danco.training.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Order implements Serializable{
+import com.danco.training.entity.AdditionalService;
+
+public class Order implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 3299762870887211471L;
+
 	private int Id;
-	private int idGuest;
-	private int [] idServices;
-	private final int MAX_SERVICES;
 	private int sumPrice;
 	private Guest guest;
-	private DailService dailService;
-	private AdditionalService addService;
-	
-	public Order (int Id, int idGuest, int [] idServices, int sumPrice){
-		
-		MAX_SERVICES = idServices.length;
+	private List<Service> serviceList;
+
+	public Order(int Id, int sumPrice, Guest guest) {
+
 		this.Id = Id;
-		this.idGuest = idGuest;
-		this.idServices = idServices;
 		this.sumPrice = sumPrice;
+		this.guest = guest;
+		this.serviceList = new ArrayList<Service>();
 	}
 
-	public int[] getIdServices() {
-		return idServices;
+	public int getId() {
+		return Id;
 	}
 
-	public void setIdServices(int[] idServices) {
-		this.idServices = idServices;
+	public void setId(int id) {
+		Id = id;
 	}
 
 	public int getSumPrice() {
+		sumPrice = 0;
+
+		for (int i = 0; i < serviceList.size(); i++) {
+			sumPrice = +serviceList.get(i).getPrice();
+			if (serviceList.get(i).getId() >=5) { // begin additional services 
+				AdditionalService service = (AdditionalService) serviceList
+						.get(i);
+				sumPrice = +service.getAddPrice();
+			}
+		}
 		return sumPrice;
 	}
 
@@ -41,18 +51,20 @@ public class Order implements Serializable{
 		this.sumPrice = sumPrice;
 	}
 
-	public int getId() {
-		return Id;
+	public Guest getGuest() {
+		return guest;
 	}
 
-	public int getIdGuest() {
-		return idGuest;
+	public void setGuest(Guest guest) {
+		this.guest = guest;
 	}
 
-	public int getMAX_SERVICES() {
-		return MAX_SERVICES;
+	public List<Service> getServiceList() {
+		return serviceList;
 	}
 
-	
-	
+	public void setServiceList(List<Service> serviceList) {
+		this.serviceList = serviceList;
+	}
+
 }

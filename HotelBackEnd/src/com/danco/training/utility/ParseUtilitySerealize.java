@@ -7,23 +7,23 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.danco.config.PropertyProgramm;
 import com.danco.training.entity.AdditionalService;
 import com.danco.training.entity.DailService;
 import com.danco.training.entity.Guest;
 import com.danco.training.entity.Order;
 import com.danco.training.entity.Room;
-import com.danco.training.entity.Service;
-import com.danco.training.entity.Status;
-import com.danco.training.services.ServiceAdmin;
 
 public class ParseUtilitySerealize {
 	
 	private static ParseUtilitySerealize utility;
 	
 	private PropertyProgramm config = PropertyProgramm.getInstance();
-	
 	private final String SERIALIZED_DATA = config.getConfigFile("file");
+	private static final Logger LOGGER = LogManager.getLogger(ParseUtilitySerealize.class);
 	
 	private ParseUtilitySerealize() {
 
@@ -39,7 +39,7 @@ public class ParseUtilitySerealize {
 
 	private List<List> getListEntity(List<Guest> guestList,
 			List<Room> roomList, List<Order> orderList,
-			List<Service> dailList, List<AdditionalService> addServiceList) {
+			List<DailService> dailList, List<AdditionalService> addServiceList) {
 
 		List<List> entitiesList = new ArrayList<>();
 		entitiesList.add(guestList);
@@ -52,7 +52,7 @@ public class ParseUtilitySerealize {
 
 	public void setSerializeData(List<Guest> guestList,
 			List<Room> roomList, List<Order> orderList,
-			List<Service> dailList, List<AdditionalService> addServiceList) {
+			List<DailService> dailList, List<AdditionalService> addServiceList) {
 
 		List<List> entitiesList = getListEntity(guestList, roomList, orderList,
 				dailList, addServiceList);
@@ -65,7 +65,7 @@ public class ParseUtilitySerealize {
 			out.close();
 			fos.close();
 		} catch (Exception e) {
-
+			LOGGER.error(e.getMessage());
 		}
 
 	}
@@ -82,6 +82,7 @@ public class ParseUtilitySerealize {
 			in.close();
 			fis.close();
 		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
 		}
 		return entitiesList;
 	}
@@ -99,25 +100,11 @@ public class ParseUtilitySerealize {
 	public List<Room> getRoomsList() {
 		
 		List<Room> roomsList;
-		if ((getSerializeData().size()!=0)&&(getSerializeData().get(1).size()!=0)){
+		if(getSerializeData().size()!=0){
 			roomsList = getSerializeData().get(1);
 
-		}else {roomsList = new ArrayList<Room>();
+		}else roomsList = new ArrayList<Room>();
 		
-		int amt = config.getConfigHistoryRoom("amount");	
-		int [] idGuest = new int [amt];
-		
-		Room room1 = new Room(1, 2, Status.FREE, 3, 10, idGuest);
-		Room room2 = new Room(2, 2, Status.FREE, 2, 10, idGuest);
-		Room room3 = new Room(3, 3, Status.FREE, 3, 12, idGuest);
-		Room room4 = new Room(4, 3, Status.FREE, 2, 5, idGuest);
-		Room room5 = new Room(5, 2, Status.FREE, 3, 12, idGuest);
-		roomsList.add(room1);
-		roomsList.add(room2);
-		roomsList.add(room3);
-		roomsList.add(room4);
-		roomsList.add(room5);
-		}		
 		return roomsList;
 	}
 	
@@ -130,36 +117,22 @@ public class ParseUtilitySerealize {
 		return ordersList;	
 	}
 	
-	public List<Service> getDailServiceList() {
+	public List<DailService> getDailServiceList() {
 		
-		List<Service> dailServiceList;
-		if ((getSerializeData().size() !=0)&&(getSerializeData().get(3).size()!=0)){
+		List<DailService> dailServiceList;
+		if (getSerializeData().size() !=0){
 			dailServiceList= getSerializeData().get(3);
-		} else {dailServiceList = new ArrayList<Service>();
-		DailService service1 = new DailService(1, "Room", 2);
-		DailService service2 = new DailService(2, "Breakfast", 3);
-		DailService service3 = new DailService(3, "Dinner", 4);
-		DailService service4 = new DailService(4, "Suppe", 6);
-		dailServiceList.add(service1);
-		dailServiceList.add(service2);
-		dailServiceList.add(service3);
-		dailServiceList.add(service4);
-		}
+		} else dailServiceList = new ArrayList<DailService>();
+		
 		return dailServiceList;	
 	}
 	
 	public List<AdditionalService> getAdditionalServiceList() {
 		
 		List<AdditionalService> additionalServicesList;
-		if ((getSerializeData().size()!=0 )&&(getSerializeData().get(4).size()!=0)){
+		if (getSerializeData().size()!=0 ){
 			additionalServicesList= getSerializeData().get(4);
-		}else {additionalServicesList = new ArrayList<AdditionalService>();
-		AdditionalService service1 = new AdditionalService(5, "animals", 3, "walk the dog", 2);
-		AdditionalService service2 = new AdditionalService(6, "animals", 3, "feed the dog", 5);
-		additionalServicesList.add(service1);
-		additionalServicesList.add(service2);
-		
-		}
+		}else additionalServicesList = new ArrayList<AdditionalService>();
 		return additionalServicesList;
 	}
 

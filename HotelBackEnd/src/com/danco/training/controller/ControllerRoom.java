@@ -11,40 +11,51 @@ import com.danco.training.comparator.Comparator;
 import com.danco.training.entity.Guest;
 import com.danco.training.entity.Room;
 import com.danco.training.entity.Status;
+import com.danco.training.utility.ParseUtilityCSVForRoom;
 
-public class ControllerRoom implements IPrintRoom {
+public class ControllerRoom implements IControllerRoom {
 
 	private static Logger logger = LogManager.getLogger(ControllerRoom.class);
 
 	private List<Room> roomsList;
+	
+	private ParseUtilityCSVForRoom utility = ParseUtilityCSVForRoom.getInstance();
 
 	public ControllerRoom(List<Room> roomsList) {
 		this.roomsList = roomsList;
 	}
 
+	@Override
 	public void createRoom(Room room) {
 		try {
-			
-			roomsList.add(room);
+			this.roomsList.add(room);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
 	}
+	
+	@Override
+	public int getNumberForNewRoom() {
+		return this.roomsList.size() + 1;
 
+	}
+
+	@Override
 	public void updateRoom(Room room) {
 		try {
 			int i = getIndexRoom(room);
-			roomsList.set(i, room);
+			this.roomsList.set(i, room);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
 	}
 
+	@Override
 	public void deleteRoom(Room room) {
 		try {
 			int i = getIndexRoom(room);
 			if (i != -1) {
-				roomsList.remove(i);
+				this.roomsList.remove(i);
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -64,9 +75,8 @@ public class ControllerRoom implements IPrintRoom {
 
 	private int getIndexRoomByNumber(int number) {
 		try {
-			for (int i = 0; i < this.roomsList.size() - 1; i++) {
-				if (roomsList.get(i) != null
-						&& roomsList.get(i).getNumber() == number) {
+			for (int i = 0; i < this.roomsList.size(); i++) {
+				if (this.roomsList.get(i).getNumber() == number) {
 					return i;
 				}
 			}
@@ -76,12 +86,12 @@ public class ControllerRoom implements IPrintRoom {
 		return -1;
 	}
 
+	@Override
 	public Room getRoomByNumber(int number) {
 		try {
-			for (int i = 0; i < this.roomsList.size() - 1; i++) {
-				if (roomsList.get(i) != null
-						&& roomsList.get(i).getNumber() == number) {
-					return roomsList.get(i);
+			for (int i = 0; i < this.roomsList.size(); i++) {
+				if (this.roomsList.get(i).getNumber() == number) {
+					return this.roomsList.get(i);
 				}
 			}
 		} catch (Exception e) {
@@ -90,9 +100,25 @@ public class ControllerRoom implements IPrintRoom {
 		return null;
 	}
 
+	@Override
 	public List<Room> getListRoom() {
 
 		return roomsList;
+	}
+	@Override
+	public void setListRoom(List<Room> roomsList) {
+		this.roomsList = roomsList;
+	}
+	@Override
+	public List<Guest> getListGuestRoom(Room room) {
+		
+		try {
+			return room.getGuestList();
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}		
+		return null;
+		
 	}
 
 	@Override
@@ -139,29 +165,29 @@ public class ControllerRoom implements IPrintRoom {
 	}
 
 	@Override
-	public List<Room> printRoomFree(List<Room> roomsList) {
+	public List<Room> getRoomListFree() {
 
-		List<Room> newRoomList = new ArrayList<Room>();
+		List<Room> roomFreeList = new ArrayList<Room>();
 
 		try {
-			for (int i = 0; i < roomsList.size(); i++) {
-				if (roomsList.get(i).getStatus() == Status.FREE) {
-					newRoomList.add(roomsList.get(i));
+			for (int i = 0; i < this.roomsList.size(); i++) {
+				if (this.roomsList.get(i).getStatus() == Status.FREE) {
+					roomFreeList.add(this.roomsList.get(i));
 				}
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
-		return newRoomList;
+		return roomFreeList;
 	}
 
 	@Override
-	public int printAmountRoomFree(List<Room> roomsList) {
+	public int printAmountRoomFree() {
 		int amountFree = 0;
 
 		try {
-			for (int i = 0; i < roomsList.size(); i++) {
-				if (roomsList.get(i).getStatus() == Status.FREE) {
+			for (int i = 0; i < this.roomsList.size(); i++) {
+				if (this.roomsList.get(i).getStatus() == Status.FREE) {
 					amountFree++;
 				}
 			}
@@ -172,21 +198,15 @@ public class ControllerRoom implements IPrintRoom {
 	}
 
 	@Override
-	public List<Guest> printRoomThemGuestsAndDateInSettle(Room room,
-			List<Guest> guestsList) {
+	public List<Guest> printRoomThemGuests(Room room, List<Guest> guestsList) {
 
-		int[] idGuest = room.getIdGuest();
 		List<Guest> newGuestList = new ArrayList<>();
 
 		try {
-			for (int i = 0; i < guestsList.size(); i++) {
-				for (int j = 0; j < idGuest.length; j++) {
-					if ((guestsList.get(i).getId() == idGuest[j])
-							&& (room.getStatus() == Status.NOTFREE)) {
-						newGuestList.add(guestsList.get(i));
 
-					}
-				}
+			List<Guest> guestList = room.getGuestList();
+			for (int i = guestList.size(); i > guestList.size() - 3; i--) {
+				newGuestList.add(guestList.get(i));
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -194,15 +214,16 @@ public class ControllerRoom implements IPrintRoom {
 		return newGuestList;
 	}
 
+	@Override
 	public void changeRoomStatus(Room room, Status status) {
 		try {
 			room.setStatus(status);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
-
 	}
 
+	@Override
 	public void changeRoomPrice(Room room, int price) {
 
 		try {
@@ -211,7 +232,8 @@ public class ControllerRoom implements IPrintRoom {
 			logger.error(e.getMessage());
 		}
 	}
-	
+
+	@Override
 	public Room cloneRoom(Room room) {
 		Room clon = room;
 		try {
@@ -220,18 +242,19 @@ public class ControllerRoom implements IPrintRoom {
 			clon.setNumber(number);
 		} catch (CloneNotSupportedException e) {
 			logger.error(e.getMessage());
-		}		
-		return clon;		
-	}
-	
-	private int getNumberForNewRoom() {
-
-		for (int i = 0; i < roomsList.size(); i++) {
-			if (roomsList.get(i) == null) {
-				return i+1;
-			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
-		return -1;
+		return clon;
+	}
+	@Override
+	public List<Room> importRoomsList() {
+		
+		return utility.importData();
+	}
+	@Override
+	public void exportRoomsList(List<Room> roomsList) {
+		utility.exportData(roomsList);
 	}
 
 }

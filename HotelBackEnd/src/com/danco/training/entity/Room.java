@@ -1,6 +1,8 @@
 package com.danco.training.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Room  implements Cloneable, Serializable{
 	/**
@@ -12,19 +14,17 @@ public class Room  implements Cloneable, Serializable{
 	private Status status;
 	private int stars;
 	private int price;
-	private int [] IdGuest;
-	private final int MAX_ID_GUEST;
-	private Guest guest;
+	private List<Guest> guestList;
 
-	public Room(int number, int content, Status status, int stars, int price, int [] IdGuest
-			) {
-		MAX_ID_GUEST =  IdGuest.length;
+	public Room(int number, int content, Status status, int stars, int price) {
+		
 		this.number = number;
 		this.content = content;
 		this.status = status;
 		this.stars = stars;
 		this.price = price;
-		this.setIdGuest(IdGuest);
+		this.guestList = new ArrayList<Guest>();
+
 		
 	}
 
@@ -68,18 +68,13 @@ public class Room  implements Cloneable, Serializable{
 		this.price = price;
 	}
 
-	public int [] getIdGuest() {
-		return IdGuest;
+	public List<Guest> getGuestList() {
+		return guestList;
 	}
 
-	public void setIdGuest(int [] idGuest) {
-		IdGuest = idGuest;
+	public void setGuestList(List<Guest> guestList) {
+		this.guestList = guestList;
 	}
-
-	public int getMAX_ID_GUEST() {
-		return MAX_ID_GUEST;
-	}
-	@Override
 	public Room clone() throws CloneNotSupportedException {
         return (Room)super.clone();
   }

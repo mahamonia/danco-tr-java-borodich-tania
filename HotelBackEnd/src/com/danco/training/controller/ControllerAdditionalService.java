@@ -9,39 +9,55 @@ import org.apache.logging.log4j.Logger;
 
 import com.danco.training.comparator.Comparator;
 import com.danco.training.entity.AdditionalService;
-import com.danco.training.entity.Service;
+import com.danco.training.utility.ParseUtilityCSVForAdditionalService;
 
-public class ControllerAdditionalService {
+public class ControllerAdditionalService implements
+		IControllerAdditionalService {
 
 	private static Logger logger = LogManager
 			.getLogger(ControllerAdditionalService.class);
 
 	private List<AdditionalService> servicesList;
+	private ParseUtilityCSVForAdditionalService utility = ParseUtilityCSVForAdditionalService.getInstance();
 
 	public ControllerAdditionalService(List<AdditionalService> servicesList) {
 		this.servicesList = servicesList;
 
 	}
 
+	@Override
 	public void createService(AdditionalService service) {
 		try {
-			servicesList.add(service);
+			this.servicesList.add(service);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
 	}
+	@Override
+	public int getIdForNewService() {
+		int newId = 0;
 
+		try {
+			newId = this.servicesList.size() + 1;
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+		return newId;
+	}
+
+	@Override
 	public void updateService(AdditionalService service) {
 		try {
 			int i = getIndexService(service);
-			servicesList.set(i, service);
+			this.servicesList.set(i, service);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
 
 	}
 
-	public void deleteService(Service service) {
+	@Override
+	public void deleteService(AdditionalService service) {
 		try {
 			int i = getIndexService(service);
 			if (i != -1) {
@@ -53,7 +69,7 @@ public class ControllerAdditionalService {
 		}
 	}
 
-	private int getIndexService(Service service) {
+	private int getIndexService(AdditionalService service) {
 		int indexService = 0;
 		try {
 			indexService = getIndexServiceById(service.getId());
@@ -68,8 +84,7 @@ public class ControllerAdditionalService {
 	private int getIndexServiceById(int Id) {
 		try {
 			for (int i = 0; i < this.servicesList.size(); i++) {
-				if (servicesList.get(i) != null
-						&& servicesList.get(i).getId() == Id) {
+				if (this.servicesList.get(i).getId() == Id) {
 					return i;
 				}
 			}
@@ -80,11 +95,12 @@ public class ControllerAdditionalService {
 		return -1;
 	}
 
-	public Service getService(int Id) {
+	@Override
+	public AdditionalService getService(int Id) {
 		try {
-			for (int i = 0; i < servicesList.size(); i++) {
-				if (servicesList.get(i).getId() == Id) {
-					return servicesList.get(i);
+			for (int i = 0; i < this.servicesList.size(); i++) {
+				if (this.servicesList.get(i).getId() == Id) {
+					return this.servicesList.get(i);
 				}
 			}
 
@@ -95,12 +111,20 @@ public class ControllerAdditionalService {
 
 	}
 
-	public List<AdditionalService> getListAddService() {
+	@Override
+	public List<AdditionalService> getListAdditionalService() {
 
 		return this.servicesList;
 
 	}
+	
+	@Override
+public void setListAdditionalService(List<AdditionalService> servicesList) {
+		
+		this.servicesList = servicesList;
+	}
 
+	@Override
 	public List<AdditionalService> printServicesSortedByPrice(
 			List<AdditionalService> servicesList) {
 		try {
@@ -111,6 +135,7 @@ public class ControllerAdditionalService {
 		return servicesList;
 	}
 
+	@Override
 	public List<AdditionalService> printServicesSortedByName(
 			List<AdditionalService> servicesList) {
 
@@ -122,58 +147,48 @@ public class ControllerAdditionalService {
 		return servicesList;
 	}
 
-	public List<AdditionalService> printServicesThemPriceById(int[] IdService) {
-
-		List<AdditionalService> newServiceList = new ArrayList<AdditionalService>();
-
-		try {
-			for (int i = 0; i < servicesList.size(); i++) {
-				for (int j = 0; j < IdService.length - 1; j++) {
-					if (servicesList.get(i).getId() == IdService[j]) {
-						newServiceList.add((AdditionalService) servicesList
-								.get(i));
-					}
-				}
-			}
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-		}
-		return newServiceList;
-	}
-
-	public int getServicesSumPriceById(int[] IdService) {
+	@Override
+	public int getServicesSumPrice(List<AdditionalService> servicesList) {
 
 		List<AdditionalService> addServicesList = new ArrayList<AdditionalService>();
-		for (Service servicesList : servicesList) {
-			addServicesList.add((AdditionalService) servicesList);
-		}
 
 		int sum = 0;
 		try {
-
 			for (int i = 0; i < addServicesList.size(); i++) {
-				for (int j = 0; j < IdService.length - 1; j++) {
-					if (addServicesList.get(i).getId() == IdService[j]) {
-						sum += addServicesList.get(i).getPrice()
-								+ addServicesList.get(i).getAddPrice();
-					}
-				}
+				sum += addServicesList.get(i).getPrice()
+						+ addServicesList.get(i).getAddPrice();
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
-
 		return sum;
 	}
 
-	public void changePrice(Service service, int price) {
+	@Override
+	public void changePrice(AdditionalService service, int price) {
 
 		try {
 			service.setPrice(price);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
+	}
 
+	@Override
+	public void changeAdditionalPrice(AdditionalService service, int price) {
+		try {
+			service.setAddPrice(price);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+	}
+	@Override
+	public List<AdditionalService> importServicesList() {
+		return utility.importData();
+	}
+	@Override
+	public void exportServicesList(List<AdditionalService> servicesList) {
+		utility.exportData(servicesList);
 	}
 
 }

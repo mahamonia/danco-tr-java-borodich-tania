@@ -1,6 +1,5 @@
 package com.danco.training.controller;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -9,50 +8,66 @@ import org.apache.logging.log4j.Logger;
 
 import com.danco.training.comparator.Comparator;
 import com.danco.training.entity.DailService;
-import com.danco.training.entity.Service;
+import com.danco.training.utility.ParseUtilityCSVForDailService;
 
-public class ControllerDailService {
+public class ControllerDailService implements IControllerDailService {
 
 	private static Logger logger = LogManager
 			.getLogger(ControllerDailService.class);
 
-	private List<Service> servicesList;
+	private List<DailService> servicesList;
+	private ParseUtilityCSVForDailService utility = ParseUtilityCSVForDailService.getInstance();
 
-	public ControllerDailService(List<Service> servicesList) {
+	public ControllerDailService(List<DailService> servicesList) {
 
 		this.servicesList = servicesList;
 
 	}
 
-	public void createService(Service service) {
+	@Override
+	public void createService(DailService service) {
 		try {
-			servicesList.add(service);
+			this.servicesList.add(service);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
 	}
+	@Override
+	public int getIdForNewService() {
+		int newId = 0;
 
-	public void updateService(Service service) {
+		try {
+			newId = this.servicesList.size() + 1;
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+		return newId;
+
+	}
+
+	@Override
+	public void updateService(DailService service) {
 		try {
 			int i = getIndexService(service);
-			servicesList.set(i, service);
+			this.servicesList.set(i, service);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
 	}
 
-	public void deleteService(Service service) {
+	@Override
+	public void deleteService(DailService service) {
 		try {
 			int i = getIndexService(service);
 			if (i != -1) {
-				servicesList.remove(i);
+				this.servicesList.remove(i);
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
 	}
 
-	private int getIndexService(Service service) {
+	private int getIndexService(DailService service) {
 		int indexService = 0;
 		try {
 			indexService = getIndexServiceById(service.getId());
@@ -66,8 +81,8 @@ public class ControllerDailService {
 	private int getIndexServiceById(int Id) {
 		try {
 			for (int i = 0; i < this.servicesList.size(); i++) {
-				if (servicesList.get(i) != null
-						&& servicesList.get(i).getId() == Id) {
+				if (this.servicesList.get(i) != null
+						&& this.servicesList.get(i).getId() == Id) {
 					return i;
 				}
 			}
@@ -77,11 +92,12 @@ public class ControllerDailService {
 		return -1;
 	}
 
-	public Service getService(int Id) {
+	@Override
+	public DailService getService(int Id) {
 		try {
-			for (int i = 0; i < servicesList.size(); i++) {
-				if (servicesList.get(i).getId() == Id) {
-					return servicesList.get(i);
+			for (int i = 0; i < this.servicesList.size(); i++) {
+				if (this.servicesList.get(i).getId() == Id) {
+					return this.servicesList.get(i);
 				}
 			}
 		} catch (Exception e) {
@@ -90,13 +106,19 @@ public class ControllerDailService {
 		return null;
 	}
 
-	public List<Service> getListDailService() {
-
+	@Override
+	public List<DailService> getListDailService() {
 		return this.servicesList;
 
 	}
+	@Override
+public void setListDailService(List<DailService> servicesList) {
+		
+		this.servicesList = servicesList;
+	}
 
-	public List<Service> printServicesSortedByPrice(List<Service> servicesList) {
+	@Override
+	public List<DailService> printServicesSortedByPrice(List<DailService> servicesList) {
 		try {
 			Collections.sort(servicesList, Comparator.SERVICE_BY_PRICE);
 		} catch (Exception e) {
@@ -105,7 +127,8 @@ public class ControllerDailService {
 		return servicesList;
 	}
 
-	public List<Service> printServicesSortedByName(List<Service> servicesList) {
+	@Override
+	public List<DailService> printServicesSortedByName(List<DailService> servicesList) {
 		try {
 			Collections.sort(servicesList, Comparator.SERVICE_BY_NAME);
 		} catch (Exception e) {
@@ -115,49 +138,34 @@ public class ControllerDailService {
 
 	}
 
-	public List<DailService> printServicesThemPriceById(int[] IdService) { // uses
-																			// for
-																			// guest
-
-		List<DailService> newServiceList = new ArrayList<DailService>();
-
-		try {
-			for (int i = 0; i < servicesList.size(); i++) {
-				for (int j = 0; j < IdService.length - 1; j++) {
-					if (servicesList.get(i).getId() == IdService[j]) {
-						newServiceList.add((DailService) servicesList.get(i));
-					}
-				}
-			}
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-		}
-		return newServiceList;
-	}
-
-	public int getServicesSumPriceById(int[] IdService) {
+	@Override
+	public int getServicesSumPrice(List<DailService> serviceList) {
 
 		int sum = 0;
 		try {
-			for (int i = 0; i < servicesList.size(); i++) {
-				for (int j = 0; j < IdService.length; j++) {
-					if (servicesList.get(i).getId() == IdService[j]) {
-						sum += servicesList.get(i).getPrice();
-					}
-				}
+			for (int i = 0; i < serviceList.size(); i++) {
+				sum += serviceList.get(i).getPrice();
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
-			;
 		}
 		return sum;
 	}
 
-	public void changePrice(Service service, int price) {
+	@Override
+	public void changePrice(DailService service, int price) {
 		try {
 			service.setPrice(price);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
+	}
+	@Override
+	public List<DailService> importServicesList() {
+		return utility.importData();
+	}
+	@Override
+	public void exportServicesList(List<DailService> servicesList) {
+		utility.exportData(servicesList);
 	}
 }

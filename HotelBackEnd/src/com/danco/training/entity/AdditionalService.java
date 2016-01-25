@@ -11,10 +11,11 @@ public class AdditionalService extends Service implements Serializable{
 	private String description;
 	private int addPrice;
 
-	public AdditionalService(int Id, String name, int price, String description, int addPrice) {
+	public AdditionalService(int Id, String name, int price, String description, int addPrice ) {
 		super(Id, name, price);
 		this.description = description;
-		this.addPrice = addPrice;
+		this.setAddPrice(addPrice);
+
 
 	}
 
