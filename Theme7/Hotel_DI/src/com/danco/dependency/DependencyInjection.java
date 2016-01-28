@@ -4,10 +4,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 
 import com.danco.annotation.Injection;
-import com.danco.annotation.ProcessorAnnotation;
-import com.danco.api.IServiceAdmin;
-import com.danco.config.PropertyProgramm;
-import com.danco.training.services.ServiceAdmin;
 
 public class DependencyInjection {
 	
@@ -44,19 +40,19 @@ public class DependencyInjection {
 				
 				switch (typeField.toString()) {
 				case TYPE_BACKEND:
-					field.set(objectClass.newInstance(), ServiceAdmin.class.newInstance());
+					Class classBackEnd = Class.forName("SreviceAdmin");
+					field.set(objectClass.newInstance(), classBackEnd.newInstance());
 					break;
 				case TYPE_CONFIG:
-					field.set(objectClass.newInstance(), PropertyProgramm.class.newInstance());
+					Class classConfig = Class.forName("PropertyProgramm");
+					field.set(objectClass.newInstance(), classConfig.newInstance());
 					break;
 				case TYPE_ANNOTATION:
-					field.set(objectClass.newInstance(), ProcessorAnnotation.class.newInstance());
+					Class classAnnotation = Class.forName("ProcessorAnnotation");
+					field.set(objectClass.newInstance(), classAnnotation.newInstance());
 					break;
-
 //				case :
-
 //					break;
-
 				default:
 					break;
 				}
@@ -64,8 +60,7 @@ public class DependencyInjection {
 		}
 		} catch (Exception e) {
 			e.getMessage();
-		}
-		
+		}		
 	}
 
 }
