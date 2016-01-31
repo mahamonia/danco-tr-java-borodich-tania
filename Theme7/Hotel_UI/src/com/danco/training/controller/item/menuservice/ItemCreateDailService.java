@@ -10,7 +10,7 @@ import com.danco.training.controller.item.itemmenu.ItemOperating;
 import com.danco.training.controller.menu.Menu;
 import com.danco.training.entity.DailService;
 import com.danco.training.entity.Service;
-import com.danco.training.services.IServiceAdmin;
+import com.danco.api.IServiceAdmin;
 
 public class ItemCreateDailService extends ItemOperating{
 	private final String MESSAGE_1 = "Name...";

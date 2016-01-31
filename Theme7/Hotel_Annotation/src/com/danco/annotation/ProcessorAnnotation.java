@@ -1,34 +1,30 @@
 package com.danco.annotation;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.danco.api.IProcessorAnnotation;
-import com.danco.api.IPropertyProgramm;
+import com.danco.config.ProcessorProperty;
 
 public class ProcessorAnnotation implements IProcessorAnnotation {
 
-	private static ProcessorAnnotation annotation;
+	//private static ProcessorAnnotation annotation;
 
 	private static final String TYPE_INTEGER = "int";
 	private static final String TYPE_BOOLEAN = "boolean";
 	private static final String TYPE_STRING = "String";
+	
+	private static final Logger LOGGER = LogManager
+			.getLogger(ProcessorAnnotation.class);
 
-	//@Injection
-	//private IPropertyProgramm config;
-
-	private ProcessorAnnotation() {
-
+	public ProcessorAnnotation() {
 	}
 
-	public static ProcessorAnnotation getInstance() {
-		if (annotation == null) {
-			annotation = new ProcessorAnnotation();
-		}
-		return annotation;
-
-	}
-
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void processAnnotation(Object object) {
 		Class classObject = object.getClass();
@@ -36,6 +32,7 @@ public class ProcessorAnnotation implements IProcessorAnnotation {
 			Field[] fields = classObject.getDeclaredFields();
 
 			for (Field field : fields) {
+				int modifier = field.getModifiers();
 				field.setAccessible(true);// allow access
 
 				// if field contains annotation then working with him
@@ -46,21 +43,17 @@ public class ProcessorAnnotation implements IProcessorAnnotation {
 
 					// get file for PropertyProgramm
 					String nameFile = annotation.configName();
-					// !!!!!!!!!!!!!!!!!!!!!!!!!
-					PropertyProgramm config = PropertyProgramm
-							.getInstance(nameFile);
+					ProcessorProperty config = new ProcessorProperty(nameFile);
 
 					// get propertyName from annotation
 					String propertyName = annotation.propertyName();
 
-					if (propertyName == null || propertyName.equals("")) {
+					if (propertyName == null || propertyName.isEmpty()) {
 						propertyName = object.getClass().getSimpleName() + "."
 								+ field.getName();
 					}
 
 					String value = config.getConfig(propertyName);
-					String type = annotation.type();
-
 					Type typeField = field.getType();
 
 					// change value
@@ -78,10 +71,13 @@ public class ProcessorAnnotation implements IProcessorAnnotation {
 						processAnnotation(field);
 						break;
 					}
+				}	
+				if (Modifier.isPrivate(modifier)){
+					field.setAccessible(false);
 				}
 			}
 		} catch (Exception e) {
-			e.getMessage();
+			LOGGER.error(e.getMessage());
 		}
 	}
 }

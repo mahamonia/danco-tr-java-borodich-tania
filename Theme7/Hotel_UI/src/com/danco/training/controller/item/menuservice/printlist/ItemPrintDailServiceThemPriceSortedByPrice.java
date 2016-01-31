@@ -5,10 +5,11 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.danco.api.IServiceAdmin;
 import com.danco.training.controller.item.itemmenu.ItemOperating;
 import com.danco.training.controller.menu.Menu;
 import com.danco.training.entity.DailService;
-import com.danco.training.services.IServiceAdmin;
+
 
 public class ItemPrintDailServiceThemPriceSortedByPrice extends ItemOperating {
 	public final String MESSAGE_1 = "List dail service";

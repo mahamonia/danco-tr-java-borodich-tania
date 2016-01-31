@@ -5,7 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.danco.training.controller.item.itemmenu.ItemOperating;
 import com.danco.training.controller.menu.Menu;
-import com.danco.training.services.IServiceAdmin;
+import com.danco.api.IServiceAdmin;
 
 public class ItemAmountFreeRoom extends ItemOperating{
 	public final String MESSAGE = "Amount free room = ";

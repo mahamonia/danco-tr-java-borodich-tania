@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import com.danco.annotation.Injection;
 import com.danco.api.IServiceAdmin;
 import com.danco.api.IWorkingMenu;
+import com.danco.dependency.DependencyInjection;
 import com.danco.training.controller.item.itemmenu.Item;
 import com.danco.training.controller.menu.Menu;
 
@@ -26,13 +27,13 @@ public class WorkingMenu implements IWorkingMenu {
 			.getLogger(WorkingMenu.class);
 
 	public WorkingMenu() {
-
 	}
 
 	@Override
 	public void workMenu() {
-
+		DependencyInjection.getInstance().getDI(admin);
 		admin.initData();
+		
 		MenuBuilder builder = new MenuBuilder(admin);
 		mainMenu = builder.buildMenu();
 

@@ -1,66 +1,77 @@
 package com.danco.dependency;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Type;
+import java.lang.reflect.Modifier;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.danco.annotation.Injection;
+import com.danco.config.ProcessorProperty;
 
 public class DependencyInjection {
-	
+
 	private static DependencyInjection container;
-	
-	private static final String TYPE_BACKEND = "IServiceAdmin";
-	private static final String TYPE_CONFIG = "IPropertyProgramm";
-	private static final String TYPE_ANNOTATION = "IProcessorAnnotation";
-	
-	
-	private DependencyInjection (){	
-	}
-	
-	public static DependencyInjection getInstance(){
-		
-		if (container == null){
-			container = new DependencyInjection();
-		}		
-		return container;
-	}
-	
-	public void getDI(Class objectClass) {
-		
-		try {		
-		//Class cl = object.getClass();
-		
-		Field [] fields = objectClass.getDeclaredFields();
-		
-		for (Field field : fields) {
-			field.setAccessible(true);
-			
-			if (field.isAnnotationPresent(Injection.class)){
-				Type typeField = field.getType();
-				
-				switch (typeField.toString()) {
-				case TYPE_BACKEND:
-					Class classBackEnd = Class.forName("SreviceAdmin");
-					field.set(objectClass.newInstance(), classBackEnd.newInstance());
-					break;
-				case TYPE_CONFIG:
-					Class classConfig = Class.forName("PropertyProgramm");
-					field.set(objectClass.newInstance(), classConfig.newInstance());
-					break;
-				case TYPE_ANNOTATION:
-					Class classAnnotation = Class.forName("ProcessorAnnotation");
-					field.set(objectClass.newInstance(), classAnnotation.newInstance());
-					break;
-//				case :
-//					break;
-				default:
-					break;
-				}
-			}
-		}
-		} catch (Exception e) {
-			e.getMessage();
-		}		
+
+	private static final Logger LOGGER = LogManager
+			.getLogger(DependencyInjection.class);
+
+	private static final String FILE = "DI.properties";
+	private ProcessorProperty config = new ProcessorProperty(FILE);
+
+	public static Map<String, Object> createdObjects = new HashMap<String, Object>();
+
+	private DependencyInjection() {
 	}
 
+	public static DependencyInjection getInstance() {
+
+		if (container == null) {
+			container = new DependencyInjection();
+		}
+		return container;
+	}
+
+	@SuppressWarnings("rawtypes")
+	public void getDI(Object ... objects) {
+		for (Object object : objects) {
+
+		try {
+			Class cl = object.getClass();
+
+			Field[] fields = cl.getDeclaredFields();
+
+			for (Field field : fields) {
+				int modifier = field.getModifiers();
+				field.setAccessible(true);
+
+				if (field.isAnnotationPresent(Injection.class)) {
+
+					String typeField = field.getType().getName();
+
+					Class classForNewObject = Class.forName(config.getConfig(typeField));
+					
+					Object newObject = null;
+					newObject = classForNewObject.newInstance();
+
+					if (createdObjects.containsKey(classForNewObject.getName())) {
+						newObject = createdObjects.get(classForNewObject
+								.getName());
+					} else {
+						newObject = classForNewObject.newInstance();
+						createdObjects.put(typeField, newObject);
+					}
+					field.set(object, newObject);
+				}
+				if (Modifier.isPrivate(modifier)) {
+					field.setAccessible(false);
+				}
+			}
+		} catch (Exception e) {
+			 LOGGER.error(e.getMessage());
+		}
+	}
+	}
 }
