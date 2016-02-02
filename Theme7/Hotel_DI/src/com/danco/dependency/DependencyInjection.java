@@ -50,17 +50,13 @@ public class DependencyInjection {
 				if (field.isAnnotationPresent(Injection.class)) {
 
 					String typeField = field.getType().getName();
-
-					Class classForNewObject = Class.forName(config.getConfig(typeField));
 					
 					Object newObject = null;
-					newObject = classForNewObject.newInstance();
 
-					if (createdObjects.containsKey(classForNewObject.getName())) {
-						newObject = createdObjects.get(classForNewObject
-								.getName());
+					if (createdObjects.containsKey(typeField)) {
+						newObject = createdObjects.get(typeField);
 					} else {
-						newObject = classForNewObject.newInstance();
+						newObject = Class.forName(config.getConfig(typeField)).newInstance();
 						createdObjects.put(typeField, newObject);
 					}
 					field.set(object, newObject);
