@@ -3,20 +3,23 @@ package com.danco.annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.danco.api.IProcessorAnnotation;
+import com.danco.api.IProcessorProperty;
 import com.danco.config.ProcessorProperty;
 
 public class ProcessorAnnotation implements IProcessorAnnotation {
 
-	//private static ProcessorAnnotation annotation;
-
 	private static final String TYPE_INTEGER = "int";
 	private static final String TYPE_BOOLEAN = "boolean";
 	private static final String TYPE_STRING = "String";
+	
+	public static Map<String, IProcessorProperty> createdPropertys = new HashMap<String, IProcessorProperty>();
 	
 	private static final Logger LOGGER = LogManager
 			.getLogger(ProcessorAnnotation.class);
@@ -43,8 +46,16 @@ public class ProcessorAnnotation implements IProcessorAnnotation {
 
 					// get file for PropertyProgramm
 					String nameFile = annotation.configName();
-					ProcessorProperty config = new ProcessorProperty(nameFile);
-
+					
+					IProcessorProperty config = null;
+					
+					if (createdPropertys.containsKey(nameFile)) {
+						config = createdPropertys.get(nameFile);
+					} else {
+						config = new ProcessorProperty(nameFile);
+						createdPropertys.put(nameFile, config);
+					}
+					
 					// get propertyName from annotation
 					String propertyName = annotation.propertyName();
 
