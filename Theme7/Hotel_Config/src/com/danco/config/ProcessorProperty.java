@@ -7,7 +7,9 @@ import java.util.Properties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class ProcessorProperty{
+import com.danco.api.IProcessorProperty;
+
+public class ProcessorProperty implements IProcessorProperty {
 
 	private Properties properties;
 	private FileInputStream fileInputStream;
@@ -39,6 +41,7 @@ public class ProcessorProperty{
 		}
 	}
 
+	@Override
 	public String getConfig(String key) {
 		return this.properties.getProperty(key);
 	}
