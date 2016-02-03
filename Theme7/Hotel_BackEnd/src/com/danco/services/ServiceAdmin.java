@@ -44,9 +44,6 @@ public class ServiceAdmin implements IServiceAdmin {
 	@Override
 	public void initData() {
 		
-		System.out.println("utilitySerealize - " + utilitySerealize);
-		System.out.println("annot - " + annotation);
-		
 		List<Guest> guestsList = utilitySerealize.getGuestsList();
 		List<Room> roomsList = utilitySerealize.getRoomsList();
 		List<Order> ordersList = utilitySerealize.getOrdersList();
@@ -55,8 +52,6 @@ public class ServiceAdmin implements IServiceAdmin {
 		List<AdditionalService> additionalServicesList = utilitySerealize
 				.getAdditionalServiceList();
 		
-		
-	
 		
 		IControllerGuest contGuest = new ControllerGuest(guestsList, ordersList);
 		IControllerRoom contRoom = new ControllerRoom(roomsList);
