@@ -41,7 +41,7 @@ public class ServiceAdmin implements IServiceAdmin {
 
 	@Override
 	public void initData() {
-		
+
 		List<Guest> guestsList = utilitySerealize.getGuestsList();
 		List<Room> roomsList = utilitySerealize.getRoomsList();
 		List<Order> ordersList = utilitySerealize.getOrdersList();
@@ -49,7 +49,7 @@ public class ServiceAdmin implements IServiceAdmin {
 				.getDailServiceList();
 		List<AdditionalService> additionalServicesList = utilitySerealize
 				.getAdditionalServiceList();
-				
+
 		IControllerGuest contGuest = new ControllerGuest(guestsList, ordersList);
 		IControllerRoom contRoom = new ControllerRoom(roomsList);
 		IControllerDailService contDailService = new ControllerDailService(
@@ -57,8 +57,9 @@ public class ServiceAdmin implements IServiceAdmin {
 		IControllerAdditionalService contAdditionalService = new ControllerAdditionalService(
 				additionalServicesList);
 
-		DependencyInjection.getInstance().getDI(contGuest, contRoom, contDailService, contAdditionalService);
-	
+		DependencyInjection.getInstance().getDI(contGuest, contRoom,
+				contDailService, contAdditionalService);
+
 		annotation.processAnnotation(contGuest);
 		annotation.processAnnotation(contRoom);
 
@@ -86,13 +87,12 @@ public class ServiceAdmin implements IServiceAdmin {
 	}
 
 	// ==== GUEST =====
-	
 
 	@Override
 	public void createGuest(Guest guest) {
 
-			guest.setId(contGuest.getIdForNewGuest());
-			contGuest.createGuest(guest);
+		guest.setId(contGuest.getIdForNewGuest());
+		contGuest.createGuest(guest);
 	}
 
 	@Override
@@ -142,8 +142,6 @@ public class ServiceAdmin implements IServiceAdmin {
 			contGuest.addRoomForGuest(guest, room);
 			contRoom.changeRoomStatus(room, Status.NOTFREE);
 		}
-
-
 	}
 
 	@Override
@@ -238,7 +236,9 @@ public class ServiceAdmin implements IServiceAdmin {
 	// ======= room ======
 	@Override
 	public void createRoom(Room room) {
-		contRoom.createRoom(room);
+		synchronized (contRoom) {
+			contRoom.createRoom(room);
+		}
 
 	}
 
@@ -330,15 +330,20 @@ public class ServiceAdmin implements IServiceAdmin {
 
 	@Override
 	public void changeRoomStatus(int idRoom, String str) {
-		Room room = contRoom.getRoomByNumber(idRoom);
-		Status status = Status.valueOf(str);
-		contRoom.changeRoomStatus(room, status);
+		synchronized (contRoom) {
+			Room room = contRoom.getRoomByNumber(idRoom);
+			Status status = Status.valueOf(str);
+			contRoom.changeRoomStatus(room, status);
+		}
+
 	}
 
 	@Override
 	public void changeRoomPrice(int idRoom, int price) {
-		Room room = contRoom.getRoomByNumber(idRoom);
-		contRoom.changeRoomPrice(room, price);
+		synchronized (contRoom) {
+			Room room = contRoom.getRoomByNumber(idRoom);
+			contRoom.changeRoomPrice(room, price);
+		}
 
 	}
 
@@ -351,28 +356,30 @@ public class ServiceAdmin implements IServiceAdmin {
 
 	@Override
 	public void importRoomsList() { // read from CSV
+		synchronized (contRoom) {
+			List<Room> importList = contRoom.importRoomsList();
+			List<Room> existList = contRoom.getListRoom();
+			// replace the existing on imported
+			for (int i = 0; i < existList.size(); i++) {
+				for (int j = 0; j < importList.size(); j++) {
+					if (existList.get(i).getNumber() == importList.get(j)
+							.getNumber()) {
+						existList.set(i, importList.get(j));
+					}
+				}
+			}
+			// if imported is new add in existList
+			for (int i = 0; i < importList.size(); i++) {
+				for (int j = 0; j < existList.size(); j++) {
+					if (importList.get(i).getNumber() != existList.get(j)
+							.getNumber()) {
+						existList.add(importList.get(i));
+					}
+				}
+			}
+			contRoom.setListRoom(existList);
+		}
 
-		List<Room> importList = contRoom.importRoomsList();
-		List<Room> existList = contRoom.getListRoom();
-		// replace the existing on imported
-		for (int i = 0; i < existList.size(); i++) {
-			for (int j = 0; j < importList.size(); j++) {
-				if (existList.get(i).getNumber() == importList.get(j)
-						.getNumber()) {
-					existList.set(i, importList.get(j));
-				}
-			}
-		}
-		// if imported is new add in existList
-		for (int i = 0; i < importList.size(); i++) {
-			for (int j = 0; j < existList.size(); j++) {
-				if (importList.get(i).getNumber() != existList.get(j)
-						.getNumber()) {
-					existList.add(importList.get(i));
-				}
-			}
-		}
-		contRoom.setListRoom(existList);
 	}
 
 	@Override
@@ -447,9 +454,9 @@ public class ServiceAdmin implements IServiceAdmin {
 	}
 
 	@Override
-	public void changeServicePrice(int idService, int price) {
+	public synchronized void changeServicePrice(int idService, int price) {
 
-		if (idService>= contDailService.getListDailService().size()) {
+		if (idService >= contDailService.getListDailService().size()) {
 			contAdditionalService.changeAdditionalPrice(idService, price);
 		} else
 			contDailService.changePrice(idService, price);
@@ -458,26 +465,27 @@ public class ServiceAdmin implements IServiceAdmin {
 
 	@Override
 	public void importDailServicesList() { // read from CSV
-
-		List<DailService> importList = contDailService.importServicesList();
-		List<DailService> existList = contDailService.getListDailService();
-		// replace the existing on imported
-		for (int i = 0; i < existList.size(); i++) {
-			for (int j = 0; j < importList.size(); j++) {
-				if (existList.get(i).getId() == importList.get(j).getId()) {
-					existList.set(i, importList.get(j));
+		synchronized (contDailService) {
+			List<DailService> importList = contDailService.importServicesList();
+			List<DailService> existList = contDailService.getListDailService();
+			// replace the existing on imported
+			for (int i = 0; i < existList.size(); i++) {
+				for (int j = 0; j < importList.size(); j++) {
+					if (existList.get(i).getId() == importList.get(j).getId()) {
+						existList.set(i, importList.get(j));
+					}
 				}
 			}
-		}
-		// if imported is new add in existList
-		for (int i = 0; i < importList.size(); i++) {
-			for (int j = 0; j < existList.size(); j++) {
-				if (importList.get(i).getId() != existList.get(j).getId()) {
-					existList.add(importList.get(i));
+			// if imported is new add in existList
+			for (int i = 0; i < importList.size(); i++) {
+				for (int j = 0; j < existList.size(); j++) {
+					if (importList.get(i).getId() != existList.get(j).getId()) {
+						existList.add(importList.get(i));
+					}
 				}
 			}
+			contDailService.setListDailService(existList);
 		}
-		contDailService.setListDailService(existList);
 	}
 
 	@Override
@@ -488,28 +496,29 @@ public class ServiceAdmin implements IServiceAdmin {
 
 	@Override
 	public void importAdditionalServicesList() { // read from CSV
-
-		List<AdditionalService> importList = contAdditionalService
-				.importServicesList();
-		List<AdditionalService> existList = contAdditionalService
-				.getListAdditionalService();
-		// replace the existing on imported
-		for (int i = 0; i < existList.size(); i++) {
-			for (int j = 0; j < importList.size(); j++) {
-				if (existList.get(i).getId() == importList.get(j).getId()) {
-					existList.set(i, importList.get(j));
+		synchronized (contAdditionalService) {
+			List<AdditionalService> importList = contAdditionalService
+					.importServicesList();
+			List<AdditionalService> existList = contAdditionalService
+					.getListAdditionalService();
+			// replace the existing on imported
+			for (int i = 0; i < existList.size(); i++) {
+				for (int j = 0; j < importList.size(); j++) {
+					if (existList.get(i).getId() == importList.get(j).getId()) {
+						existList.set(i, importList.get(j));
+					}
 				}
 			}
-		}
-		// if imported is new add in existList
-		for (int i = 0; i < importList.size(); i++) {
-			for (int j = 0; j < existList.size(); j++) {
-				if (importList.get(i).getId() != existList.get(j).getId()) {
-					existList.add(importList.get(i));
+			// if imported is new add in existList
+			for (int i = 0; i < importList.size(); i++) {
+				for (int j = 0; j < existList.size(); j++) {
+					if (importList.get(i).getId() != existList.get(j).getId()) {
+						existList.add(importList.get(i));
+					}
 				}
 			}
+			contAdditionalService.setListAdditionalService(existList);
 		}
-		contAdditionalService.setListAdditionalService(existList);
 	}
 
 	@Override

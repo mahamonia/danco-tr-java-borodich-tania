@@ -26,6 +26,7 @@ public class ItemAmountGuest extends ItemOperating {
 			String str = PROTOCOL;
 			DataInputStream in = new DataInputStream(socket.getInputStream());
             DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+            
 			out.writeUTF(str);
 			out.flush();
 			
@@ -33,7 +34,8 @@ public class ItemAmountGuest extends ItemOperating {
 			
 			System.out.println(MESSAGE_1 + line);
 		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
+			//LOGGER.error(e.getMessage());
+			System.out.println(e.getMessage());
 		}
 		return this.getMenu();
 	}
