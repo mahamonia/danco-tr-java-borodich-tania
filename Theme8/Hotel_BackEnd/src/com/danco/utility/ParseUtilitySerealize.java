@@ -10,7 +10,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.danco.api.IParseUtilitySerealize;
+import com.danco.api.backend.IParseUtilitySerealize;
 import com.danco.training.entity.AdditionalService;
 import com.danco.training.entity.DailService;
 import com.danco.training.entity.Guest;

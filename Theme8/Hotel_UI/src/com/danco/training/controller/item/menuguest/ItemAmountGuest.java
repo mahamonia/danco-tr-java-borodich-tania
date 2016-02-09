@@ -1,12 +1,9 @@
 package com.danco.training.controller.item.menuguest;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.net.Socket;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.danco.api.ui.IProcessing;
 import com.danco.training.controller.item.itemmenu.ItemOperating;
 import com.danco.training.controller.menu.Menu;
 
@@ -16,26 +13,21 @@ public class ItemAmountGuest extends ItemOperating {
 
 	private static final Logger LOGGER = LogManager.getLogger(ItemAmountGuest.class);
 
-	public ItemAmountGuest(String name, Socket socket) {
-		super(name, socket);
+	public ItemAmountGuest(String name, IProcessing processing) {
+		super(name, processing);
 	}
 
 	@Override
 	public Menu work() {
 		try {
-			String str = PROTOCOL;
-			DataInputStream in = new DataInputStream(socket.getInputStream());
-            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-            
-			out.writeUTF(str);
-			out.flush();
 			
-			String line = in.readUTF(); // ждем пока сервер отошлет строку текста.
+			StringBuilder str = new StringBuilder();
+			str.append(PROTOCOL);
 			
-			System.out.println(MESSAGE_1 + line);
+			//выводим результат		
+			System.out.println(MESSAGE_1 + processing.dataProcessing(str));
 		} catch (Exception e) {
-			//LOGGER.error(e.getMessage());
-			System.out.println(e.getMessage());
+			LOGGER.error(e.getMessage());
 		}
 		return this.getMenu();
 	}

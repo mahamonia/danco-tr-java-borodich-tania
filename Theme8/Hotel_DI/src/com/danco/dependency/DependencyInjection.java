@@ -16,8 +16,8 @@ public class DependencyInjection {
 
 	private static DependencyInjection container;
 
-	//private static final Logger LOGGER = LogManager
-		//	.getLogger(DependencyInjection.class);
+	private static final Logger LOGGER = LogManager
+			.getLogger(DependencyInjection.class);
 
 	private static final String FILE = "DI.properties";
 	private ProcessorProperty config = new ProcessorProperty(FILE);
@@ -59,6 +59,7 @@ public class DependencyInjection {
 					} else {
 						newObject = Class.forName(config.getConfig(typeField)).newInstance();
 						createdObjects.put(typeField, newObject);
+						getDI(newObject);
 					}
 					field.set(object, newObject);
 				}
@@ -67,7 +68,7 @@ public class DependencyInjection {
 				}
 			}
 		} catch (Exception e) {
-			 //LOGGER.error(e.getMessage());
+			 LOGGER.error(e.getMessage());
 		}
 	}
 	}

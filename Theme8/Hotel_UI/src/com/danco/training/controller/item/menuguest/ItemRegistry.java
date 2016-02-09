@@ -1,27 +1,26 @@
 package com.danco.training.controller.item.menuguest;
 
 import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.InputStreamReader;
-import java.net.Socket;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.danco.api.ui.IProcessing;
 import com.danco.training.controller.item.itemmenu.ItemOperating;
 import com.danco.training.controller.menu.Menu;
 
 public class ItemRegistry extends ItemOperating {
 	private static final String PROTOCOL = "guest"+";"+"createGuest"+";";
+	private static final String SEPARATOR =";";
 	private static final String MESSAGE_1 = "Name...";
 	private static final String MESSAGE_2 = "Pasport...";
 	private static final String MESSAGE_3 = "Date in settle...";
 	private static final String MESSAGE_4 = "Message ";
 	private static final Logger LOGGER = LogManager.getLogger(ItemRegistry.class);
 
-	public ItemRegistry(String name, Socket socket) {
-		super(name, socket);
+	public ItemRegistry(String name, IProcessing processing) {
+		super(name, processing);
 	}
 
 	public Menu work() {
@@ -36,14 +35,11 @@ public class ItemRegistry extends ItemOperating {
 			System.out.println(MESSAGE_3);
 			String dateInSettle = reader.readLine();
 			
-			String str = PROTOCOL+name+";"+pasport+";"+dateInSettle;
-			DataInputStream in = new DataInputStream(socket.getInputStream());
-            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-			out.writeUTF(str);
-			out.flush();
+			StringBuilder str = new StringBuilder();
+			str.append(PROTOCOL).append(name).append(SEPARATOR).append(pasport).append(SEPARATOR).append(dateInSettle);
 			
-			String line = in.readUTF(); // ждем пока сервер отошлет строку текста.
-			System.out.println(MESSAGE_4+line);
+			//выводим результат		
+			System.out.println(MESSAGE_4 + processing.dataProcessing(str));
 
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());

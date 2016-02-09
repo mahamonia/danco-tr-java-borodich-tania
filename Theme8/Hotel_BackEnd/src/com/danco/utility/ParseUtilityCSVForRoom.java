@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.danco.annotation.Injection;
-import com.danco.api.IParseUtilityCSVForRoom;
-import com.danco.api.IServiceAdmin;
+import com.danco.api.backend.IParseUtilityCSVForRoom;
+import com.danco.api.backend.IServiceAdmin;
 import com.danco.training.entity.Guest;
 import com.danco.training.entity.Room;
 import com.danco.training.entity.Status;

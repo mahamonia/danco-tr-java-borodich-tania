@@ -1,14 +1,12 @@
 package com.danco.training.controller.item.menuguest;
 
 import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.InputStreamReader;
-import java.net.Socket;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.danco.api.ui.IProcessing;
 import com.danco.training.controller.item.itemmenu.ItemOperating;
 import com.danco.training.controller.menu.Menu;
 
@@ -19,8 +17,8 @@ public class ItemOutSettle extends ItemOperating {
 	
 	private static final Logger LOGGER = LogManager.getLogger(ItemOutSettle.class);
 
-	public ItemOutSettle(String name, Socket socket) {
-		super(name, socket);
+	public ItemOutSettle(String name, IProcessing processing) {
+		super(name, processing);
 	}
 
 	@Override
@@ -32,14 +30,11 @@ public class ItemOutSettle extends ItemOperating {
 			System.out.println(MESSAGE_1);
 			String idGuest = reader.readLine();
 		
-			String str = PROTOCOL+idGuest;
-			DataInputStream in = new DataInputStream(socket.getInputStream());
-            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-			out.writeUTF(str);
-			out.flush();
+			StringBuilder str = new StringBuilder();
+			str.append(PROTOCOL).append(idGuest);
 			
-			String line = in.readUTF(); // ждем пока сервер отошлет строку текста.
-			System.out.println(MESSAGE_2+line);
+			//выводим результат		
+			System.out.println(MESSAGE_2 + processing.dataProcessing(str));
 			
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());

@@ -7,7 +7,7 @@ import java.util.Properties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.danco.api.IProcessorProperty;
+import com.danco.api.backend.IProcessorProperty;
 
 public class ProcessorProperty implements IProcessorProperty {
 

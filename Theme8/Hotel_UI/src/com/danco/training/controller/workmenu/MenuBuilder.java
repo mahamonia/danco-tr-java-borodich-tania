@@ -4,6 +4,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.danco.api.ui.IProcessing;
 import com.danco.training.controller.item.itemmenu.Item;
 import com.danco.training.controller.item.itemmenu.ItemExit;
 import com.danco.training.controller.item.menuguest.ItemAddService;
@@ -109,10 +110,10 @@ public class MenuBuilder {
 	private static final String ITEM_PRINT_ADD_SERVICE_SORTED_BY_PRICE = "Print additional service them price sorted by price";
 	private static final String ITEM_BACK_IN_MENU_SERVICE = "Back menu service";
 
-	private Socket socket;
+	public IProcessing processing;
 
-	public MenuBuilder(Socket socket) {
-		this.socket = socket;
+	public MenuBuilder(Socket socket){
+		processing = new Processing(socket);
 
 	}
 
@@ -137,15 +138,15 @@ public class MenuBuilder {
 		// Guest ============================
 
 		// ITEMS MENU FOR WORK GUEST
-		Item itemRegistry = new ItemRegistry(ITEM_REGISTRY, socket);
-		Item itemSettle = new ItemSettle(ITEM_SETTLE, socket);
-		Item itemOutSettle = new ItemOutSettle(ITEM_OUT_SETTLE, socket);
+		Item itemRegistry = new ItemRegistry(ITEM_REGISTRY, processing);
+		Item itemSettle = new ItemSettle(ITEM_SETTLE, processing);
+		Item itemOutSettle = new ItemOutSettle(ITEM_OUT_SETTLE, processing);
 		Item itemPrintListGuest = new Item(ITEM_PRINT_LIST_GUEST);
-		Item itemAddService = new ItemAddService(ITEM_ADD_SERVICE, socket);
-		Item itemAmountGuest = new ItemAmountGuest(ITEM_AMOUNT_GUEST, socket);
-		Item itemGetSumOrder = new ItemGetSumOrderGuest(ITEM_SUM_ORDER, socket);
-		Item itemImportListGuest = new ItemImportGuestsList(ITEM_IMPORT_LIST_GUEST, socket);
-		Item itemExportListGuest = new ItemExportGuestsList(ITEM_EXPORT_LIST_GUEST, socket);
+		Item itemAddService = new ItemAddService(ITEM_ADD_SERVICE, processing);
+		Item itemAmountGuest = new ItemAmountGuest(ITEM_AMOUNT_GUEST, processing);
+		Item itemGetSumOrder = new ItemGetSumOrderGuest(ITEM_SUM_ORDER, processing);
+		Item itemImportListGuest = new ItemImportGuestsList(ITEM_IMPORT_LIST_GUEST, processing);
+		Item itemExportListGuest = new ItemExportGuestsList(ITEM_EXPORT_LIST_GUEST, processing);
 		Item itemBackMainMenu = new Item(ITEM_BACK_IN_MAIN_MENU);
 
 		List<Item> itemsMenuGuest = new ArrayList<Item>();
@@ -172,9 +173,9 @@ public class MenuBuilder {
 
 		// ITEMS MENU PRINT LIST GUEST
 		Item itemPrintGuestThemRoomSortedByDate = new ItemPrintGuestThemRoomSortedByDate(
-				ITEM_PRINT_LIST_GUEST_SORTED_BY_DATE, socket);
+				ITEM_PRINT_LIST_GUEST_SORTED_BY_DATE, processing);
 		Item itemPrintGuestThemRoomSortedByName = new ItemPrintGuestThemRoomSortedByName(
-				ITEM_PRINT_LIST_GUEST_SORTED_BY_NAME, socket);
+				ITEM_PRINT_LIST_GUEST_SORTED_BY_NAME, processing);
 		Item itemBackMenuGuest = new Item(ITEM_BACK_IN_MENU_GUEST);
 
 		List<Item> itemsMenuPrintGuest = new ArrayList<Item>();
@@ -196,19 +197,19 @@ public class MenuBuilder {
 		// Room ==================================
 
 		// ITEMS MENU FOR WORK ROOM
-		Item itemCreateRoom = new ItemCreateRoom(ITEM_CREATE_ROOM, socket);
+		Item itemCreateRoom = new ItemCreateRoom(ITEM_CREATE_ROOM, processing);
 		Item itemPrintListRoom = new Item(ITEM_PRINT_LIST_ROOM);
 		Item itemAmountFreeRoom = new ItemAmountFreeRoom(ITEM_AMOUNT_FREE_ROOM,
-				socket);
+				processing);
 		Item itemLastThreeGuest = new ItemLastThreeGuestsRoom(
-				ITEM_THREE_GUEST_ROOM, socket);
+				ITEM_THREE_GUEST_ROOM, processing);
 		Item itemChangePriceRoom = new ItemChangePriceRoom(
-				ITEM_CHANGE_PRICE_ROOM, socket);
+				ITEM_CHANGE_PRICE_ROOM, processing);
 		Item itemChangeStatus = new ItemChangeStatusRoom(
-				ITEM_CHANGE_STATUS_ROOM, socket);
-		Item itemCloneRoom = new ItemForCloningRoom(ITEM_CLONE_ROOM, socket);
-		Item itemImportRoom = new ItemImportRoomList(ITEM_IMPORT_LIST_ROOM, socket);
-		Item itemExportRoom = new ItemExportRoomList(ITEM_EXPORT_LIST_ROOM, socket);
+				ITEM_CHANGE_STATUS_ROOM, processing);
+		Item itemCloneRoom = new ItemForCloningRoom(ITEM_CLONE_ROOM, processing);
+		Item itemImportRoom = new ItemImportRoomList(ITEM_IMPORT_LIST_ROOM, processing);
+		Item itemExportRoom = new ItemExportRoomList(ITEM_EXPORT_LIST_ROOM, processing);
 
 		List<Item> itemsMenuRoom = new ArrayList<Item>();
 		itemsMenuRoom.add(itemCreateRoom);
@@ -233,17 +234,17 @@ public class MenuBuilder {
 
 		// ITEMS MENU PRINT LIST ROOM
 		Item itemPrintRoomSortedByContent = new ItemPrintRoomSortedByContent(
-				ITEM_PRINT_ROOM_SORTED_BY_CONTENT, socket);
+				ITEM_PRINT_ROOM_SORTED_BY_CONTENT, processing);
 		Item itemPrintRoomSortedByPrice = new ItemPrintRoomSortedByPrice(
-				ITEM_PRINT_ROOM_SORTED_BY_PRICE, socket);
+				ITEM_PRINT_ROOM_SORTED_BY_PRICE, processing);
 		Item itemPrintRoomSortedByStars = new ItemPrintRoomSortedByStars(
-				ITEM_PRINT_ROOM_SORTED_BY_STARS, socket);
+				ITEM_PRINT_ROOM_SORTED_BY_STARS, processing);
 		Item itemPrintFreeRoomSortedByContent = new ItemPrintFreeRoomSortedByContent(
-				ITEM_PRINT_FREE_ROOM_SORTED_BY_CONTENT, socket);
+				ITEM_PRINT_FREE_ROOM_SORTED_BY_CONTENT, processing);
 		Item itemPrintFreeRoomSortedByPrice = new ItemPrintFreeRoomSortedByPrice(
-				ITEM_PRINT_FREE_ROOM_SORTED_BY_PRICE, socket);
+				ITEM_PRINT_FREE_ROOM_SORTED_BY_PRICE, processing);
 		Item itemPrintFreeRoomSortedByStars = new ItemPrintFreeRoomSortedByStars(
-				ITEM_PRINT_FREE_ROOM_SORTED_BY_STARS, socket);
+				ITEM_PRINT_FREE_ROOM_SORTED_BY_STARS, processing);
 		Item itemBackMenuRoom = new Item(ITEM_BACK_IN_MENU_ROOM);
 
 		List<Item> itemsMenuPrintRoom = new ArrayList<Item>();
@@ -268,15 +269,15 @@ public class MenuBuilder {
 		// Service ============================
 
 		// ITEMS MENU FOR WOR SERVICE
-		Item itemCreateDailService = new ItemCreateDailService(ITEM_CREATE_DAIL_SERVICE, socket);
-		Item itemCeateAdditionalService = new ItemCreateAdditionalService(ITEM_CREATE_ADDITIONAL_SERVICE, socket);
+		Item itemCreateDailService = new ItemCreateDailService(ITEM_CREATE_DAIL_SERVICE, processing);
+		Item itemCeateAdditionalService = new ItemCreateAdditionalService(ITEM_CREATE_ADDITIONAL_SERVICE, processing);
 		Item itemChangePriceService = new ItemChangePriceService(
-				ITEM_CHANGE_PRICE_SERVICE, socket);
+				ITEM_CHANGE_PRICE_SERVICE, processing);
 		Item itemPrintListService = new Item(ITEM_PRINT_LIST_SERVICE);
-		Item itemImportDailServiceList = new ItemImportDailServiceList(ITEM_DAIL_SERVICE_IMPORT, socket);
-		Item itemExportDailServiceList = new ItemExportDailService(ITEM_DAIL_SERVICE_EXPORT, socket);
-		Item itemImportAdditionalServiceList = new ItemImportAdditionalService(ITEM_ADDITIONAL_SERVICE_IMPORT, socket);
-		Item itemExportAdditionalServiceList = new ItemExportAdditionalService(ITEM_ADDITIONAL_SERVICE_EXPORT, socket);
+		Item itemImportDailServiceList = new ItemImportDailServiceList(ITEM_DAIL_SERVICE_IMPORT, processing);
+		Item itemExportDailServiceList = new ItemExportDailService(ITEM_DAIL_SERVICE_EXPORT, processing);
+		Item itemImportAdditionalServiceList = new ItemImportAdditionalService(ITEM_ADDITIONAL_SERVICE_IMPORT, processing);
+		Item itemExportAdditionalServiceList = new ItemExportAdditionalService(ITEM_ADDITIONAL_SERVICE_EXPORT, processing);
 
 		List<Item> itemsMenuService = new ArrayList<Item>();
 		itemsMenuService.add(itemCreateDailService);
@@ -301,13 +302,13 @@ public class MenuBuilder {
 
 		// ITEMS MENU PRINT LIST SERVICE
 		Item itemPrintDailServiceThemPriceSortedByName = new ItemPrintDailServiceThemPriceSortedByName(
-				ITEM_PRINT_DAIL_SERVICE_SORTED_BY_NAME, socket);
+				ITEM_PRINT_DAIL_SERVICE_SORTED_BY_NAME, processing);
 		Item itemPrintDailServiceThemPriceSortedByPrice = new ItemPrintDailServiceThemPriceSortedByPrice(
-				ITEM_PRINT_DAIL_SERVICE_SORTED_BY_PRICE, socket);
+				ITEM_PRINT_DAIL_SERVICE_SORTED_BY_PRICE, processing);
 		Item itemPrintAdditionalServiceThemPriceSortedByName = new ItemPrintAdditionalServiceThemPriceSortedByName(
-				ITEM_PRINT_ADD_SERVICE_SORTED_BY_NAME, socket);
+				ITEM_PRINT_ADD_SERVICE_SORTED_BY_NAME, processing);
 		Item itemPrintAdditionalServiceThemPriceSortedByPrice = new ItemPrintAdditionalServiceThemPriceSortedByPrice(
-				ITEM_PRINT_ADD_SERVICE_SORTED_BY_PRICE, socket);
+				ITEM_PRINT_ADD_SERVICE_SORTED_BY_PRICE, processing);
 		Item itemBackMenuService = new Item(ITEM_BACK_IN_MENU_SERVICE);
 
 		List<Item> itemsMenuPrintService = new ArrayList<Item>();

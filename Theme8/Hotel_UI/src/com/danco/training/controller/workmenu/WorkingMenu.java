@@ -7,7 +7,7 @@ import java.net.Socket;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.danco.api.IWorkingMenu;
+import com.danco.api.ui.IWorkingMenu;
 import com.danco.training.controller.item.itemmenu.Item;
 import com.danco.training.controller.menu.Menu;
 
@@ -48,6 +48,9 @@ public class WorkingMenu implements IWorkingMenu {
 			}
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
-		} 
+		} finally{
+			builder.processing.processingClose();
+		}
+		
 	}
 }

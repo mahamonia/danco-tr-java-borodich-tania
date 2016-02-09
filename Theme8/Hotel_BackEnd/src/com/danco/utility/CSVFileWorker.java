@@ -8,10 +8,15 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+
 public class CSVFileWorker {
 
 	private final File file;
 	private String newLine = System.getProperty("line.separator");
+	private static Logger logger = LogManager.getLogger(CSVFileWorker.class);
 
 	public CSVFileWorker(String fileName) {
 
@@ -30,7 +35,7 @@ public class CSVFileWorker {
 			writer.close();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 	}
 
@@ -45,7 +50,7 @@ public class CSVFileWorker {
 			}
 			reader.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return getArrayString(listString);
 

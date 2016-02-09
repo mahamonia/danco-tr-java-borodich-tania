@@ -1,24 +1,21 @@
 package com.danco.training.controller.item.itemmenu;
 
-import java.net.Socket;
-
-
+import com.danco.api.ui.IProcessing;
 
 public class ItemOperating extends Item {
-	protected Socket socket;
+	protected IProcessing processing;
 
-	public ItemOperating(String name, Socket socket) {
+	public ItemOperating(String name, IProcessing processing) {
 		super(name);
-		this.socket = socket;
-
+		this.processing = processing;
 	}
 
-	public Socket getSocket() {
-		return socket;
+	public IProcessing getProcessing() {
+		return processing;
 	}
 
-	public void setSocket(Socket socket) {
-		this.socket = socket;
+	public void setProcessing(IProcessing processing) {
+		this.processing = processing;
 	}
 
 

@@ -1,40 +1,34 @@
 package com.danco.training.controller.item.menuservice;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.net.Socket;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.danco.api.ui.IProcessing;
 import com.danco.training.controller.item.itemmenu.ItemOperating;
 import com.danco.training.controller.menu.Menu;
 
-public class ItemExportDailService extends ItemOperating{
+public class ItemExportDailService extends ItemOperating {
+	private static final String PROTOCOL = "0" + ";" + "exportDailServicesList";
 	private static final String MESSAGE = "Message ";
-	private static final Logger LOGGER = LogManager.getLogger(ItemExportDailService.class);
+	private static final Logger LOGGER = LogManager
+			.getLogger(ItemExportDailService.class);
 
-	public ItemExportDailService(String name, Socket socket) {
-		super(name, socket);
+	public ItemExportDailService(String name, IProcessing processing) {
+		super(name, processing);
 	}
-	
+
 	public Menu work() {
 
 		try {
-			String str = "name";
-			DataInputStream in = new DataInputStream(socket.getInputStream());
-            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-			out.writeUTF(str);
-			out.flush();
-			
-			String line = in.readUTF(); // ждем пока сервер отошлет строку текста.
-			System.out.println(MESSAGE+line);
+			StringBuilder str = new StringBuilder();
+			str.append(PROTOCOL);
+			System.out.println(MESSAGE + processing.dataProcessing(str));
 
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
 		return this.getMenu();
-		
+
 	}
 
 }

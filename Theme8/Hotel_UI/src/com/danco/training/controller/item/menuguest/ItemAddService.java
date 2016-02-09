@@ -1,27 +1,27 @@
 package com.danco.training.controller.item.menuguest;
 
 import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.InputStreamReader;
-import java.net.Socket;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.danco.api.ui.IProcessing;
 import com.danco.training.controller.item.itemmenu.ItemOperating;
 import com.danco.training.controller.menu.Menu;
 
 public class ItemAddService extends ItemOperating {
+
 	private static final String PROTOCOL = "2"+";"+"addService"+";";
+	private static final String SEPARATOR =";";
 	private static final String MESSAGE_1 = "Id guest";
 	private static final String MESSAGE_2 = "Id service";
 	private static final String MESSAGE_3 = "Message ";
 	
 	private static final Logger LOGGER = LogManager.getLogger(ItemAddService.class);
-
-	public ItemAddService(String name, Socket socket) {
-		super(name, socket);
+	
+	public ItemAddService(String name, IProcessing processing) {
+		super(name, processing);
 	}
 
 	@Override
@@ -36,14 +36,10 @@ public class ItemAddService extends ItemOperating {
 			System.out.println(MESSAGE_2);
 			String idService = reader.readLine();
 			
-			String str = PROTOCOL+idGuest+";"+idService;
-			DataInputStream in = new DataInputStream(socket.getInputStream());
-            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
-			out.writeUTF(str);
-			out.flush();
+			StringBuilder str = new StringBuilder();
+			str.append(PROTOCOL).append(idGuest).append(SEPARATOR).append(idService);
 			
-			String line = in.readUTF(); // ждем пока сервер отошлет строку текста.
-			System.out.println(MESSAGE_3+line);
+			System.out.println(MESSAGE_3 + processing.dataProcessing(str));
 
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());

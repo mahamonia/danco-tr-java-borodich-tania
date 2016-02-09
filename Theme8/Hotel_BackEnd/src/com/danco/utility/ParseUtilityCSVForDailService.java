@@ -3,7 +3,7 @@ package com.danco.utility;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.danco.api.IParseUtilityCSVForDailService;
+import com.danco.api.backend.IParseUtilityCSVForDailService;
 import com.danco.training.entity.DailService;
 
 public class ParseUtilityCSVForDailService implements IParseUtilityCSVForDailService{

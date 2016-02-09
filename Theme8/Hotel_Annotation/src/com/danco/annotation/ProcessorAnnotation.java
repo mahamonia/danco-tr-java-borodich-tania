@@ -9,8 +9,8 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.danco.api.IProcessorAnnotation;
-import com.danco.api.IProcessorProperty;
+import com.danco.api.backend.IProcessorAnnotation;
+import com.danco.api.backend.IProcessorProperty;
 import com.danco.config.ProcessorProperty;
 
 public class ProcessorAnnotation implements IProcessorAnnotation {

@@ -9,8 +9,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.danco.annotation.ConfigProperty;
 import com.danco.annotation.Injection;
-import com.danco.api.IControllerGuest;
-import com.danco.api.IParseUtilityCSVForGuest;
+import com.danco.api.backend.IControllerGuest;
+import com.danco.api.backend.IParseUtilityCSVForGuest;
 import com.danco.comparator.Comparator;
 import com.danco.training.entity.*;
 
@@ -38,6 +38,7 @@ public class ControllerGuest implements IControllerGuest {
 	public void createGuest(Guest guest) {
 		int idOrder = getIdForNewOrder();
 		Order order = new Order(idOrder, 0, guest);
+		this.orderList.add(order);
 		guest.setOrder(order);
 		try {
 			this.guestsList.add(guest);
@@ -245,6 +246,7 @@ public class ControllerGuest implements IControllerGuest {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public Room getRoomInLiveGuest(Guest guest, List<Room> roomsList) {
 		try {
@@ -307,6 +309,7 @@ public class ControllerGuest implements IControllerGuest {
 
 	@Override
 	public List<Guest> importGuestsList() {
+		
 		return utility.importData();
 	}
 
