@@ -1,0 +1,1 @@
+mysql -u root -p -h localhost -D Hotel_DB < task3.sql
