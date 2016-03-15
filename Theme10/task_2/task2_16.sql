@@ -1,4 +1,4 @@
-select max(pc.model) as model_max, min(pc.model) as model_min, pc.speed, pc.ram
-from pc
-group by pc.speed, pc.ram
+select distinct B.model as model, A.model as model, A.speed, A.ram 
+from PC as A, PC B 
+where A.speed = B.speed and A.ram = B.ram and A.model < B.model
 
