@@ -2,44 +2,49 @@ package com.danco.api.backend;
 
 import java.util.List;
 
-import com.danco.training.entity.Guest;
-import com.danco.training.entity.Room;
-import com.danco.training.entity.Status;
+import com.danco.model.entity.Room;
+import com.danco.model.entity.Status;
 
 public interface IControllerRoom {
 
 	public void createRoom(Room room);
 
-	public void updateRoom(Room room);
+	public void updateRoom(int idRoom);
 
-	public void deleteRoom(Room room);
+	public void deleteRoom(int idRoom);
 
-	public Room getRoomByNumber(int number);
+	public Room getRoom(int idRoom);
 
-	public String[] getListRoom();
+	public List<Room> getListRoom();
 
-	public String[] getListThreeLastGuestsOfRoom(int idRoom);
+	public List<Room> getListRoomSortedByContetn();
 
-	public String[] printRoomSortedByContetn();
+	public List<Room> getListRoomSortedByNumber();
 
-	public List<Room> printRoomSortedByNumber(List<Room> roomsList);
+	public List<Room> getListRoomSortedByPrice();
 
-	public List<Room> printRoomSortedByPrice(List<Room> roomsList);
+	public List<Room> getListRoomSortedByStars();
 
-	public List<Room> printRoomSortedByStars(List<Room> roomsList);
+	public List<Room> getListRoomFree();
+	
+	public List<Room> getListRoomFreeSortedByContetn();
 
-	public List<Room> getRoomListFree();
+	public List<Room> getListRoomFreeSortedByNumber();
 
-	public int printAmountRoomFree();
+	public List<Room> getListRoomFreeSortedByPrice();
 
-	public List<Guest> printRoomThemGuests(Room room, List<Guest> guestsList);
+	public List<Room> getListRoomFreeSortedByStars();
+	
+	public int getAmountRoomFree();
 
-	public void changeRoomStatus(Room room, Status status);
+	public void changeRoomStatus(int idRoom, Status status);
 
-	public void changeRoomPrice(Room room, int price);
+	public void changeRoomPrice(int idRoom, int price);
 
-	public Room cloneRoom(Room room);
-	public List<Room> importRoomsList() ;
-	public void exportRoomsList(List<Room> roomsList);
+	public Room cloneRoom(int idRoom);
+
+	public List<Room> importRoomsList();
+
+	public void exportRoomsList();
 
 }

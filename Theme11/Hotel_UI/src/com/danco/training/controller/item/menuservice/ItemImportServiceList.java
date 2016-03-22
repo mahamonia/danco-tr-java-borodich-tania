@@ -1,4 +1,4 @@
-package com.danco.training.controller.item.menuroom;
+package com.danco.training.controller.item.menuservice;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -7,25 +7,24 @@ import com.danco.api.ui.IProcessing;
 import com.danco.training.controller.item.itemmenu.ItemOperating;
 import com.danco.training.controller.menu.Menu;
 
-public class ItemAmountFreeRoom extends ItemOperating{
-	private static final String PROTOCOL = "0"+";"+"getAmountRoomFree"+";";
-	private static final String MESSAGE = "Amount free room = ";
+public class ItemImportServiceList extends ItemOperating {
+	private static final String PROTOCOL = "0" + ";" + "importServicesList";
+	private static final String MESSAGE = "Message ";
+
 	private static final Logger LOGGER = LogManager
-			.getLogger(ItemAmountFreeRoom.class);
+			.getLogger(ItemImportServiceList.class);
 
-	public ItemAmountFreeRoom(String name, IProcessing processing) {
+	public ItemImportServiceList(String name, IProcessing processing) {
 		super(name, processing);
-
 	}
 
-	@Override
-	public Menu work()  {
+	public Menu work() {
+
 		try {
-					
 			StringBuilder str = new StringBuilder();
 			str.append(PROTOCOL);
-			
 			System.out.println(MESSAGE + processing.dataProcessing(str));
+
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}

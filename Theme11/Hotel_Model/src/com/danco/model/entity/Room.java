@@ -1,16 +1,18 @@
-package com.danco.training.entity;
+package com.danco.model.entity;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class Room  extends BaseModel implements Cloneable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6490565046509298682L;
 	private int number;
 	private int content;
 	private Status status;
 	private int stars;
 	private int price;
-	private List<Guest> guestList;
+	
 
 	public Room(int number, int content, Status status, int stars, int price) {
 		
@@ -19,8 +21,7 @@ public class Room  extends BaseModel implements Cloneable{
 		this.status = status;
 		this.stars = stars;
 		this.price = price;
-		this.guestList = new ArrayList<Guest>();
-		
+				
 	}
 
 	public int getNumber() {
@@ -63,13 +64,7 @@ public class Room  extends BaseModel implements Cloneable{
 		this.price = price;
 	}
 
-	public List<Guest> getGuestList() {
-		return guestList;
-	}
 
-	public void setGuestList(List<Guest> guestList) {
-		this.guestList = guestList;
-	}
 	public Room clone() throws CloneNotSupportedException {
         return (Room)super.clone();
   }

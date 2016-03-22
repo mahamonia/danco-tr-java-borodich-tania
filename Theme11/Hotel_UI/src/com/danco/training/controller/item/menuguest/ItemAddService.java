@@ -12,7 +12,7 @@ import com.danco.training.controller.menu.Menu;
 
 public class ItemAddService extends ItemOperating {
 
-	private static final String PROTOCOL = "2"+";"+"addService"+";";
+	private static final String PROTOCOL = "2"+";"+"addServiceForGuest"+";";
 	private static final String SEPARATOR =";";
 	private static final String MESSAGE_1 = "Id guest";
 	private static final String MESSAGE_2 = "Id service";

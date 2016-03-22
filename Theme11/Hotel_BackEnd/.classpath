@@ -8,5 +8,6 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Hotel_Annotation"/>
 	<classpathentry exported="true" kind="lib" path="/Hotel_Server/lib/log4j-api-2.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="/Hotel_Server/lib/log4j-core-2.5.jar"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/Hotel_DAO"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

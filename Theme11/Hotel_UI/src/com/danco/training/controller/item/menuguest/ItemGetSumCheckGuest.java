@@ -11,7 +11,7 @@ import com.danco.training.controller.item.itemmenu.ItemOperating;
 import com.danco.training.controller.menu.Menu;
 
 public class ItemGetSumCheckGuest extends ItemOperating{
-	private static final String PROTOCOL = "1"+";"+"getSumOrderGuest"+";";
+	private static final String PROTOCOL = "1"+";"+"getSumCheck"+";";
 	private static final String MESSAGE_1 = "Id guest..";
 	private static final String MESSAGE_2 = "Sum order guest = ";
 	private static final Logger LOGGER = LogManager.getLogger(ItemGetSumCheckGuest.class);

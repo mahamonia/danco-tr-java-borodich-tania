@@ -6,13 +6,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.danco.api.ui.IProcessing;
+import com.danco.model.entity.Room;
 import com.danco.training.controller.item.itemmenu.ItemOperating;
 import com.danco.training.controller.menu.Menu;
-import com.danco.training.entity.Room;
 
 public class ItemPrintRoomSortedByContent extends ItemOperating {
 	private static final String PROTOCOL = "0" + ";"
-			+ "printSortedRoomsByContent";
+			+ "getListRoomFreeSortedByContent";
 	private static final String MESSAGE_1 = "List room";
 	private static final String MESSAGE_2 = " contains ";
 	private static final String MESSAGE_3 = " places";
@@ -32,6 +32,7 @@ public class ItemPrintRoomSortedByContent extends ItemOperating {
 
 			List<Room> roomList = (List<Room>) processing.dataProcessing(str);
 			System.out.println(MESSAGE_1);
+			System.out.println(roomList.size());
 			for (int i = 0; i < roomList.size(); i++) {
 				System.out.println(roomList.get(i).getNumber() + MESSAGE_2
 						+ roomList.get(i).getContent() + MESSAGE_3);

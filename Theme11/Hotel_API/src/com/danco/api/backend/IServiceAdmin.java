@@ -2,12 +2,10 @@ package com.danco.api.backend;
 
 import java.util.List;
 
-import com.danco.training.entity.AdditionalService;
-import com.danco.training.entity.DailService;
-import com.danco.training.entity.Guest;
-import com.danco.training.entity.Check;
-import com.danco.training.entity.Room;
-import com.danco.training.entity.Status;
+import com.danco.model.entity.Check;
+import com.danco.model.entity.Guest;
+import com.danco.model.entity.Room;
+import com.danco.model.entity.Service;
 
 public interface IServiceAdmin {
 
@@ -15,7 +13,8 @@ public interface IServiceAdmin {
 
 	public void saveData();
 
-	// guest
+	// G U E S T
+
 	public void createGuest(Guest guest);
 
 	public Guest getGuestById(int id);
@@ -26,8 +25,6 @@ public interface IServiceAdmin {
 
 	public void updateGuest(int idGuest);
 
-	public Check getCheckById(int id);
-
 	public void settleGuestInRoom(int idGuest, int idRoom, String dateInSettle,
 			String dateOutSettle);
 
@@ -36,10 +33,6 @@ public interface IServiceAdmin {
 	public void settleGuestOutRoom(int idGuest);
 
 	public Room getRoomInLiveGuest(int idGuest);
-
-	public int getSumOrderGuest(int idGuest);
-
-	public List<Guest> printListGuestRoom(int idRoom);
 
 	public List<Guest> printGuestsSortedByName();
 
@@ -51,32 +44,33 @@ public interface IServiceAdmin {
 
 	public void exportGuestsList();
 
-	// room
+	// R O O M
+
 	public void createRoom(Room room);
 
-	public String [] getListRoom();
-
-	public String[] getListThreeLastGuestsOfRoom(int idRoom);
+	public List<Room> getListRoom();
 
 	public void updateRoom(int idRoom);
 
-	public List<Room> printSortedRoomsByContent();
+	public List<Room> getListRoomSortedByContent();
 
-	public List<Room> printSortedRoomsByNumber();
+	public List<Room> getListRoomSortedByNumber();
 
-	public List<Room> printSortedRoomsByPrice();
+	public List<Room> getListRoomSortedByPrice();
 
-	public List<Room> printSortedRoomByStars();
+	public List<Room> getListRoomSortedByStars();
 
-	public List<Room> printRoomFreeSortetdByContent();
+	public List<Room> getListRoomFree();
 
-	public List<Room> printRoomFreeSortetdByPrice();
+	public List<Room> getListRoomFreeSortedByContent();
 
-	public List<Room> printRoomFreeSortetdByNumber();
+	public List<Room> getListRoomFreeSortedByNumber();
 
-	public List<Room> printRoomFreeSortetdByStars();
+	public List<Room> getListRoomFreeSortedByPrice();
 
-	public int getAmountFreeRoom();
+	public List<Room> getListRoomFreeSortedByStars();
+
+	public int getAmountRoomFree();
 
 	public void changeRoomStatus(int idRoom, String status);
 
@@ -88,33 +82,38 @@ public interface IServiceAdmin {
 
 	public void exportRoomsList();
 
-	// service
-	public void createService(DailService service);
+	// S E R V I C E
 
-	public void createAdditionalService(AdditionalService service);
+	public void createService(Service service);
 
-	public DailService getServiceById(int id);
+	public void updateService(int idService);
 
-	public List<DailService> getListDailService();
+	public Service getServiceById(int idService);
 
-	public List<AdditionalService> getListAdditionalService();
+	public List<Service> getListService();
 
-	public List<DailService> printDailServicesSortedByName();
+	public List<Service> printServicesSortedByName();
 
-	public List<AdditionalService> printAdditionalServicesSortedByName();
+	public List<Service> printServicesSortedByPrice();
 
-	public List<DailService> printDailServicesSortedByPrice();
-
-	public List<AdditionalService> printAdditionalServicesSortedByPrice();
+	public List<Service> getGuestThemServices(int idGuest);
 
 	public void changeServicePrice(int idService, int price);
 
-	public void importDailServicesList();
+	public void importServicesList();
 
-	public void exportDailServicesList();
+	public void exportServicesList();
+	
+	// C H E C K
+	
+	public void createCheck(Check check);
 
-	public void importAdditionalServicesList();
+	public void updateCheck(int idCheck);
 
-	public void exportAdditionalServicesList();
+	public Check getCheckById(int idCheck);
+
+	public List<Check> getListCheck();
+	
+	public int getSumCheck(int idGuest);
 
 }

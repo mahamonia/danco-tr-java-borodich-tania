@@ -1,7 +1,11 @@
-package com.danco.training.entity;
+package com.danco.model.entity;
 
 public class Guest extends BaseModel{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -736915922230762330L;
 	private String name;
 	private String pasport;
 
@@ -35,6 +39,10 @@ public class Guest extends BaseModel{
 
 	public void setCheck(Check check) {
 		this.check = check;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 	
 }

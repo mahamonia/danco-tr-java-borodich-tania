@@ -6,8 +6,8 @@ import java.util.List;
 import com.danco.annotation.Injection;
 import com.danco.api.backend.IParseUtilityCSVForGuest;
 import com.danco.api.backend.IServiceAdmin;
-import com.danco.training.entity.Guest;
-import com.danco.training.entity.Check;
+import com.danco.model.entity.Check;
+import com.danco.model.entity.Guest;
 
 public class ParseUtilityCSVForGuest implements IParseUtilityCSVForGuest{
 	

@@ -11,7 +11,7 @@ import com.danco.training.controller.item.itemmenu.ItemOperating;
 import com.danco.training.controller.menu.Menu;
 
 public class ItemOutSettle extends ItemOperating {
-	private static final String PROTOCOL = "2"+";"+"settleGuestOutRoom"+";";
+	private static final String PROTOCOL = "1"+";"+"settleGuestOutRoom"+";";
 	private static final String MESSAGE_1 = "Id guest";
 	private static final String MESSAGE_2 = "Message";
 	

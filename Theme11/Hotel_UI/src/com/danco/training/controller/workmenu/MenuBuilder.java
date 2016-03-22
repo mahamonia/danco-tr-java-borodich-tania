@@ -17,6 +17,7 @@ import com.danco.training.controller.item.menuguest.ItemRegistry;
 import com.danco.training.controller.item.menuguest.ItemSettle;
 import com.danco.training.controller.item.menuguest.printlist.ItemPrintGuestThemRoomSortedByDate;
 import com.danco.training.controller.item.menuguest.printlist.ItemPrintGuestThemRoomSortedByName;
+import com.danco.training.controller.item.menuguest.printlist.ItemPrintListGuest;
 import com.danco.training.controller.item.menuroom.ItemAmountFreeRoom;
 import com.danco.training.controller.item.menuroom.ItemChangePriceRoom;
 import com.danco.training.controller.item.menuroom.ItemChangeStatusRoom;
@@ -24,7 +25,6 @@ import com.danco.training.controller.item.menuroom.ItemCreateRoom;
 import com.danco.training.controller.item.menuroom.ItemExportRoomList;
 import com.danco.training.controller.item.menuroom.ItemForCloningRoom;
 import com.danco.training.controller.item.menuroom.ItemImportRoomList;
-import com.danco.training.controller.item.menuroom.ItemLastThreeGuestsRoom;
 import com.danco.training.controller.item.menuroom.printlist.ItemPrintFreeRoomSortedByContent;
 import com.danco.training.controller.item.menuroom.printlist.ItemPrintFreeRoomSortedByPrice;
 import com.danco.training.controller.item.menuroom.printlist.ItemPrintFreeRoomSortedByStars;
@@ -32,16 +32,11 @@ import com.danco.training.controller.item.menuroom.printlist.ItemPrintRoomSorted
 import com.danco.training.controller.item.menuroom.printlist.ItemPrintRoomSortedByPrice;
 import com.danco.training.controller.item.menuroom.printlist.ItemPrintRoomSortedByStars;
 import com.danco.training.controller.item.menuservice.ItemChangePriceService;
-import com.danco.training.controller.item.menuservice.ItemCreateAdditionalService;
-import com.danco.training.controller.item.menuservice.ItemCreateDailService;
-import com.danco.training.controller.item.menuservice.ItemExportAdditionalService;
-import com.danco.training.controller.item.menuservice.ItemExportDailService;
-import com.danco.training.controller.item.menuservice.ItemImportAdditionalService;
-import com.danco.training.controller.item.menuservice.ItemImportDailServiceList;
-import com.danco.training.controller.item.menuservice.printlist.ItemPrintAdditionalServiceThemPriceSortedByName;
-import com.danco.training.controller.item.menuservice.printlist.ItemPrintAdditionalServiceThemPriceSortedByPrice;
-import com.danco.training.controller.item.menuservice.printlist.ItemPrintDailServiceThemPriceSortedByName;
-import com.danco.training.controller.item.menuservice.printlist.ItemPrintDailServiceThemPriceSortedByPrice;
+import com.danco.training.controller.item.menuservice.ItemCreateService;
+import com.danco.training.controller.item.menuservice.ItemExportService;
+import com.danco.training.controller.item.menuservice.ItemImportServiceList;
+import com.danco.training.controller.item.menuservice.printlist.ItemPrintServiceThemPriceSortedByName;
+import com.danco.training.controller.item.menuservice.printlist.ItemPrintServiceThemPriceSortedByPrice;
 import com.danco.training.controller.menu.Menu;
 
 public class MenuBuilder {
@@ -67,8 +62,9 @@ public class MenuBuilder {
 	private static final String ITEM_BACK_IN_MAIN_MENU = "Back in main menu";
 
 	private static final String TITLE_MENU_PRINT_GUEST = "  Menu for print list guest";
-	private static final String ITEM_PRINT_LIST_GUEST_SORTED_BY_NAME = "Print Guest Them Room Sorted By Name";
-	private static final String ITEM_PRINT_LIST_GUEST_SORTED_BY_DATE = "Print Guest Them Room Sorted By Date";
+	private static final String ITEM_PRINT_GUEST_LIST = "Print List guest";
+	private static final String ITEM_PRINT_LIST_GUEST_SORTED_BY_NAME = "Print List guest Sorted By Name";
+	private static final String ITEM_PRINT_LIST_GUEST_SORTED_BY_DATE = "Print List guest Sorted By Date";
 	private static final String ITEM_BACK_IN_MENU_GUEST = "Back in menu guest";
 
 	private static final String TITLE_MENU_ROOM = "Menu for work room";
@@ -76,7 +72,6 @@ public class MenuBuilder {
 	private static final String ITEM_CREATE_ROOM = "Create room ";
 	private static final String ITEM_PRINT_LIST_ROOM = "Print list room ...";
 	private static final String ITEM_AMOUNT_FREE_ROOM = "Show amount free room";
-	private static final String ITEM_THREE_GUEST_ROOM = "Show the last three guests of room";
 	private static final String ITEM_CHANGE_PRICE_ROOM = "Change price room";
 	private static final String ITEM_CHANGE_STATUS_ROOM = "Change status room";
 	private static final String ITEM_CLONE_ROOM = "Clone room";
@@ -94,20 +89,15 @@ public class MenuBuilder {
 
 	private static final String TITLE_MENU_SERVICE = " Menu for work service";
 	
-	private static final String ITEM_CREATE_DAIL_SERVICE = "Create dail service ";
-	private static final String ITEM_CREATE_ADDITIONAL_SERVICE = "Create additional service ";
+	private static final String ITEM_CREATE_SERVICE = "Create service ";
 	private static final String ITEM_CHANGE_PRICE_SERVICE = "Change price service";
 	private static final String ITEM_PRINT_LIST_SERVICE = "Print list service ...";
-	private static final String ITEM_DAIL_SERVICE_IMPORT = "Dail service list import";
-	private static final String ITEM_DAIL_SERVICE_EXPORT = "Dail service list export";
-	private static final String ITEM_ADDITIONAL_SERVICE_IMPORT = "Additional service list import";
-	private static final String ITEM_ADDITIONAL_SERVICE_EXPORT = "Additional service list export";
+	private static final String ITEM_SERVICE_IMPORT = "Service list import";
+	private static final String ITEM_SERVICE_EXPORT = "Service list export";
 
 	private static final String TITLE_MENU_PRINT_SERVICE = "  Menu for print list service";
-	private static final String ITEM_PRINT_DAIL_SERVICE_SORTED_BY_NAME = "Print dail service them price sorted by name";
-	private static final String ITEM_PRINT_DAIL_SERVICE_SORTED_BY_PRICE = "Print dail service them price sorted by price";
-	private static final String ITEM_PRINT_ADD_SERVICE_SORTED_BY_NAME = "Print additional service them price sorted by name";
-	private static final String ITEM_PRINT_ADD_SERVICE_SORTED_BY_PRICE = "Print additional service them price sorted by price";
+	private static final String ITEM_PRINT_SERVICE_SORTED_BY_NAME = "Print service them price sorted by name";
+	private static final String ITEM_PRINT_SERVICE_SORTED_BY_PRICE = "Print service them price sorted by price";
 	private static final String ITEM_BACK_IN_MENU_SERVICE = "Back menu service";
 
 	public IProcessing processing;
@@ -172,6 +162,7 @@ public class MenuBuilder {
 		itemBackMainMenu.setMenu(menuMain);
 
 		// ITEMS MENU PRINT LIST GUEST
+		Item itemPrintGuestList = new ItemPrintListGuest(ITEM_PRINT_GUEST_LIST, processing);
 		Item itemPrintGuestThemRoomSortedByDate = new ItemPrintGuestThemRoomSortedByDate(
 				ITEM_PRINT_LIST_GUEST_SORTED_BY_DATE, processing);
 		Item itemPrintGuestThemRoomSortedByName = new ItemPrintGuestThemRoomSortedByName(
@@ -179,6 +170,7 @@ public class MenuBuilder {
 		Item itemBackMenuGuest = new Item(ITEM_BACK_IN_MENU_GUEST);
 
 		List<Item> itemsMenuPrintGuest = new ArrayList<Item>();
+		itemsMenuPrintGuest.add(itemPrintGuestList);
 		itemsMenuPrintGuest.add(itemPrintGuestThemRoomSortedByName);
 		itemsMenuPrintGuest.add(itemPrintGuestThemRoomSortedByDate);
 		itemsMenuPrintGuest.add(itemBackMenuGuest);
@@ -201,8 +193,6 @@ public class MenuBuilder {
 		Item itemPrintListRoom = new Item(ITEM_PRINT_LIST_ROOM);
 		Item itemAmountFreeRoom = new ItemAmountFreeRoom(ITEM_AMOUNT_FREE_ROOM,
 				processing);
-		Item itemLastThreeGuest = new ItemLastThreeGuestsRoom(
-				ITEM_THREE_GUEST_ROOM, processing);
 		Item itemChangePriceRoom = new ItemChangePriceRoom(
 				ITEM_CHANGE_PRICE_ROOM, processing);
 		Item itemChangeStatus = new ItemChangeStatusRoom(
@@ -215,7 +205,6 @@ public class MenuBuilder {
 		itemsMenuRoom.add(itemCreateRoom);
 		itemsMenuRoom.add(itemPrintListRoom);
 		itemsMenuRoom.add(itemAmountFreeRoom);
-		itemsMenuRoom.add(itemLastThreeGuest);
 		itemsMenuRoom.add(itemChangePriceRoom);
 		itemsMenuRoom.add(itemChangeStatus);
 		itemsMenuRoom.add(itemCloneRoom);
@@ -269,25 +258,19 @@ public class MenuBuilder {
 		// Service ============================
 
 		// ITEMS MENU FOR WOR SERVICE
-		Item itemCreateDailService = new ItemCreateDailService(ITEM_CREATE_DAIL_SERVICE, processing);
-		Item itemCeateAdditionalService = new ItemCreateAdditionalService(ITEM_CREATE_ADDITIONAL_SERVICE, processing);
+		Item itemCreateService = new ItemCreateService(ITEM_CREATE_SERVICE, processing);
 		Item itemChangePriceService = new ItemChangePriceService(
 				ITEM_CHANGE_PRICE_SERVICE, processing);
 		Item itemPrintListService = new Item(ITEM_PRINT_LIST_SERVICE);
-		Item itemImportDailServiceList = new ItemImportDailServiceList(ITEM_DAIL_SERVICE_IMPORT, processing);
-		Item itemExportDailServiceList = new ItemExportDailService(ITEM_DAIL_SERVICE_EXPORT, processing);
-		Item itemImportAdditionalServiceList = new ItemImportAdditionalService(ITEM_ADDITIONAL_SERVICE_IMPORT, processing);
-		Item itemExportAdditionalServiceList = new ItemExportAdditionalService(ITEM_ADDITIONAL_SERVICE_EXPORT, processing);
+		Item itemImportServiceList = new ItemImportServiceList(ITEM_SERVICE_IMPORT, processing);
+		Item itemExportServiceList = new ItemExportService(ITEM_SERVICE_EXPORT, processing);
 
 		List<Item> itemsMenuService = new ArrayList<Item>();
-		itemsMenuService.add(itemCreateDailService);
-		itemsMenuService.add(itemCeateAdditionalService);
+		itemsMenuService.add(itemCreateService);
 		itemsMenuService.add(itemChangePriceService);
 		itemsMenuService.add(itemPrintListService);
-		itemsMenuService.add(itemImportDailServiceList);
-		itemsMenuService.add(itemExportDailServiceList);
-		itemsMenuService.add(itemImportAdditionalServiceList);
-		itemsMenuService.add(itemExportAdditionalServiceList);
+		itemsMenuService.add(itemImportServiceList);
+		itemsMenuService.add(itemExportServiceList);
 		
 		itemsMenuService.add(itemBackMainMenu);
 
@@ -301,24 +284,15 @@ public class MenuBuilder {
 		itemMenuService.setMenu(menuService);// item go to menu service
 
 		// ITEMS MENU PRINT LIST SERVICE
-		Item itemPrintDailServiceThemPriceSortedByName = new ItemPrintDailServiceThemPriceSortedByName(
-				ITEM_PRINT_DAIL_SERVICE_SORTED_BY_NAME, processing);
-		Item itemPrintDailServiceThemPriceSortedByPrice = new ItemPrintDailServiceThemPriceSortedByPrice(
-				ITEM_PRINT_DAIL_SERVICE_SORTED_BY_PRICE, processing);
-		Item itemPrintAdditionalServiceThemPriceSortedByName = new ItemPrintAdditionalServiceThemPriceSortedByName(
-				ITEM_PRINT_ADD_SERVICE_SORTED_BY_NAME, processing);
-		Item itemPrintAdditionalServiceThemPriceSortedByPrice = new ItemPrintAdditionalServiceThemPriceSortedByPrice(
-				ITEM_PRINT_ADD_SERVICE_SORTED_BY_PRICE, processing);
+		Item itemPrintServiceThemPriceSortedByName = new ItemPrintServiceThemPriceSortedByName(
+				ITEM_PRINT_SERVICE_SORTED_BY_NAME, processing);
+		Item itemPrintServiceThemPriceSortedByPrice = new ItemPrintServiceThemPriceSortedByPrice(
+				ITEM_PRINT_SERVICE_SORTED_BY_PRICE, processing);
 		Item itemBackMenuService = new Item(ITEM_BACK_IN_MENU_SERVICE);
 
 		List<Item> itemsMenuPrintService = new ArrayList<Item>();
-		itemsMenuPrintService.add(itemPrintDailServiceThemPriceSortedByName);
-		itemsMenuPrintService.add(itemPrintDailServiceThemPriceSortedByPrice);
-		itemsMenuPrintService
-				.add(itemPrintAdditionalServiceThemPriceSortedByName);
-		itemsMenuPrintService
-				.add(itemPrintAdditionalServiceThemPriceSortedByPrice);
-		itemsMenuPrintService.add(itemBackMenuService);
+		itemsMenuPrintService.add(itemPrintServiceThemPriceSortedByName);
+		itemsMenuPrintService.add(itemPrintServiceThemPriceSortedByPrice);
 
 		// == MENU PRINT SERVICE ==
 		Menu menuPrintService = new Menu(TITLE_MENU_PRINT_SERVICE,

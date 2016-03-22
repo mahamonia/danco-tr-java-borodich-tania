@@ -1,88 +1,90 @@
 package com.danco.services;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.danco.annotation.Injection;
-import com.danco.api.backend.IControllerAdditionalService;
-import com.danco.api.backend.IControllerDailService;
+import com.danco.api.backend.IControllerCheck;
+import com.danco.api.backend.IControllerService;
 import com.danco.api.backend.IControllerGuest;
 import com.danco.api.backend.IControllerRoom;
 import com.danco.api.backend.IProcessorAnnotation;
 import com.danco.api.backend.IServiceAdmin;
-import com.danco.controller.ControllerAdditionalService;
-import com.danco.controller.ControllerDailService;
+import com.danco.controller.ControllerCheck;
 import com.danco.controller.ControllerGuest;
 import com.danco.controller.ControllerRoom;
+import com.danco.controller.ControllerService;
 import com.danco.dependency.DependencyInjection;
-import com.danco.training.dao.AdditionalServiceDao;
-import com.danco.training.dao.CheckDao;
-import com.danco.training.dao.DailServiceDao;
-import com.danco.training.dao.GuestDao;
-import com.danco.training.dao.RoomDao;
-import com.danco.training.entity.AdditionalService;
-import com.danco.training.entity.Check;
-import com.danco.training.entity.DailService;
-import com.danco.training.entity.Guest;
-import com.danco.training.entity.Room;
-import com.danco.training.entity.Status;
+import com.danco.model.dao.CheckDao;
+import com.danco.model.dao.DataSource;
+import com.danco.model.dao.GuestDao;
+import com.danco.model.dao.RoomDao;
+import com.danco.model.dao.ServiceDao;
+import com.danco.model.entity.Check;
+import com.danco.model.entity.Guest;
+import com.danco.model.entity.Room;
+import com.danco.model.entity.Service;
+import com.danco.model.entity.Status;
 
 public class ServiceAdmin implements IServiceAdmin {
 
 	private IControllerRoom contRoom;
 	private IControllerGuest contGuest;
-	private IControllerDailService contDailService;
-	private IControllerAdditionalService contAdditionalService;
+	private IControllerCheck contCheck;
+	private IControllerService contService;
 
 	@Injection
 	private IProcessorAnnotation annotation;
 
-	private final int RESIDENTCE_IN_ROOM = 1;
-
 	private static final Logger LOGGER = LogManager
 			.getLogger(ServiceAdmin.class);
+
+	@Injection
+	private DataSource source;
 
 	public ServiceAdmin() {
 	}
 
 	@Override
 	public void initData() {
-		
+
 		GuestDao guestDao = new GuestDao();
-		RoomDao roomDao = new RoomDao();		
-		CheckDao checkDao = new CheckDao();		
-		DailServiceDao dailServiceDao =  new DailServiceDao();
-		AdditionalServiceDao additionalServiceDao = new AdditionalServiceDao();
+		RoomDao roomDao = new RoomDao();
+		CheckDao checkDao = new CheckDao();
+		ServiceDao serviceDao = new ServiceDao();
 		
-		IControllerGuest contGuest = new ControllerGuest(guestDao, checkDao);		
-		IControllerRoom contRoom = new ControllerRoom(roomDao);		
-		IControllerDailService contDailService = new ControllerDailService(
-				dailServiceDao);
-		IControllerAdditionalService contAdditionalService = new ControllerAdditionalService(
-				additionalServiceDao);
+		annotation.processAnnotation(source);
+		
+		IControllerGuest contGuest = new ControllerGuest(source, guestDao);
+		IControllerRoom contRoom = new ControllerRoom(source, roomDao);
+		IControllerCheck contCheck = new ControllerCheck(source, checkDao);
+		IControllerService contService = new ControllerService(source,
+				serviceDao);
 
 		DependencyInjection.getInstance().getDI(contGuest, contRoom,
-				contDailService, contAdditionalService);
+				contService);
 
 		annotation.processAnnotation(contGuest);
 		annotation.processAnnotation(contRoom);
+		
+		
 
 		this.contGuest = contGuest;
 		this.contRoom = contRoom;
-		this.contDailService = contDailService;
-		this.contAdditionalService = contAdditionalService;
+		this.contCheck = contCheck;
+		this.contService = contService;
 
 	}
 
 	@Override
 	public void saveData() {
+
+		// ----- NOTHING ------
 
 	}
 
@@ -90,13 +92,12 @@ public class ServiceAdmin implements IServiceAdmin {
 
 	@Override
 	public void createGuest(Guest guest) {
-		
 		contGuest.createGuest(guest);
 	}
 
 	@Override
 	public Guest getGuestById(int id) {
-		return contGuest.getGuestById(id);
+		return contGuest.getGuest(id);
 	}
 
 	@Override
@@ -107,97 +108,118 @@ public class ServiceAdmin implements IServiceAdmin {
 
 	@Override
 	public void deleteGuest(int idGuest) {
-		contGuest.deleteGuest(contGuest.getGuestById(idGuest));
+		contGuest.deleteGuest(idGuest);
 	}
 
 	@Override
 	public void updateGuest(int idGuest) {
-		Guest guest = contGuest.getGuestById(idGuest);
-		contGuest.updateGuest(guest);
+		contGuest.updateGuest(idGuest);
 
-	}
-
-	@Override
-	public Check getCheckById(int id) {
-		return contGuest.getCheckById(id);
 	}
 
 	@Override
 	public void settleGuestInRoom(int idGuest, int idRoom, String dateInSettle,
 			String dateOutSettle) {
+
 		synchronized (contRoom) {
+			Connection connection = null;
+			try {
+				connection = source.openConnection();
+				connection.setAutoCommit(false);
+ 
+				Room room = contRoom.getRoom(idRoom);
 
-			Guest guest = contGuest.getGuestById(idGuest);
-			Room room = contRoom.getRoomByNumber(idRoom);
-			// add guest order with service residence in Room
-			DailService service = contDailService
-					.getService(RESIDENTCE_IN_ROOM);
-			contGuest.addServiceForGuest(guest, service);
+				Service service = new Service("Settle guest in room",
+						room.getPrice());
+				contService.createService(service);
 
-			// reserve a room
-			contGuest.addDateInSettle(guest, dateInSettle);
-			contGuest.addDateOutSettle(guest, dateOutSettle);
+				Check check = new Check(LocalDateTime.parse(dateInSettle),
+						LocalDateTime.parse(dateOutSettle), false, idGuest,
+						idRoom);
+				contCheck.createCheck(check);
 
-			// add id guest in room
-			contGuest.addRoomForGuest(guest, room);
-			contRoom.changeRoomStatus(room, Status.NOTFREE);
+				service.setIdCheck(check.getId());
+				contService.updateService(service.getId());
+
+				contRoom.changeRoomStatus(idRoom, Status.NOTFREE);
+				contRoom.updateRoom(idRoom);
+
+				connection.commit();
+
+			} catch (SQLException e) {
+				if (connection != null) {
+					try {
+						System.err.print("Transaction is being rolled back");
+						connection.rollback();
+					} catch (SQLException excep) {
+						LOGGER.error(e.getMessage());
+					}
+				}
+				LOGGER.error(e.getMessage());
+			} finally {
+				source.closeConnection();
+			}
 		}
 	}
 
 	@Override
 	public void addServiceForGuest(int idGuest, int idService) {
-		Guest guest = contGuest.getGuestById(idGuest);
+		// Guest guest = contGuest.getGuestById(idGuest);
 
-		DailService service = contDailService.getService(idService);
-		contGuest.addServiceForGuest(guest, service);
+		// DailService service = contDailService.getService(idService);
+		// contGuest.addServiceForGuest(guest, idService);
 
 	}
 
 	@Override
 	public void settleGuestOutRoom(int idGuest) {
-//		synchronized (contRoom) {
-//			Guest guest = contGuest.getGuestById(idGuest);
-//			// 1. guest pay the order
-//			// 2. change room status
-//			List<Room> roomsList = contRoom.getListRoom();
-//			Room room = contGuest.getRoomInLiveGuest(guest, roomsList);
-//			contRoom.changeRoomStatus(room, Status.FREE);
-//			contRoom.updateRoom(room);
-//		}
+		synchronized (contRoom) {
+			Connection connection = null;
+			try {
+				connection = source.openConnection();
+				connection.setAutoCommit(false);
+
+				// 1. guest pay the check
+				Check check = contCheck.getIdCheckForIdGuest(idGuest);
+				check.setStatus(true);
+
+				// 2. change room status
+
+				contRoom.changeRoomStatus(check.getIdRoom(), Status.FREE);
+				contRoom.updateRoom(check.getIdRoom());
+				connection.commit();
+
+			} catch (SQLException e) {
+				if (connection != null) {
+					try {
+						System.err.print("Transaction is being rolled back");
+						connection.rollback();
+					} catch (SQLException excep) {
+						LOGGER.error(e.getMessage());
+					}
+				}
+				LOGGER.error(e.getMessage());
+			} finally {
+				source.closeConnection();
+			}
+		}
 	}
 
 	@Override
 	public Room getRoomInLiveGuest(int idGuest) {
-		return null;
-//		Guest guest = contGuest.getGuestById(idGuest);
-//		List<Room> roomsList = contRoom.getListRoom();
-//		return contGuest.getRoomInLiveGuest(guest, roomsList);
+		int idRoom = contCheck.getRoomInLiveGuest(idGuest);
+		return contRoom.getRoom(idRoom);
 	}
 
-	@Override
-	public int getSumOrderGuest(int idGuest) {
-		Guest guest = contGuest.getGuestById(idGuest);
-		return contGuest.getSumOrderGuest(guest);
-
-	}
-
-	@Override
-	public List<Guest> printListGuestRoom(int idRoom) {
-		Room room = contRoom.getRoomByNumber(idRoom);
-		//return contRoom.getListGuestRoom(idRoom);
-		return null;
-	}
 
 	@Override
 	public List<Guest> printGuestsSortedByName() {
-		List<Guest> guestsList = contGuest.getListGuest();
-		return contGuest.printGuestsSortedByName(guestsList);
+		return contGuest.getListGuestSortedByName();
 	}
 
 	@Override
 	public List<Guest> printGuestsSortedByDateOutSettle() {
-		List<Guest> guestsList = contGuest.getListGuest();
-		return contGuest.printGuestsSortedByDateOutSettle(guestsList);
+		return contGuest.getListGuestSortedByDateOutSettle();
 	}
 
 	@Override
@@ -206,131 +228,92 @@ public class ServiceAdmin implements IServiceAdmin {
 	}
 
 	@Override
-	public synchronized void importGuestsList() { // read from CSV
+	public void importGuestsList() {
+		contGuest.importGuestsList();
 
-		List<Guest> importList = contGuest.importGuestsList();
-		List<Guest> existList = contGuest.getListGuest();
-
-		// replace the existing on imported
-		for (int i = 0; i < existList.size(); i++) {
-			for (int j = 0; j < importList.size(); j++) {
-				if (existList.get(i).getId() == importList.get(j).getId()) {
-					existList.set(i, importList.get(j));
-				}
-			}
-		}
-		// if imported is new add in existList
-		for (int i = 0; i < importList.size(); i++) {
-			for (int j = 0; j < existList.size(); j++) {
-				if (importList.get(i).getId() != existList.get(j).getId()) {
-					existList.add(importList.get(i));
-				}
-			}
-		}
-		contGuest.setListGuest(existList); // updata List
 	}
 
 	@Override
-	public void exportGuestsList() { // write in CSV
-		contGuest.exportGuestsList(contGuest.getListGuest());
+	public void exportGuestsList() {// write in CSV
+		contGuest.exportGuestsList();
+
 	}
 
-	// ======= room ======
+	// ======= ROOM ======
+
 	@Override
 	public void createRoom(Room room) {
-		contRoom.createRoom(room);
 		synchronized (contRoom) {
-			//contRoom.createRoom( number,  content,  stars,  price);
+			contRoom.createRoom(room);
 		}
 	}
 
 	@Override
-	public String[] getListRoom() {
+	public List<Room> getListRoom() {
 		return contRoom.getListRoom();
 	}
 
 	@Override
-	public String[] getListThreeLastGuestsOfRoom(int idRoom) {
-		
-		return contRoom.getListThreeLastGuestsOfRoom(idRoom);
-	}
-
-	@Override
 	public void updateRoom(int idRoom) {
-		Room room = contRoom.getRoomByNumber(idRoom);
-		contRoom.updateRoom(room);
-	}
-
-	@Override
-	public List<Room> printSortedRoomsByContent() {
-		return null;
-//		List<Room> roomsList = contRoom.getListRoom();
-//		return contRoom.printRoomSortedByContetn(roomsList);
-	}
-
-	@Override
-	public List<Room> printSortedRoomsByNumber() {
-		return null;
-//		List<Room> roomsList = contRoom.getListRoom();
-//		return contRoom.printRoomSortedByNumber(roomsList);
-
-	}
-
-	@Override
-	public List<Room> printSortedRoomsByPrice() {
-		return null;
-//		List<Room> roomsList = contRoom.getListRoom();
-//		return contRoom.printRoomSortedByPrice(roomsList);
-	}
-
-	@Override
-	public List<Room> printSortedRoomByStars() {
-		return null;
-//		List<Room> roomsList = contRoom.getListRoom();
-//		return contRoom.printRoomSortedByStars(roomsList);
-
-	}
-
-	@Override
-	public List<Room> printRoomFreeSortetdByContent() {
-		List<Room> roomsList = contRoom.getRoomListFree();
-		//return contRoom.printRoomSortedByContetn(roomsList);
-		return null;
-
-	}
-
-	@Override
-	public List<Room> printRoomFreeSortetdByPrice() {
-		List<Room> roomsList = contRoom.getRoomListFree();
-		return contRoom.printRoomSortedByPrice(roomsList);
-
-	}
-
-	@Override
-	public List<Room> printRoomFreeSortetdByNumber() {
-		List<Room> roomsList = contRoom.getRoomListFree();
-		return contRoom.printRoomSortedByNumber(roomsList);
-
-	}
-
-	@Override
-	public List<Room> printRoomFreeSortetdByStars() {
-		List<Room> roomsList = contRoom.getRoomListFree();
-		return contRoom.printRoomSortedByStars(roomsList);
-
-	}
-
-	@Override
-	public int getAmountFreeRoom() {
-		return contRoom.printAmountRoomFree();
-	}
-
-	@Override
-	public void changeRoomStatus(int idRoom, String str) {
 		synchronized (contRoom) {
-			Room room = contRoom.getRoomByNumber(idRoom);
-			Status status = Status.valueOf(str);
-			contRoom.changeRoomStatus(room, status);
+			contRoom.updateRoom(idRoom);
+		}
+	}
+
+	@Override
+	public List<Room> getListRoomSortedByContent() {
+		return contRoom.getListRoomSortedByContetn();
+	}
+
+	@Override
+	public List<Room> getListRoomSortedByNumber() {
+		return contRoom.getListRoomSortedByNumber();
+	}
+
+	@Override
+	public List<Room> getListRoomSortedByPrice() {
+		return contRoom.getListRoomSortedByPrice();
+	}
+
+	@Override
+	public List<Room> getListRoomSortedByStars() {
+		return contRoom.getListRoomFreeSortedByStars();
+	}
+
+	@Override
+	public List<Room> getListRoomFree() {
+		return contRoom.getListRoomFree();
+	}
+
+	@Override
+	public List<Room> getListRoomFreeSortedByContent() {
+		return contRoom.getListRoomFreeSortedByContetn();
+	}
+
+	@Override
+	public List<Room> getListRoomFreeSortedByNumber() {
+		return contRoom.getListRoomFreeSortedByNumber();
+	}
+
+	@Override
+	public List<Room> getListRoomFreeSortedByPrice() {
+		return contRoom.getListRoomFreeSortedByPrice();
+	}
+
+	@Override
+	public List<Room> getListRoomFreeSortedByStars() {
+		return contRoom.getListRoomFreeSortedByStars();
+	}
+
+	@Override
+	public int getAmountRoomFree() {
+		return contRoom.getAmountRoomFree();
+	}
+
+	@Override
+	public void changeRoomStatus(int idRoom, String status) {
+		synchronized (contRoom) {
+			contRoom.changeRoomStatus(idRoom, Status.valueOf(status));
 		}
 
 	}
@@ -338,190 +321,111 @@ public class ServiceAdmin implements IServiceAdmin {
 	@Override
 	public void changeRoomPrice(int idRoom, int price) {
 		synchronized (contRoom) {
-			Room room = contRoom.getRoomByNumber(idRoom);
-			contRoom.changeRoomPrice(room, price);
+			contRoom.changeRoomPrice(idRoom, price);
 		}
-
 	}
 
 	@Override
 	public void cloneRoom(int idRoom) {
-		Room room = contRoom.getRoomByNumber(idRoom);
-		//contRoom.createRoom(contRoom.cloneRoom(room));
+		contRoom.cloneRoom(idRoom);
+	}
+
+	@Override
+	public void importRoomsList() {
+		contRoom.importRoomsList();
 
 	}
 
 	@Override
-	public void importRoomsList() { // read from CSV
-//		synchronized (contRoom) {
-//			List<Room> importList = contRoom.importRoomsList();
-//			List<Room> existList = contRoom.getListRoom();
-//			// replace the existing on imported
-//			for (int i = 0; i < existList.size(); i++) {
-//				for (int j = 0; j < importList.size(); j++) {
-//					if (existList.get(i).getNumber() == importList.get(j)
-//							.getNumber()) {
-//						existList.set(i, importList.get(j));
-//					}
-//				}
-//			}
-//			// if imported is new add in existList
-//			for (int i = 0; i < importList.size(); i++) {
-//				for (int j = 0; j < existList.size(); j++) {
-//					if (importList.get(i).getNumber() != existList.get(j)
-//							.getNumber()) {
-//						existList.add(importList.get(i));
-//					}
-//				}
-//			}
-//			contRoom.setListRoom(existList);
-//		}
+	public void exportRoomsList() {// write in CSV
+		contRoom.exportRoomsList();
+
+	}
+
+	// ========= SERVICE ===============
+
+	@Override
+	public void createService(Service service) {
+		contService.createService(service);
 
 	}
 
 	@Override
-	public void exportRoomsList() { // write in CSV
-		//contRoom.exportRoomsList(contRoom.getListRoom());
-	}
-
-	// ====== service =====
-	@Override
-	public void createService(DailService service) {
-		service.setId(contDailService.getIdForNewService());
-		contDailService.createService((DailService) service);
+	public void updateService(int idService) {
+		contService.updateService(idService);
 
 	}
 
 	@Override
-	public void createAdditionalService(AdditionalService service) {
-		service.setId(contAdditionalService.getIdForNewService());
-		contAdditionalService.createService(service);
+	public Service getServiceById(int idService) {
+		return contService.getService(idService);
 	}
 
 	@Override
-	public DailService getServiceById(int id) {
-
-		if (contDailService.getService(id) != null) {
-			return contDailService.getService(id);
-		} else if (contAdditionalService.getService(id) != null) {
-			return contAdditionalService.getService(id);
-		} else
-			return null;
-	}
-
-	@Override
-	public List<DailService> getListDailService() {
-		return contDailService.getListDailService();
-	}
-
-	@Override
-	public List<AdditionalService> getListAdditionalService() {
-		return contAdditionalService.getListAdditionalService();
-	}
-
-	@Override
-	public List<DailService> printDailServicesSortedByName() {
-		List<DailService> dailServicesList = contDailService
-				.getListDailService();
-		return contDailService.printServicesSortedByName(dailServicesList);
-	}
-
-	@Override
-	public List<AdditionalService> printAdditionalServicesSortedByName() {
-		List<AdditionalService> additionalServicesList = contAdditionalService
-				.getListAdditionalService();
-		return contAdditionalService
-				.printServicesSortedByName(additionalServicesList);
-	}
-
-	@Override
-	public List<DailService> printDailServicesSortedByPrice() {
-		List<DailService> dailServicesList = contDailService
-				.getListDailService();
-		contDailService.printServicesSortedByPrice(dailServicesList);
-		return dailServicesList;
-	}
-
-	@Override
-	public List<AdditionalService> printAdditionalServicesSortedByPrice() {
-		List<AdditionalService> additionalServicesList = contAdditionalService
-				.getListAdditionalService();
-		return contAdditionalService
-				.printServicesSortedByPrice(additionalServicesList);
-	}
-
-	@Override
-	public synchronized void changeServicePrice(int idService, int price) {
-
-		if (idService >= contDailService.getListDailService().size()) {
-			contAdditionalService.changeAdditionalPrice(idService, price);
-		} else
-			contDailService.changePrice(idService, price);
+	public List<Service> getListService() {
+		return contService.getListService();
 
 	}
 
 	@Override
-	public void importDailServicesList() { // read from CSV
-		synchronized (contDailService) {
-			List<DailService> importList = contDailService.importServicesList();
-			List<DailService> existList = contDailService.getListDailService();
-			// replace the existing on imported
-			for (int i = 0; i < existList.size(); i++) {
-				for (int j = 0; j < importList.size(); j++) {
-					if (existList.get(i).getId() == importList.get(j).getId()) {
-						existList.set(i, importList.get(j));
-					}
-				}
-			}
-			// if imported is new add in existList
-			for (int i = 0; i < importList.size(); i++) {
-				for (int j = 0; j < existList.size(); j++) {
-					if (importList.get(i).getId() != existList.get(j).getId()) {
-						existList.add(importList.get(i));
-					}
-				}
-			}
-			contDailService.setListDailService(existList);
-		}
+	public List<Service> printServicesSortedByName() {
+		return contService.getServiceSortedByName();
 	}
 
 	@Override
-	public void exportDailServicesList() { // write in CSV
-		contDailService
-				.exportServicesList(contDailService.getListDailService());
+	public List<Service> printServicesSortedByPrice() {
+		return contService.getServiceSortedByPrice();
 	}
 
 	@Override
-	public void importAdditionalServicesList() { // read from CSV
-		synchronized (contAdditionalService) {
-			List<AdditionalService> importList = contAdditionalService
-					.importServicesList();
-			List<AdditionalService> existList = contAdditionalService
-					.getListAdditionalService();
-			// replace the existing on imported
-			for (int i = 0; i < existList.size(); i++) {
-				for (int j = 0; j < importList.size(); j++) {
-					if (existList.get(i).getId() == importList.get(j).getId()) {
-						existList.set(i, importList.get(j));
-					}
-				}
-			}
-			// if imported is new add in existList
-			for (int i = 0; i < importList.size(); i++) {
-				for (int j = 0; j < existList.size(); j++) {
-					if (importList.get(i).getId() != existList.get(j).getId()) {
-						existList.add(importList.get(i));
-					}
-				}
-			}
-			contAdditionalService.setListAdditionalService(existList);
-		}
+	public List<Service> getGuestThemServices(int idGuest) {
+		return contService.getGuestThemServices(idGuest);
 	}
 
 	@Override
-	public void exportAdditionalServicesList() { // write in CSV
-		contAdditionalService.exportServicesList(contAdditionalService
-				.getListAdditionalService());
+	public void changeServicePrice(int idService, int price) {
+		contService.changePrice(idService, price);
+	}
+
+	@Override
+	public void importServicesList() {
+		contService.importServicesList();
+
+	}
+
+	@Override
+	public void exportServicesList() {// write in CSV
+		contService.exportServicesList();
+
+	}
+
+	// ========= CHECK =============
+
+	@Override
+	public void createCheck(Check check) {
+		contCheck.createCheck(check);
+
+	}
+
+	@Override
+	public void updateCheck(int idCheck) {
+		contCheck.updateCheck(idCheck);
+
+	}
+
+	@Override
+	public Check getCheckById(int idCheck) {
+		return contCheck.getCheck(idCheck);
+	}
+
+	@Override
+	public List<Check> getListCheck() {
+		return contCheck.getListCheck();
+	}
+
+	@Override
+	public int getSumCheck(int idGuest) {
+		return contService.getServiceSumPrice(idGuest);
 	}
 
 }

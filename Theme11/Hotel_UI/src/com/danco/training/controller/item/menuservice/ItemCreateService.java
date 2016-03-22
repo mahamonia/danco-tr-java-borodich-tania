@@ -1,4 +1,4 @@
-package com.danco.training.controller.item.menuguest;
+package com.danco.training.controller.item.menuservice;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -10,15 +10,17 @@ import com.danco.api.ui.IProcessing;
 import com.danco.training.controller.item.itemmenu.ItemOperating;
 import com.danco.training.controller.menu.Menu;
 
-public class ItemRegistry extends ItemOperating {
-	private static final String PROTOCOL = "guest"+";"+"createGuest"+";";
-	private static final String SEPARATOR =";";
+public class ItemCreateService extends ItemOperating {
+	private static final String PROTOCOL = "service" + ";"
+			+ "createService" + ";";
+	private static final String SEPARATOR = ";";
 	private static final String MESSAGE_1 = "Name...";
-	private static final String MESSAGE_2 = "Pasport...";
-	private static final String MESSAGE_4 = "Message ";
-	private static final Logger LOGGER = LogManager.getLogger(ItemRegistry.class);
+	private static final String MESSAGE_2 = "Price...";
+	private static final String MESSAGE_3 = "Message";
+	private static final Logger LOGGER = LogManager
+			.getLogger(ItemCreateService.class);
 
-	public ItemRegistry(String name, IProcessing processing) {
+	public ItemCreateService(String name, IProcessing processing) {
 		super(name, processing);
 	}
 
@@ -29,14 +31,13 @@ public class ItemRegistry extends ItemOperating {
 		try {
 			System.out.println(MESSAGE_1);
 			String name = reader.readLine();
+
 			System.out.println(MESSAGE_2);
-			String pasport = reader.readLine();
-			
+			String price = reader.readLine();
+
 			StringBuilder str = new StringBuilder();
-			str.append(PROTOCOL).append(name).append(SEPARATOR).append(pasport);
-			
-			//выводим результат		
-			System.out.println(MESSAGE_4 + processing.dataProcessing(str));
+			str.append(PROTOCOL).append(name).append(SEPARATOR).append(price);
+			System.out.println(MESSAGE_3 + processing.dataProcessing(str));
 
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());

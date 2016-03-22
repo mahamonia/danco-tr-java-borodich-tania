@@ -6,11 +6,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.danco.api.backend.IServiceAdmin;
-import com.danco.training.entity.AdditionalService;
-import com.danco.training.entity.DailService;
-import com.danco.training.entity.Guest;
-import com.danco.training.entity.Room;
-import com.danco.training.entity.Status;
+import com.danco.model.entity.Guest;
+import com.danco.model.entity.Room;
+import com.danco.model.entity.Service;
+import com.danco.model.entity.Status;
 
 public class ProtocolFromUiToBackEnd {
 
@@ -23,8 +22,7 @@ public class ProtocolFromUiToBackEnd {
 	private static final String FOUR_OPTION = "4";
 	private static final String OPTION_OBGECT_GUEST = "guest";
 	private static final String OPTION_OBGECT_ROOM = "room";
-	private static final String OPTION_OBGECT_DAIL_SERVICE = "dailService";
-	private static final String OPTION_OBGECT_ADDITIONAL_SERVICE = "additionalService";
+	private static final String OPTION_OBGECT_SERVICE = "service";
 
 	private IServiceAdmin admin;
 
@@ -33,12 +31,12 @@ public class ProtocolFromUiToBackEnd {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public String[] parseStringToObject(String str) {
+	public Object parseStringToObject(String str) {
 
 		String[] arrayStr = str.split(";");
 		String type = arrayStr[0];
 		String nameMetod = arrayStr[1];
-		String[] rezult = new String[] {};
+		Object rezult = new Object();
 
 		try {
 			Class cl = this.admin.getClass();
@@ -74,19 +72,15 @@ public class ProtocolFromUiToBackEnd {
 				paramTypes = new Class[] { Room.class };
 				args = new Object[] { StringToRoom(arrayStr) };
 				break;
-			case OPTION_OBGECT_DAIL_SERVICE:
-				paramTypes = new Class[] { DailService.class };
-				args = new Object[] { StringToDailService(arrayStr) };
-				break;
-			case OPTION_OBGECT_ADDITIONAL_SERVICE:
-				paramTypes = new Class[] { AdditionalService.class };
-				args = new Object[] { StringToAdditionalService(arrayStr) };
+			case OPTION_OBGECT_SERVICE:
+				paramTypes = new Class[] { Service.class };
+				args = new Object[] { StringToService(arrayStr) };
 				break;
 			default:
 				break;
 			}
 			Method m = cl.getMethod(nameMetod, paramTypes);
-			rezult = (String[]) m.invoke(this.admin, args);
+			rezult = (Object)m.invoke(this.admin, args);
 
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
@@ -107,15 +101,11 @@ public class ProtocolFromUiToBackEnd {
 		return room;
 	}
 
-	public DailService StringToDailService(String[] str) {
-		DailService service = new DailService(str[2], Integer.parseInt(str[3]));
+	public Service StringToService(String[] str) {
+		Service service = new Service(str[2], Integer.parseInt(str[3]));
 		return service;
 	}
 
-	public AdditionalService StringToAdditionalService(String[] str) {
-		AdditionalService service = new AdditionalService(str[2],
-				Integer.parseInt(str[3]), str[4], Integer.parseInt(str[5]));
-		return service;
-	}
+	
 
 }
