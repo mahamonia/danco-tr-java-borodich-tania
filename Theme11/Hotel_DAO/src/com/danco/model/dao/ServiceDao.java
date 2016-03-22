@@ -1,5 +1,6 @@
 package com.danco.model.dao;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -16,48 +17,47 @@ public class ServiceDao implements BaseDao<Service> {
 	private static final Logger LOGGER = LogManager.getLogger(ServiceDao.class);
 
 	@Override
-	public void create(DataSource source, Service model) {
+	public void create(Connection connect, Service model) {
 		try {
-			Statement statement = source.openConnection().createStatement();
+			Statement statement = connect.createStatement();
 			statement.executeUpdate("INSERT INTO `Hotel_service`.`Service` "
 					+ "(`idService`, `name`, `price`, `idCheck`) " + "VALUES ("
-					+ getIdForNewModel(source) + ", '" + model.getName()
+					+ getIdForNewModel(connect) + ", '" + model.getName()
 					+ "', '" + model.getPrice() + "', '" + model.getIdCheck()
 					+ "' );");
 
 		} catch (SQLException e) {
 			LOGGER.error(e.getMessage());
-		} finally {
-			source.closeConnection();
-		}
-
+		} 
 	}
 
 	@Override
-	public int getIdForNewModel(DataSource source) {
+	public int getIdForNewModel(Connection connect) {
 		int id = 0;
 		Statement statement = null;
 		try {
-			statement = source.openConnection().createStatement();
+			statement = connect.createStatement();
 			ResultSet result = statement
-					.executeQuery("SELECT * FROM Service order by idService");
+					.executeQuery("SELECT * FROM Service ORDER BY idService");
+			
+			if (result.next()){
+				result.last();
+				id = result.getInt(1);
+			} else id = 1;
 
-			result.last();
-			id = result.getInt(1);
+			
 
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
-		} finally {
-			source.closeConnection();
-		}
+		} 
 		return id + 1;
 	}
 
 	@Override
-	public void update(DataSource source, int idModel) {
-		Service service = getById(source, idModel);
+	public void update(Connection connect, int idModel) {
+		Service service = getById(connect, idModel);
 		try {
-			Statement statement = source.openConnection().createStatement();
+			Statement statement = connect.createStatement();
 
 			statement.executeUpdate("UPDATE  Service SET idService = "
 					+ service.getId() + ", name = '" + service.getName()
@@ -66,52 +66,46 @@ public class ServiceDao implements BaseDao<Service> {
 
 		} catch (SQLException e) {
 			LOGGER.error(e.getMessage());
-		} finally {
-			source.closeConnection();
-		}
+		} 
 
 	}
 
 	@Override
-	public void delete(DataSource source, int idModel) {
+	public void delete(Connection connect, int idModel) {
 		try {
-			Statement statement = source.openConnection().createStatement();
+			Statement statement = connect.createStatement();
 
 			statement.executeUpdate("DELETE FROM Service WHERE idService = "
 					+ idModel + ";");
 
 		} catch (SQLException e) {
 			LOGGER.error(e.getMessage());
-		} finally {
-			source.closeConnection();
-		}
+		} 
 	}
 
 	@Override
-	public Service getById(DataSource source, int idModel) {
+	public Service getById(Connection connect, int idModel) {
 		Statement statement = null;
 		ResultSet result = null;
 		try {
-			statement = source.openConnection().createStatement();
+			statement = connect.createStatement();
 			result = statement
 					.executeQuery("SELECT * FROM Service WHERE idService ="
 							+ idModel + ";");
 
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
-		} finally {
-			source.closeConnection();
 		}
 		return parseResultSet(result);
 	}
 
 	@Override
-	public List<Service> getList(DataSource source) {
+	public List<Service> getList(Connection connect) {
 		Statement statement = null;
 		ResultSet result = null;
 		List<Service> serviceList = new ArrayList<Service>();
 		try {
-			statement = source.openConnection().createStatement();
+			statement = connect.createStatement();
 			result = statement.executeQuery("SELECT * FROM Guest;");
 			while (result.next()) {
 				serviceList.add(parseResultSet(result));
@@ -128,6 +122,7 @@ public class ServiceDao implements BaseDao<Service> {
 	public Service parseResultSet(ResultSet result) {
 		Service service = null;
 		try {
+			if (result.next()){
 			int idService = result.getInt("idService");
 			String name = result.getString("name");
 			int price = result.getInt("price");
@@ -136,19 +131,19 @@ public class ServiceDao implements BaseDao<Service> {
 			service = new Service(name, price);
 			service.setIdCheck(idCheck);
 			service.setId(idService);
-
+			}
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
 		return service;
 	}
 
-	public List<Service> getListServiceSortedByPrice(DataSource source) {
+	public List<Service> getListServiceSortedByPrice(Connection connect) {
 		Statement statement = null;
 		ResultSet result = null;
 		List<Service> serviceList = new ArrayList<Service>();
 		try {
-			statement = source.openConnection().createStatement();
+			statement = connect.createStatement();
 			result = statement
 					.executeQuery("SELECT * FROM Service ORDER BY price;");
 			while (result.next()) {
@@ -162,13 +157,13 @@ public class ServiceDao implements BaseDao<Service> {
 
 	}
 
-	public List<Service> getGuestThemServices(DataSource source, int idGuest) {
+	public List<Service> getGuestThemServices(Connection connect, int idGuest) {
 
 		Statement statement = null;
 		ResultSet result = null;
 		List<Service> serviceList = new ArrayList<Service>();
 		try {
-			statement = source.openConnection().createStatement();
+			statement = connect.createStatement();
 			result = statement
 					.executeQuery("SELECT Service.idService, Service.name, Service.price, Service.idCheck"
 							+ " FROM Service join `Check`"

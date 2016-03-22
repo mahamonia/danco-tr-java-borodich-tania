@@ -1,5 +1,6 @@
 package com.danco.api.backend;
 
+import java.sql.Connection;
 import java.util.List;
 
 import com.danco.model.entity.Room;
@@ -7,44 +8,44 @@ import com.danco.model.entity.Status;
 
 public interface IControllerRoom {
 
-	public void createRoom(Room room);
+	public void createRoom(Connection connect, Room room);
 
-	public void updateRoom(int idRoom);
+	public void updateRoom(Connection connect, int idRoom);
 
-	public void deleteRoom(int idRoom);
+	public void deleteRoom(Connection connect, int idRoom);
 
-	public Room getRoom(int idRoom);
+	public Room getRoom(Connection connect, int idRoom);
 
-	public List<Room> getListRoom();
+	public List<Room> getListRoom(Connection connect);
 
-	public List<Room> getListRoomSortedByContetn();
+	public List<Room> getListRoomSortedByContetn(Connection connect);
 
-	public List<Room> getListRoomSortedByNumber();
+	public List<Room> getListRoomSortedByNumber(Connection connect);
 
-	public List<Room> getListRoomSortedByPrice();
+	public List<Room> getListRoomSortedByPrice(Connection connect);
 
-	public List<Room> getListRoomSortedByStars();
+	public List<Room> getListRoomSortedByStars(Connection connect);
 
-	public List<Room> getListRoomFree();
+	public List<Room> getListRoomFree(Connection connect);
 	
-	public List<Room> getListRoomFreeSortedByContetn();
+	public List<Room> getListRoomFreeSortedByContetn(Connection connect);
 
-	public List<Room> getListRoomFreeSortedByNumber();
+	public List<Room> getListRoomFreeSortedByNumber(Connection connect);
 
-	public List<Room> getListRoomFreeSortedByPrice();
+	public List<Room> getListRoomFreeSortedByPrice(Connection connect);
 
-	public List<Room> getListRoomFreeSortedByStars();
+	public List<Room> getListRoomFreeSortedByStars(Connection connect);
 	
-	public int getAmountRoomFree();
+	public int getAmountRoomFree(Connection connect);
 
-	public void changeRoomStatus(int idRoom, Status status);
+	public void changeRoomStatus (Connection connect, int idRoom, Status status);
 
-	public void changeRoomPrice(int idRoom, int price);
+	public void changeRoomPrice(Connection connect, int idRoom, int price);
 
-	public Room cloneRoom(int idRoom);
+	public Room cloneRoom(Connection connect, int idRoom);
 
-	public List<Room> importRoomsList();
+	public List<Room> importRoomsList(Connection connect);
 
-	public void exportRoomsList();
+	public void exportRoomsList(Connection connect);
 
 }

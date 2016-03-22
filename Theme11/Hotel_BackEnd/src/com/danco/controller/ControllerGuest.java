@@ -1,5 +1,6 @@
 package com.danco.controller;
 
+import java.sql.Connection;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -8,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 import com.danco.annotation.Injection;
 import com.danco.api.backend.IControllerGuest;
 import com.danco.api.backend.IParseUtilityCSVForGuest;
-import com.danco.model.dao.DataSource;
 import com.danco.model.dao.GuestDao;
 import com.danco.model.entity.*;
 
@@ -21,27 +21,25 @@ public class ControllerGuest implements IControllerGuest {
 	private IParseUtilityCSVForGuest utility;
 
 	private GuestDao guestDao;
-	private DataSource source;
 
-	public ControllerGuest(DataSource source, GuestDao guestDao) {
-		this.source = source;
+	public ControllerGuest(GuestDao guestDao) {
 		this.guestDao = guestDao;
 
 	}
 
 	@Override
-	public void createGuest(Guest guest) {
+	public void createGuest(Connection connect, Guest guest) {
 		try {
-			guestDao.create(source, guest);
+			guestDao.create(connect, guest);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
 	}
 
 	@Override
-	public void updateGuest(int idGuest) {
+	public void updateGuest(Connection connect, int idGuest) {
 		try {
-			guestDao.update(source, idGuest);
+			guestDao.update(connect, idGuest);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
@@ -49,47 +47,47 @@ public class ControllerGuest implements IControllerGuest {
 	}
 
 	@Override
-	public void deleteGuest(int idGuest) {
+	public void deleteGuest(Connection connect, int idGuest) {
 		try {
-			guestDao.delete(source, idGuest);
+			guestDao.delete(connect, idGuest);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
 	}
 
 	@Override
-	public Guest getGuest(int idGuest) {
-		return guestDao.getById(source, idGuest);
+	public Guest getGuest(Connection connect, int idGuest) {
+		return guestDao.getById(connect, idGuest);
 	}
 
 	@Override
-	public List<Guest> getListGuest() {
-		return guestDao.getList(source);
+	public List<Guest> getListGuest(Connection connect) {
+		return guestDao.getList(connect);
 	}
 
 	@Override
-	public List<Guest> getListGuestSortedByName() {
-		return guestDao.getListGuestSortedByName(source);
+	public List<Guest> getListGuestSortedByName(Connection connect) {
+		return guestDao.getListGuestSortedByName(connect);
 	}
 
 	@Override
-	public List<Guest> getListGuestSortedByDateOutSettle() {
-		return guestDao.getListGuestSortedByDateOutSettle(source);
+	public List<Guest> getListGuestSortedByDateOutSettle(Connection connect) {
+		return guestDao.getListGuestSortedByDateOutSettle(connect);
 	}
 
 	@Override
-	public int getAmountGuest() {
-		return guestDao.getList(source).size();
+	public int getAmountGuest(Connection connect) {
+		return guestDao.getList(connect).size();
 	}
 
 	@Override
-	public List<Guest> importGuestsList() {
+	public List<Guest> importGuestsList(Connection connect) {
 		return utility.importData();
 	}
 
 	@Override
-	public void exportGuestsList() {
-		utility.exportData(guestDao.getList(source));
+	public void exportGuestsList(Connection connect) {
+		utility.exportData(guestDao.getList(connect));
 
 	}
 

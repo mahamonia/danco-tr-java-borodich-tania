@@ -1,5 +1,6 @@
 package com.danco.model.dao;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.List;
 
@@ -7,17 +8,17 @@ import com.danco.model.entity.BaseModel;
 
 public interface BaseDao<T extends BaseModel> {
 
-	public void create(DataSource source, T model);
+	public void create(Connection connect, T model);
 	
-	public int getIdForNewModel(DataSource source);
+	public int getIdForNewModel(Connection con);
 
-	public void update(DataSource source, int idModel);
+	public void update(Connection con, int idModel);
 
-	public void delete(DataSource source, int idModel);
+	public void delete(Connection con, int idModel);
 
-	public T getById(DataSource source, int idModel);
+	public T getById(Connection con, int idModel);
 
-	public List<T> getList(DataSource source);
+	public List<T> getList(Connection con);
 	
 	public T parseResultSet (ResultSet result);
 

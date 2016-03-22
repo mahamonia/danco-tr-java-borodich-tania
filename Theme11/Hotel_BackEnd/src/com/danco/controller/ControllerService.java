@@ -1,5 +1,6 @@
 package com.danco.controller;
 
+import java.sql.Connection;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -8,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 import com.danco.annotation.Injection;
 import com.danco.api.backend.IControllerService;
 import com.danco.api.backend.IParseUtilityCSVForService;
-import com.danco.model.dao.DataSource;
 import com.danco.model.dao.ServiceDao;
 import com.danco.model.entity.Service;
 
@@ -22,32 +22,30 @@ public class ControllerService implements IControllerService{
 	private IParseUtilityCSVForService utility;
 	
 	private  ServiceDao serviceDao;
-	private DataSource source;
 
-	public ControllerService(DataSource source, ServiceDao serviceDao) {
-		this.source = source;
+	public ControllerService(ServiceDao serviceDao) {
 		this.serviceDao = serviceDao;
 
 }
 
 	@Override
-	public void createService(Service service) {
+	public void createService(Connection connect, Service service) {
 		try {
-			serviceDao.create(source, service);
+			serviceDao.create(connect, service);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
 	}
 
 	@Override
-	public int getIdForNewService() {
+	public int getIdForNewService(Connection connect) {
 		return 0;
 	}
 
 	@Override
-	public void updateService(int idService) {
+	public void updateService(Connection connect ,int idService) {
 		try {
-			serviceDao.update(source, idService);
+			serviceDao.update(connect, idService);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
@@ -55,61 +53,61 @@ public class ControllerService implements IControllerService{
 	}
 
 	@Override
-	public void deleteService(int idService) {
+	public void deleteService(Connection connect, int idService) {
 		try {
-			serviceDao.delete(source, idService);
+			serviceDao.delete(connect, idService);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}	
 	}
 
 	@Override
-	public Service getService(int idService) {
-		return serviceDao.getById(source, idService);
+	public Service getService(Connection connect, int idService) {
+		return serviceDao.getById(connect, idService);
 	}
 
 	@Override
-	public List<Service> getListService() {
-		return serviceDao.getList(source);
+	public List<Service> getListService(Connection connect) {
+		return serviceDao.getList(connect);
 	}
 
-	public List<Service> getGuestThemServices(int idGuest){	
-		return serviceDao.getGuestThemServices(source, idGuest);
+	public List<Service> getGuestThemServices(Connection connect, int idGuest){	
+		return serviceDao.getGuestThemServices(connect, idGuest);
 		
 	}
 	@Override
-	public List<Service> getServiceSortedByPrice() {
-		return serviceDao.getListServiceSortedByPrice(source);
+	public List<Service> getServiceSortedByPrice(Connection connect ) {
+		return serviceDao.getListServiceSortedByPrice(connect);
 	}
 
 	@Override
-	public List<Service> getServiceSortedByName() {
+	public List<Service> getServiceSortedByName(Connection connect) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public int getServiceSumPrice(int idGuest) {
+	public int getServiceSumPrice(Connection connect, int idGuest) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public void changePrice(int idService, int price) {
+	public void changePrice(Connection connect, int idService, int price) {
 		try {
-			serviceDao.getById(source, idService).setPrice(price);
+			serviceDao.getById(connect, idService).setPrice(price);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}		
 	}
 
 	@Override
-	public List<Service> importServicesList() {
+	public List<Service> importServicesList(Connection connect) {
 		return utility.importData();
 	}
 
 	@Override
-	public void exportServicesList() {
-		utility.exportData(serviceDao.getList(source));
+	public void exportServicesList(Connection connect) {
+		utility.exportData(serviceDao.getList(connect));
 	}
 }

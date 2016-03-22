@@ -1,35 +1,36 @@
 package com.danco.api.backend;
 
+import java.sql.Connection;
 import java.util.List;
 
 import com.danco.model.entity.Service;
 
 public interface IControllerService {
 
-	public void createService(Service service);
+	public void createService(Connection connect, Service service);
 
-	public int getIdForNewService();
+	public int getIdForNewService(Connection con);
 
-	public void updateService(int idService);
+	public void updateService(Connection con, int idService);
 
-	public void deleteService(int idService);
+	public void deleteService(Connection con, int idService);
 
-	public Service getService(int idService);
+	public Service getService(Connection con, int idService);
 
-	public List<Service> getListService();
+	public List<Service> getListService(Connection con);
 	
-	public List<Service> getGuestThemServices(int idGuest);
+	public List<Service> getGuestThemServices(Connection con, int idGuest);
 
-	public List<Service> getServiceSortedByPrice();
+	public List<Service> getServiceSortedByPrice(Connection con);
 
-	public List<Service> getServiceSortedByName();
+	public List<Service> getServiceSortedByName(Connection con);
 
-	public int getServiceSumPrice(int idGuest);
+	public int getServiceSumPrice(Connection con, int idGuest);
 
-	public void changePrice(int idService, int price);
+	public void changePrice(Connection con, int idService, int price);
 
-	public List<Service> importServicesList();
+	public List<Service> importServicesList(Connection con);
 
-	public void exportServicesList();
+	public void exportServicesList(Connection con);
 
 }

@@ -1,5 +1,6 @@
 package com.danco.model.dao;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -17,14 +18,14 @@ public class CheckDao implements BaseDao<Check> {
 	private static final Logger LOGGER = LogManager.getLogger(CheckDao.class);
 
 	@Override
-	public void create(DataSource source, Check model) {
+	public void create(Connection connect, Check model) {
 		try {
-			Statement statement = source.openConnection().createStatement();
+			Statement statement = connect.createStatement();
 
 			statement
 					.executeUpdate("INSERT INTO `Hotel_service`.`Check` "
 							+ "(`idCheck`, `date_in_settle`, `date_out_settle`, `status`, `idRoom`, `idGuest`) "
-							+ "VALUES (" + getIdForNewModel(source) + ", '"
+							+ "VALUES (" + getIdForNewModel(connect) + ", '"
 							+ model.getDateInSettle() + "', '"
 							+ model.getDateOutSettle() + "', '"
 							+ model.isStatus() + "', " + model.getIdGuest()
@@ -32,17 +33,15 @@ public class CheckDao implements BaseDao<Check> {
 
 		} catch (SQLException e) {
 			LOGGER.error(e.getMessage());
-		} finally {
-			source.closeConnection();
-		}
+		} 
 
 	}
 
-	public int getIdForNewModel(DataSource source) {
+	public int getIdForNewModel(Connection connect) {
 		int id = 0;
 		Statement statement = null;
 		try {
-			statement = source.openConnection().createStatement();
+			statement = connect.createStatement();
 			ResultSet result = statement
 					.executeQuery("SELECT * FROM `Check` order by idCheck");
 
@@ -51,18 +50,16 @@ public class CheckDao implements BaseDao<Check> {
 
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
-		} finally {
-			source.closeConnection();
-		}
+		} 
 		return id + 1;
 
 	}
 
 	@Override
-	public void update(DataSource source, int idModel) {
-		Check check = getById(source, idModel);
+	public void update(Connection connect, int idModel) {
+		Check check = getById(connect, idModel);
 		try {
-			Statement statement = source.openConnection().createStatement();
+			Statement statement = connect.createStatement();
 
 			statement.executeUpdate("UPDATE  `Check` SET idCheck = "
 					+ check.getId() + ", date_in_settle = '"
@@ -73,53 +70,47 @@ public class CheckDao implements BaseDao<Check> {
 
 		} catch (SQLException e) {
 			LOGGER.error(e.getMessage());
-		} finally {
-			source.closeConnection();
-		}
+		} 
 
 	}
 
 	@Override
-	public void delete(DataSource source, int idModel) {
+	public void delete(Connection connect, int idModel) {
 		try {
-			Statement statement = source.openConnection().createStatement();
+			Statement statement = connect.createStatement();
 
 			statement.executeUpdate("DELETE FROM `Check` WHERE idCheck = "
 					+ idModel + ";");
 
 		} catch (SQLException e) {
 			LOGGER.error(e.getMessage());
-		} finally {
-			source.closeConnection();
-		}
+		} 
 
 	}
 
 	@Override
-	public Check getById(DataSource source, int idModel) {
+	public Check getById(Connection connect, int idModel) {
 		Statement statement = null;
 		ResultSet result = null;
 		try {
-			statement = source.openConnection().createStatement();
+			statement = connect.createStatement();
 
 			result = statement
 					.executeQuery("SELECT * FROM Check WHERE idCheck ="
 							+ idModel + ";");
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
-		} finally {
-			source.closeConnection();
-		}
+		} 
 		return parseResultSet(result);
 	}
 
 	@Override
-	public List<Check> getList(DataSource source) {
+	public List<Check> getList(Connection connect) {
 		Statement statement = null;
 		ResultSet result = null;
 		List<Check> checkList = new ArrayList<Check>();
 		try {
-			statement = source.openConnection().createStatement();
+			statement = connect.createStatement();
 			result = statement.executeQuery("SELECT * FROM `Check`;");
 
 			while (result.next()) {
@@ -127,9 +118,7 @@ public class CheckDao implements BaseDao<Check> {
 			}
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
-		} finally {
-			source.closeConnection();
-		}
+		} 
 		return checkList;
 	}
 
@@ -138,7 +127,7 @@ public class CheckDao implements BaseDao<Check> {
 
 		Check check = null;
 		try {
-
+			if (result.next()){
 			int idCheck = result.getInt("idCheck");
 			LocalDateTime dateInSettle = LocalDateTime.parse(result
 					.getString("date_in_settle"));
@@ -153,28 +142,26 @@ public class CheckDao implements BaseDao<Check> {
 			check = new Check(dateInSettle, dateOutSettle, status, idGuest,
 					idRoom);
 			check.setId(idCheck);
-
+			}
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
 		return check;
 	}
 
-	public int getIdCheckForIdGuest(DataSource source, int idGuest) {
+	public int getIdCheckForIdGuest(Connection connect, int idGuest) {
 		Statement statement = null;
 		ResultSet result = null;
 		int idCheck = 0;
 		try {
-			statement = source.openConnection().createStatement();
+			statement = connect.createStatement();
 			result = statement.executeQuery("SELECT idCheck	FROM `Check` "
 					+ "WHERE Check.idGuest = " + idGuest + ";");
 
 			idCheck = result.getInt("idCheck");
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
-		} finally {
-			source.closeConnection();
-		}
+		} 
 
 		return idCheck;
 

@@ -1,5 +1,6 @@
 package com.danco.controller;
 
+import java.sql.Connection;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -9,7 +10,6 @@ import com.danco.annotation.ConfigProperty;
 import com.danco.annotation.Injection;
 import com.danco.api.backend.IControllerRoom;
 import com.danco.api.backend.IParseUtilityCSVForRoom;
-import com.danco.model.dao.DataSource;
 import com.danco.model.dao.RoomDao;
 import com.danco.model.entity.Room;
 import com.danco.model.entity.Status;
@@ -27,105 +27,103 @@ public class ControllerRoom implements IControllerRoom {
 	private IParseUtilityCSVForRoom utility;
 
 	private RoomDao roomDao;
-	private DataSource source;
 
-	public ControllerRoom(DataSource source, RoomDao roomDao) {
-		this.source = source;
+	public ControllerRoom(RoomDao roomDao) {
 		this.roomDao = roomDao;
 	}
 
 	@Override
-	public void createRoom(Room room) {
+	public void createRoom(Connection connect, Room room) {
 		try {
-			roomDao.create(source, room);
+			roomDao.create(connect, room);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
 	}
 
 	@Override
-	public void updateRoom(int idRoom) {
+	public void updateRoom(Connection connect, int idRoom) {
 		try {
-			roomDao.update(source, idRoom);
+			roomDao.update(connect, idRoom);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
 	}
 
 	@Override
-	public void deleteRoom(int idRoom) {
+	public void deleteRoom(Connection connect, int idRoom) {
 		try {
-			roomDao.delete(source, idRoom);
+			roomDao.delete(connect, idRoom);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
 	}
 
 	@Override
-	public Room getRoom(int idRoom) {
-		return roomDao.getById(source, idRoom);
+	public Room getRoom(Connection connect, int idRoom) {
+		return roomDao.getById(connect, idRoom);
 	}
 
 	@Override
-	public List<Room> getListRoom() {
-		return roomDao.getList(source);
+	public List<Room> getListRoom(Connection connect) {
+		return roomDao.getList(connect);
 	}
 
 	@Override
-	public List<Room> getListRoomSortedByContetn() {
-		return roomDao.getListRoomSortedByContetn(source);
+	public List<Room> getListRoomSortedByContetn(Connection connect) {
+		return roomDao.getListRoomSortedByContetn(connect);
 	}
 
 	@Override
-	public List<Room> getListRoomSortedByNumber() {
-		return roomDao.getListRoomSortedByNumber(source);
+	public List<Room> getListRoomSortedByNumber(Connection connect) {
+		return roomDao.getListRoomSortedByNumber(connect);
 	}
 
 	@Override
-	public List<Room> getListRoomSortedByPrice() {
-		return roomDao.getListRoomSortedByPrice(source);
+	public List<Room> getListRoomSortedByPrice(Connection connect) {
+		return roomDao.getListRoomSortedByPrice(connect);
 	}
 
 	@Override
-	public List<Room> getListRoomSortedByStars() {
-		return roomDao.getListRoomSortedByStars(source);
+	public List<Room> getListRoomSortedByStars(Connection connect) {
+		return roomDao.getListRoomSortedByStars(connect);
 	}
 
 	@Override
-	public List<Room> getListRoomFree() {
-		return roomDao.getListFreeRoom(source);
+	public List<Room> getListRoomFree(Connection connect) {
+		return roomDao.getListFreeRoom(connect);
 	}
 
 	@Override
-	public List<Room> getListRoomFreeSortedByContetn() {
-		return roomDao.getListRoomFreeSortedByContetn(source);
+	public List<Room> getListRoomFreeSortedByContetn(Connection connect) {
+		return roomDao.getListRoomFreeSortedByContetn(connect);
 	}
 
 	@Override
-	public List<Room> getListRoomFreeSortedByNumber() {
-		return roomDao.getListRoomFreeSortedByNumber(source);
+	public List<Room> getListRoomFreeSortedByNumber(Connection connect) {
+		return roomDao.getListRoomFreeSortedByNumber(connect);
 	}
 
 	@Override
-	public List<Room> getListRoomFreeSortedByPrice() {
-		return roomDao.getListRoomFreeSortedByPrice(source);
+	public List<Room> getListRoomFreeSortedByPrice(Connection connect) {
+		return roomDao.getListRoomFreeSortedByPrice(connect);
 	}
 
 	@Override
-	public List<Room> getListRoomFreeSortedByStars() {
-		return roomDao.getListRoomFreeSortedByStars(source);
+	public List<Room> getListRoomFreeSortedByStars(Connection connect) {
+		return roomDao.getListRoomFreeSortedByStars(connect);
 	}
 
 	@Override
-	public int getAmountRoomFree() {
-		return roomDao.getListFreeRoom(source).size();
+	public int getAmountRoomFree(Connection connect) {
+		return roomDao.getListFreeRoom(connect).size();
 	}
 
 	@Override
-	public void changeRoomStatus(int idRoom, Status status) {
+	public void changeRoomStatus(Connection connect, int idRoom, Status status) {
 		try {
 			if (statusRoom == true) {
-				roomDao.getById(source, idRoom).setStatus(status);
+				roomDao.getById(connect, idRoom).setStatus(status);
 			} else {
 				System.out.println(MESSAGE_1);
 			}
@@ -135,22 +133,22 @@ public class ControllerRoom implements IControllerRoom {
 	}
 
 	@Override
-	public void changeRoomPrice(int idRoom, int price) {
+	public void changeRoomPrice(Connection connect, int idRoom, int price) {
 
 		try {
-			roomDao.getById(source, idRoom).setPrice(price);
+			roomDao.getById(connect, idRoom).setPrice(price);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
 	}
 
 	@Override
-	public Room cloneRoom(int idRoom) {
+	public Room cloneRoom(Connection connect, int idRoom) {
 		Room clon = null;
 		try {
 
-			clon = roomDao.getById(source, idRoom).clone();
-			int idForNewRoom = roomDao.getIdForNewModel(source);
+			clon = roomDao.getById(connect, idRoom).clone();
+			int idForNewRoom = roomDao.getIdForNewModel(connect);
 			clon.setId(idForNewRoom);
 
 		} catch (CloneNotSupportedException e) {
@@ -162,13 +160,13 @@ public class ControllerRoom implements IControllerRoom {
 	}
 
 	@Override
-	public List<Room> importRoomsList() {
+	public List<Room> importRoomsList(Connection connect) {
 		return utility.importData();
 	}
 
 	@Override
-	public void exportRoomsList() {
-		utility.exportData(roomDao.getList(source));
+	public void exportRoomsList(Connection connect) {
+		utility.exportData(roomDao.getList(connect));
 	}
 }
 
