@@ -10,7 +10,7 @@ import com.danco.annotation.ConfigProperty;
 import com.danco.annotation.Injection;
 import com.danco.api.backend.IControllerRoom;
 import com.danco.api.backend.IParseUtilityCSVForRoom;
-import com.danco.model.dao.RoomDao;
+import com.danco.api.dao.IRoomDao;
 import com.danco.model.entity.Room;
 import com.danco.model.entity.Status;
 
@@ -20,16 +20,13 @@ public class ControllerRoom implements IControllerRoom {
 
 	@ConfigProperty(configName = "property.properties", propertyName = "status", type = "boolean")
 	private boolean statusRoom;
-
 	private final String MESSAGE_1 = "Prohibited privacy settings";
-
 	@Injection
 	private IParseUtilityCSVForRoom utility;
+	@Injection
+	private IRoomDao roomDao;
 
-	private RoomDao roomDao;
-
-	public ControllerRoom(RoomDao roomDao) {
-		this.roomDao = roomDao;
+	public ControllerRoom() {
 	}
 
 	@Override
@@ -42,9 +39,9 @@ public class ControllerRoom implements IControllerRoom {
 	}
 
 	@Override
-	public void updateRoom(Connection connect, int idRoom) {
+	public void updateRoom(Connection connect, Room room) {
 		try {
-			roomDao.update(connect, idRoom);
+			roomDao.update(connect, room);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
@@ -120,10 +117,11 @@ public class ControllerRoom implements IControllerRoom {
 	}
 
 	@Override
-	public void changeRoomStatus(Connection connect, int idRoom, Status status) {
+	public void changeRoomStatus(Connection connect, Room room, Status status) {
 		try {
 			if (statusRoom == true) {
-				roomDao.getById(connect, idRoom).setStatus(status);
+				room.setStatus(status);
+				//roomDao.update(connect, room);
 			} else {
 				System.out.println(MESSAGE_1);
 			}
@@ -133,10 +131,10 @@ public class ControllerRoom implements IControllerRoom {
 	}
 
 	@Override
-	public void changeRoomPrice(Connection connect, int idRoom, int price) {
+	public void changeRoomPrice(Connection connect, Room room, int price) {
 
 		try {
-			roomDao.getById(connect, idRoom).setPrice(price);
+			room.setPrice(price);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}

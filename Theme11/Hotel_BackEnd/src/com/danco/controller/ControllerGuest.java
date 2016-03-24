@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 import com.danco.annotation.Injection;
 import com.danco.api.backend.IControllerGuest;
 import com.danco.api.backend.IParseUtilityCSVForGuest;
-import com.danco.model.dao.GuestDao;
+import com.danco.api.dao.IGuestDao;
 import com.danco.model.entity.*;
 
 public class ControllerGuest implements IControllerGuest {
@@ -19,11 +19,11 @@ public class ControllerGuest implements IControllerGuest {
 
 	@Injection
 	private IParseUtilityCSVForGuest utility;
+	@Injection
+	private IGuestDao guestDao;
 
-	private GuestDao guestDao;
-
-	public ControllerGuest(GuestDao guestDao) {
-		this.guestDao = guestDao;
+	public ControllerGuest() {
+		//this.guestDao = guestDao;
 
 	}
 
@@ -37,9 +37,9 @@ public class ControllerGuest implements IControllerGuest {
 	}
 
 	@Override
-	public void updateGuest(Connection connect, int idGuest) {
+	public void updateGuest(Connection connect, Guest guest) {
 		try {
-			guestDao.update(connect, idGuest);
+			guestDao.update(connect, guest);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
@@ -71,13 +71,8 @@ public class ControllerGuest implements IControllerGuest {
 	}
 
 	@Override
-	public List<Guest> getListGuestSortedByDateOutSettle(Connection connect) {
-		return guestDao.getListGuestSortedByDateOutSettle(connect);
-	}
-
-	@Override
 	public int getAmountGuest(Connection connect) {
-		return guestDao.getList(connect).size();
+		return guestDao.getList(connect).size()+1;
 	}
 
 	@Override
@@ -127,7 +122,6 @@ public class ControllerGuest implements IControllerGuest {
 	// // } catch (Exception e) {
 	// // LOGGER.error(e.getMessage());
 	// // }
-
 
 	// @SuppressWarnings("unused")
 	// @Override

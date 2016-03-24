@@ -12,7 +12,7 @@ import com.danco.training.controller.menu.Menu;
 
 public class ItemPrintRoomSortedByContent extends ItemOperating {
 	private static final String PROTOCOL = "0" + ";"
-			+ "getListRoomFreeSortedByContent";
+			+ "getListRoomSortedByContent";
 	private static final String MESSAGE_1 = "List room";
 	private static final String MESSAGE_2 = " contains ";
 	private static final String MESSAGE_3 = " places";

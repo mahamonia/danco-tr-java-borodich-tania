@@ -3,17 +3,13 @@ package com.danco.utility;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.danco.annotation.Injection;
 import com.danco.api.backend.IParseUtilityCSVForRoom;
-import com.danco.api.backend.IServiceAdmin;
 import com.danco.model.entity.Room;
 import com.danco.model.entity.Status;
 
 public class ParseUtilityCSVForRoom implements IParseUtilityCSVForRoom{
 	
 	private CSVFileWorker fileRoom = new CSVFileWorker("room.csv");
-	@Injection
-	private IServiceAdmin admin;
 	
 	public ParseUtilityCSVForRoom(){	
 	}

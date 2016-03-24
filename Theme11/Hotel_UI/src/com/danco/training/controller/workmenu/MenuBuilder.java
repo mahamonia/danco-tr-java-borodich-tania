@@ -293,6 +293,7 @@ public class MenuBuilder {
 		List<Item> itemsMenuPrintService = new ArrayList<Item>();
 		itemsMenuPrintService.add(itemPrintServiceThemPriceSortedByName);
 		itemsMenuPrintService.add(itemPrintServiceThemPriceSortedByPrice);
+		itemsMenuPrintService.add(itemBackMenuService);
 
 		// == MENU PRINT SERVICE ==
 		Menu menuPrintService = new Menu(TITLE_MENU_PRINT_SERVICE,

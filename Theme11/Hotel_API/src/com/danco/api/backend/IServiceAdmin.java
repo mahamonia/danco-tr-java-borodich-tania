@@ -2,7 +2,7 @@ package com.danco.api.backend;
 
 import java.util.List;
 
-import com.danco.model.entity.Check;
+import com.danco.model.entity.Chek;
 import com.danco.model.entity.Guest;
 import com.danco.model.entity.Room;
 import com.danco.model.entity.Service;
@@ -23,8 +23,6 @@ public interface IServiceAdmin {
 
 	public void deleteGuest(int id);
 
-	public void updateGuest(int idGuest);
-
 	public void settleGuestInRoom(int idGuest, int idRoom, String dateInSettle,
 			String dateOutSettle);
 
@@ -35,8 +33,6 @@ public interface IServiceAdmin {
 	public Room getRoomInLiveGuest(int idGuest);
 
 	public List<Guest> printGuestsSortedByName();
-
-	public List<Guest> printGuestsSortedByDateOutSettle();
 
 	public int getAmountGuest();
 
@@ -49,8 +45,6 @@ public interface IServiceAdmin {
 	public void createRoom(Room room);
 
 	public List<Room> getListRoom();
-
-	public void updateRoom(int idRoom);
 
 	public List<Room> getListRoomSortedByContent();
 
@@ -86,8 +80,6 @@ public interface IServiceAdmin {
 
 	public void createService(Service service);
 
-	public void updateService(int idService);
-
 	public Service getServiceById(int idService);
 
 	public List<Service> getListService();
@@ -106,14 +98,14 @@ public interface IServiceAdmin {
 	
 	// C H E C K
 	
-	public void createCheck(Check check);
+	public void createChek(Chek chek);
 
-	public void updateCheck(int idCheck);
+	public Chek getChekById(int idChek);
 
-	public Check getCheckById(int idCheck);
-
-	public List<Check> getListCheck();
+	public List<Chek> getListChek();
 	
-	public int getSumCheck(int idGuest);
+	public List<Chek> getListChekSortedByDateOutSettle();
+	
+	public int getSumChek(int idGuest);
 
 }

@@ -1,4 +1,4 @@
-package com.danco.model.dao;
+package com.danco.api.dao;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -12,7 +12,7 @@ public interface BaseDao<T extends BaseModel> {
 	
 	public int getIdForNewModel(Connection con);
 
-	public void update(Connection con, int idModel);
+	public void update(Connection con, T model);
 
 	public void delete(Connection con, int idModel);
 

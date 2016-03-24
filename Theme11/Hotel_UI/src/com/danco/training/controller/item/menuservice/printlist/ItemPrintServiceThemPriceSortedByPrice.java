@@ -12,8 +12,8 @@ import com.danco.training.controller.menu.Menu;
 
 public class ItemPrintServiceThemPriceSortedByPrice extends ItemOperating {
 	private static final String PROTOCOL = "0" + ";" + "printServicesSortedByPrice";
-	private static final String MESSAGE_1 = "List dail service";
-	private static final String MESSAGE_2 = " cost ";
+	private static final String MESSAGE_1 = "List service";
+	private static final String MESSAGE_2 = ", cost - ";
 	private static final Logger LOGGER = LogManager
 			.getLogger(ItemPrintServiceThemPriceSortedByPrice.class);
 
@@ -33,7 +33,7 @@ public class ItemPrintServiceThemPriceSortedByPrice extends ItemOperating {
 					.dataProcessing(str);
 			System.out.println(MESSAGE_1);
 			for (int i = 0; i < serviceList.size(); i++) {
-				System.out.println(serviceList.get(i).getName() + MESSAGE_2
+				System.out.println(i+". "+serviceList.get(i).getName() + MESSAGE_2
 						+ serviceList.get(i).getPrice());
 			}
 

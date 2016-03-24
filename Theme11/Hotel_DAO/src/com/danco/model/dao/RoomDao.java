@@ -10,37 +10,34 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.danco.api.dao.IRoomDao;
 import com.danco.model.entity.Room;
 import com.danco.model.entity.Status;
 
-public class RoomDao implements BaseDao<Room> {
+public class RoomDao implements IRoomDao {
 
 	private static final Logger LOGGER = LogManager.getLogger(RoomDao.class);
 
 	public RoomDao() {
-
 	}
 
 	@Override
 	public void create(Connection connect, Room model) {
-
 		try {
 			Statement statement = connect.createStatement();
-
+			int id = getIdForNewModel(connect);
 			statement
 					.executeUpdate("INSERT INTO `Hotel_service`.`Room` "
 							+ "(`idRoom`, `number`, `content`, `stars`, `price`, `idStatus`) "
-							+ "VALUES (" + getIdForNewModel(connect) + ", "
-							+ model.getNumber() + ", " + model.getContent()
-							+ ", " + model.getStars() + ", " + model.getPrice()
-							+ ", 1);");
+							+ "VALUES (" + id + ", " + model.getNumber() + ", "
+							+ model.getContent() + ", " + model.getStars()
+							+ ", " + model.getPrice() + ", 1);");
 
 		} catch (SQLException e) {
 			LOGGER.error(e.getMessage());
-		} 
-
+		}
 	}
-	
+
 	@Override
 	public int getIdForNewModel(Connection connect) {
 		int id = 0;
@@ -48,33 +45,35 @@ public class RoomDao implements BaseDao<Room> {
 		try {
 			statement = connect.createStatement();
 			ResultSet result = statement
-					.executeQuery("SELECT * FROM Room order by idRoom");
+					.executeQuery("SELECT * FROM Room order by idRoom;");
 
-			result.last();
-			id = result.getInt(1);
+			if (result.next()) {
+				result.last();
+				id = result.getInt(1);
+			} else
+				id = 1;
 
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
-		} 
+		}
 		return id + 1;
 
 	}
 
 	@Override
-	public void update(Connection connect, int idModel) {
-		Room room = getById(connect, idModel);
+	public void update(Connection connect, Room model) {
+
 		try {
 			Statement statement = connect.createStatement();
-
-			statement.executeUpdate("UPDATE  Room SET idRoom = " + room.getId()
-					+ ", number = " + room.getNumber() + ", content = "
-					+ room.getContent() + ", stars = " + room.getStars()
-					+ ", price = " + room.getPrice() + ", idStatus = "
-					+ room.getStatus().ordinal() + ";");
-
+			statement.executeUpdate("UPDATE  Room SET number = "
+					+ model.getNumber() + ", content = " + model.getContent()
+					+ ", stars = " + model.getStars() + ", price = "
+					+ model.getPrice() + ", idStatus = "
+					+ (model.getStatus().ordinal() + 1) + " WHERE idRoom = "
+					+ model.getId() + " ;");
 		} catch (SQLException e) {
 			LOGGER.error(e.getMessage());
-		} 
+		}
 	}
 
 	@Override
@@ -93,19 +92,20 @@ public class RoomDao implements BaseDao<Room> {
 
 	@Override
 	public Room getById(Connection connect, int idModel) {
-
 		Statement statement = null;
 		ResultSet result = null;
+		Room room = null;
 		try {
 			statement = connect.createStatement();
-			result = statement
-					.executeQuery("SELECT * FROM Room WHERE idRoom =" + idModel
-							+ ";");
-			
+			result = statement.executeQuery("SELECT * FROM Room WHERE idRoom ="
+					+ idModel + ";");
+			if (result.next()) {
+				room = parseResultSet(result);
+			}
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
-		} 
-		return parseResultSet(result);
+		}
+		return room;
 	}
 
 	@Override
@@ -113,7 +113,6 @@ public class RoomDao implements BaseDao<Room> {
 
 		Statement statement = null;
 		ResultSet result = null;
-
 		List<Room> roomList = new ArrayList<Room>();
 		try {
 			statement = connect.createStatement();
@@ -122,37 +121,33 @@ public class RoomDao implements BaseDao<Room> {
 
 				roomList.add(parseResultSet(result));
 			}
-
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
-
 		return roomList;
 	}
 
 	@Override
 	public Room parseResultSet(ResultSet result) {
-
 		Room room = null;
 		try {
-			if (result.next()){
-				int id = result.getInt("idRoom");
-				int number = result.getInt("number");
-				int content = result.getInt("content");
-				int stars = result.getInt("stars");
-				int price = result.getInt("price");
-				Status status = Status.values()[result.getInt("idStatus")];
+			int id = result.getInt("idRoom");
+			int number = result.getInt("number");
+			int content = result.getInt("content");
+			int stars = result.getInt("stars");
+			int price = result.getInt("price");
+			Status status = Status.values()[result.getInt("idStatus") - 1];
 
-				room = new Room(number, content, status, stars, price);
-				room.setId(id);
-			}
+			room = new Room(number, content, status, stars, price);
+			room.setId(id);
+
 		} catch (SQLException e) {
 			LOGGER.error(e.getMessage());
 		}
-		
 		return room;
 	}
 
+	@Override
 	public List<Room> getListRoomSortedByContetn(Connection connect) {
 		Statement statement = null;
 		ResultSet result = null;
@@ -163,16 +158,15 @@ public class RoomDao implements BaseDao<Room> {
 					.executeQuery("SELECT * FROM Room ORDER BY content;");
 
 			while (result.next()) {
-
 				roomList.add(parseResultSet(result));
 			}
-
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
 		return roomList;
 	}
 
+	@Override
 	public List<Room> getListRoomSortedByNumber(Connection connect) {
 		Statement statement = null;
 		ResultSet result = null;
@@ -182,16 +176,15 @@ public class RoomDao implements BaseDao<Room> {
 			result = statement
 					.executeQuery("SELECT * FROM Room ORDER BY number;");
 			while (result.next()) {
-
 				roomList.add(parseResultSet(result));
 			}
-
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
 		return roomList;
 	}
 
+	@Override
 	public List<Room> getListRoomSortedByPrice(Connection connect) {
 		Statement statement = null;
 		ResultSet result = null;
@@ -201,16 +194,15 @@ public class RoomDao implements BaseDao<Room> {
 			result = statement
 					.executeQuery("SELECT * FROM Room ORDER BY price;");
 			while (result.next()) {
-
 				roomList.add(parseResultSet(result));
 			}
-
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
 		return roomList;
 	}
 
+	@Override
 	public List<Room> getListRoomSortedByStars(Connection connect) {
 		Statement statement = null;
 		ResultSet result = null;
@@ -220,16 +212,15 @@ public class RoomDao implements BaseDao<Room> {
 			result = statement
 					.executeQuery("SELECT * FROM Room ORDER BY stars;");
 			while (result.next()) {
-
 				roomList.add(parseResultSet(result));
 			}
-
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
 		return roomList;
 	}
 
+	@Override
 	public List<Room> getListFreeRoom(Connection connect) {
 		Statement statement = null;
 		ResultSet result = null;
@@ -239,17 +230,15 @@ public class RoomDao implements BaseDao<Room> {
 			result = statement
 					.executeQuery("SELECT * FROM Room WHERE idStatus = 1;");
 			while (result.next()) {
-
 				roomList.add(parseResultSet(result));
 			}
-
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
-
 		return roomList;
 	}
 
+	@Override
 	public List<Room> getListRoomFreeSortedByContetn(Connection connect) {
 		Statement statement = null;
 		ResultSet result = null;
@@ -259,16 +248,15 @@ public class RoomDao implements BaseDao<Room> {
 			result = statement
 					.executeQuery("SELECT * FROM Room WHERE idStatus = 1 ORDER BY content;");
 			while (result.next()) {
-
 				roomList.add(parseResultSet(result));
 			}
-
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
 		return roomList;
 	}
 
+	@Override
 	public List<Room> getListRoomFreeSortedByNumber(Connection connect) {
 		Statement statement = null;
 		ResultSet result = null;
@@ -278,16 +266,15 @@ public class RoomDao implements BaseDao<Room> {
 			result = statement
 					.executeQuery("SELECT * FROM Room WHERE idStatus = 1 ORDER BY number;");
 			while (result.next()) {
-
 				roomList.add(parseResultSet(result));
 			}
-
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
 		return roomList;
 	}
 
+	@Override
 	public List<Room> getListRoomFreeSortedByPrice(Connection connect) {
 		Statement statement = null;
 		ResultSet result = null;
@@ -297,17 +284,15 @@ public class RoomDao implements BaseDao<Room> {
 			result = statement
 					.executeQuery("SELECT * FROM Room WHERE idStatus = 1 ORDER BY price;");
 			while (result.next()) {
-
 				roomList.add(parseResultSet(result));
 			}
-
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
-
 		return roomList;
 	}
 
+	@Override
 	public List<Room> getListRoomFreeSortedByStars(Connection connect) {
 		Statement statement = null;
 		ResultSet result = null;
@@ -317,10 +302,8 @@ public class RoomDao implements BaseDao<Room> {
 			result = statement
 					.executeQuery("SELECT * FROM Room WHERE idStatus = 1 ORDER BY stars;");
 			while (result.next()) {
-
 				roomList.add(parseResultSet(result));
 			}
-
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}

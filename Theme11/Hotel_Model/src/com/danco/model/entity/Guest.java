@@ -9,12 +9,10 @@ public class Guest extends BaseModel{
 	private String name;
 	private String pasport;
 
-	private Check check;
-
 	public Guest(String name, String pasport) {
 		this.name = name;
 		this.pasport = pasport;
-		this.check = null;
+
 	}
 
 	public String getName() {
@@ -32,15 +30,7 @@ public class Guest extends BaseModel{
 	public void setPasport(String pasport) {
 		this.pasport = pasport;
 	}
-
-	public Check getCheck() {
-		return check;
-	}
-
-	public void setCheck(Check check) {
-		this.check = check;
-	}
-
+	
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}

@@ -10,7 +10,7 @@ public interface IControllerRoom {
 
 	public void createRoom(Connection connect, Room room);
 
-	public void updateRoom(Connection connect, int idRoom);
+	public void updateRoom(Connection connect, Room room);
 
 	public void deleteRoom(Connection connect, int idRoom);
 
@@ -38,9 +38,9 @@ public interface IControllerRoom {
 	
 	public int getAmountRoomFree(Connection connect);
 
-	public void changeRoomStatus (Connection connect, int idRoom, Status status);
+	public void changeRoomStatus (Connection connect, Room room, Status status);
 
-	public void changeRoomPrice(Connection connect, int idRoom, int price);
+	public void changeRoomPrice(Connection connect, Room room, int price);
 
 	public Room cloneRoom(Connection connect, int idRoom);
 

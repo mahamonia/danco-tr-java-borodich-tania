@@ -9,9 +9,7 @@ public interface IControllerService {
 
 	public void createService(Connection connect, Service service);
 
-	public int getIdForNewService(Connection con);
-
-	public void updateService(Connection con, int idService);
+	public void updateService(Connection con, Service service);
 
 	public void deleteService(Connection con, int idService);
 

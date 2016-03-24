@@ -6,13 +6,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.danco.api.ui.IProcessing;
-import com.danco.model.entity.Guest;
+import com.danco.model.entity.Chek;
 import com.danco.training.controller.item.itemmenu.ItemOperating;
 import com.danco.training.controller.menu.Menu;
 
 public class ItemPrintGuestThemRoomSortedByDate extends ItemOperating {
 	private static final String PROTOCOL = "0" + ";"
-			+ "printGuestsSortedByDateOutSettle";
+			+ "getListChekSortedByDateOutSettle";
 	private static final String MESSAGE_1 = "List guest";
 	private static final String MESSAGE_2 = " date out settle: ";
 	private static final Logger LOGGER = LogManager
@@ -32,11 +32,12 @@ public class ItemPrintGuestThemRoomSortedByDate extends ItemOperating {
 
 			// выводим результат
 			System.out.println(MESSAGE_1);
-			List<Guest> guestsList = (List<Guest>) processing.dataProcessing(str);
-			for (int i = 0; i < guestsList.size(); i++) {
-				System.out.println(guestsList.get(i).getId() + " - "
-						+ guestsList.get(i).getName() + MESSAGE_2
-						+ guestsList.get(i).getCheck().getDateOutSettle());
+			List<Chek> list = (List<Chek>) processing.dataProcessing(str);
+			System.out.println(list.size());
+			for (int i = 0; i < list.size(); i++) {
+				System.out.println(list.get(i).getGuest().getId() + " - "
+						+ list.get(i).getGuest().getName() +" live in "+ list.get(i).getRoom().getNumber() + MESSAGE_2
+						+ list.get(i).getDateOutSettle());
 
 			}
 		} catch (Exception e) {

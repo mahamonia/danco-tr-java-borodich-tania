@@ -56,7 +56,7 @@ public class ProtocolFromUiToBackEnd {
 			case TWO_DIFFERENT_OPTION:
 				paramTypes = new Class[] { int.class, String.class };
 				args = new Object[] { Integer.parseInt(arrayStr[2]),
-						Integer.parseInt(arrayStr[3]) };
+						arrayStr[3] };
 				break;
 			case FOUR_OPTION:
 				paramTypes = new Class[] { int.class, int.class, String.class,

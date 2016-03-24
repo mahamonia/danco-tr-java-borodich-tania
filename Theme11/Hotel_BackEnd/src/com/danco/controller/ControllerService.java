@@ -9,24 +9,22 @@ import org.apache.logging.log4j.Logger;
 import com.danco.annotation.Injection;
 import com.danco.api.backend.IControllerService;
 import com.danco.api.backend.IParseUtilityCSVForService;
-import com.danco.model.dao.ServiceDao;
+import com.danco.api.dao.IServiceDao;
 import com.danco.model.entity.Service;
 
-public class ControllerService implements IControllerService{
-	
+public class ControllerService implements IControllerService {
 
 	private static Logger LOGGER = LogManager
 			.getLogger(ControllerService.class);
 
 	@Injection
 	private IParseUtilityCSVForService utility;
-	
-	private  ServiceDao serviceDao;
+	@Injection
+	private IServiceDao serviceDao;
 
-	public ControllerService(ServiceDao serviceDao) {
-		this.serviceDao = serviceDao;
-
-}
+	public ControllerService() {
+		//this.serviceDao = serviceDao;
+	}
 
 	@Override
 	public void createService(Connection connect, Service service) {
@@ -38,18 +36,12 @@ public class ControllerService implements IControllerService{
 	}
 
 	@Override
-	public int getIdForNewService(Connection connect) {
-		return 0;
-	}
-
-	@Override
-	public void updateService(Connection connect ,int idService) {
+	public void updateService(Connection connect, Service service) {
 		try {
-			serviceDao.update(connect, idService);
+			serviceDao.update(connect, service);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
-		
 	}
 
 	@Override
@@ -58,7 +50,7 @@ public class ControllerService implements IControllerService{
 			serviceDao.delete(connect, idService);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
-		}	
+		}
 	}
 
 	@Override
@@ -71,25 +63,24 @@ public class ControllerService implements IControllerService{
 		return serviceDao.getList(connect);
 	}
 
-	public List<Service> getGuestThemServices(Connection connect, int idGuest){	
+	public List<Service> getGuestThemServices(Connection connect, int idGuest) {
 		return serviceDao.getGuestThemServices(connect, idGuest);
-		
+
 	}
+
 	@Override
-	public List<Service> getServiceSortedByPrice(Connection connect ) {
+	public List<Service> getServiceSortedByPrice(Connection connect) {
 		return serviceDao.getListServiceSortedByPrice(connect);
 	}
 
 	@Override
 	public List<Service> getServiceSortedByName(Connection connect) {
-		// TODO Auto-generated method stub
-		return null;
+		return serviceDao.getListServiceSortedByName(connect);
 	}
 
 	@Override
 	public int getServiceSumPrice(Connection connect, int idGuest) {
-		// TODO Auto-generated method stub
-		return 0;
+		return serviceDao.getSumServiceForGuest(connect, idGuest);
 	}
 
 	@Override
@@ -98,7 +89,7 @@ public class ControllerService implements IControllerService{
 			serviceDao.getById(connect, idService).setPrice(price);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
-		}		
+		}
 	}
 
 	@Override

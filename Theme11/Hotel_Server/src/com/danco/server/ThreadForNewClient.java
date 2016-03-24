@@ -32,14 +32,14 @@ public class ThreadForNewClient implements Runnable {
 			ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());			
 			
 			// WORK SERVER WITH CLIENT
-								
+			
 			while (isAlive) {			
 				line = in.readObject().toString(); // data with ui
 				if (line == null) {
 					isAlive = false;
 				} else {
 					// processing data and send of client
-					out.writeObject(protocol.parseStringToObject(line));
+					out.writeObject(protocol.parseStringToObject(line));				
 					out.flush();
 				}
 			}

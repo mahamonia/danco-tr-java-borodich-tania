@@ -9,7 +9,7 @@ public interface IControllerGuest {
 
 	public void createGuest(Connection con, Guest guest);
 
-	public void updateGuest(Connection con, int idGuest);
+	public void updateGuest(Connection con, Guest guest);
 
 	public void deleteGuest(Connection con, int idGuest);
 
@@ -18,8 +18,6 @@ public interface IControllerGuest {
 	public List<Guest> getListGuest(Connection con);
 
 	public List<Guest> getListGuestSortedByName(Connection con);
-
-	public List<Guest> getListGuestSortedByDateOutSettle(Connection con);
 
 	public int getAmountGuest(Connection con);
 

@@ -8,12 +8,13 @@ public class Service extends BaseModel{
 	private static final long serialVersionUID = 2916383920457058904L;
 	private String name;
 	private int price;
-
-	private int idCheck;
+	
+	private Chek chek;
 	
 	public Service(String name, int price) {
 		this.name = name;
 		this.price = price;
+		this.chek = null;
 	}
 
 	public String getName() {
@@ -32,17 +33,16 @@ public class Service extends BaseModel{
 		this.price = price;
 	}
 
-	public int getIdCheck() {
-		return idCheck;
+	public Chek getChek() {
+		return chek;
 	}
 
-	public void setIdCheck(int idCheck) {
-		this.idCheck = idCheck;
+	public void setChek(Chek chek) {
+		this.chek = chek;
 	}
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-
 
 }
