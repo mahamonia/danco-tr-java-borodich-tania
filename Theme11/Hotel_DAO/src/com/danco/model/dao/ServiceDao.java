@@ -92,7 +92,7 @@ public class ServiceDao implements IServiceDao {
 			result = statement
 					.executeQuery("SELECT Service.idService, Service.name, Service.price AS priceService,"
 							+ " Service.Chek_idChek, Chek.date_in_settle, Chek.date_out_settle, Chek.status,"
-							+ "Chek.Guest_idGuest, Guest.name AS nameGuest, Guest.name,"
+							+ "Chek.Guest_idGuest, Guest.name AS nameGuest, Guest.pasport,"
 							+ "Chek.Room_idRoom, Room.number, Room.content, Room.price AS priceRoom, Room.stars, Room.idStatus"
 							+ "FROM Service JOIN Chek"
 							+ "ON Service.Chek_idChek=Chek.idChek"
@@ -121,7 +121,7 @@ public class ServiceDao implements IServiceDao {
 			result = statement
 					.executeQuery("SELECT Service.idService, Service.name, Service.price AS priceService,"
 							+ " Service.Chek_idChek, Chek.date_in_settle, Chek.date_out_settle, Chek.status,"
-							+ "Chek.Guest_idGuest, Guest.name AS nameGuest,"
+							+ "Chek.Guest_idGuest, Guest.name AS nameGuest, Guest.pasport,"
 							+ "Chek.Room_idRoom, Room.number, Room.content, Room.price AS priceRoom, Room.stars, Room.idStatus"
 							+ "FROM Service JOIN Chek"
 							+ "ON Service.Chek_idChek=Chek.idChek"
@@ -157,7 +157,7 @@ public class ServiceDao implements IServiceDao {
 			Guest guest = new Guest(nameGuest, pasport);
 			guest.setId(idGuest);
 
-			int idRoom = result.getInt("idRoom");
+			int idRoom = result.getInt("Room_idRoom");
 			int number = result.getInt("number");
 			int content = result.getInt("content");
 			int stars = result.getInt("stars");
@@ -188,16 +188,16 @@ public class ServiceDao implements IServiceDao {
 		try {
 			statement = connect.createStatement();
 			result = statement
-					.executeQuery("SELECT Service.idService, Service.name, Service.price AS priceService,"
-							+ " Service.Chek_idChek, Chek.date_in_settle, Chek.date_out_settle, Chek.status,"
-							+ "Chek.Guest_idGuest, Guest.name AS nameGuest,"
-							+ "Chek.Room_idRoom, Room.number, Room.content, Room.price AS priceRoom, Room.stars, Room.idStatus"
-							+ "FROM Service JOIN Chek"
-							+ "ON Service.Chek_idChek=Chek.idChek"
-							+ "left JOIN Guest"
-							+ "ON Chek.Guest_idGuest=Guest.idGuest"
-							+ "LEFT JOIN Room"
-							+ "ON Chek.Room_idRoom = Room.idRoom ORDER BY priceService;");
+					.executeQuery("select Service.idService, Service.name, Service.price AS priceService,"
+							+" Service.Chek_idChek, Chek.date_in_settle, Chek.date_out_settle, Chek.status,"
+							+" Chek.Guest_idGuest, Guest.name AS nameGuest,Guest.pasport,"
+							+" Chek.Room_idRoom, Room.number, Room.content, Room.price AS priceRoom, Room.stars, Room.idStatus"
+							+" from Service join Chek"
+							+" on Service.Chek_idChek=Chek.idChek"
+							+" left join Guest"
+							+" on Chek.Guest_idGuest=Guest.idGuest"
+							+" left join Room"
+							+" on Chek.Room_idRoom=Room.idRoom ORDER BY priceService;");
 			while (result.next()) {
 				serviceList.add(parseResultSet(result));
 			}
@@ -216,16 +216,16 @@ public class ServiceDao implements IServiceDao {
 		try {
 			statement = connect.createStatement();
 			result = statement
-					.executeQuery("SELECT Service.idService, Service.name, Service.price AS priceService,"
-							+ " Service.Chek_idChek, Chek.date_in_settle, Chek.date_out_settle, Chek.status,"
-							+ "Chek.Guest_idGuest, Guest.name AS nameGuest,"
-							+ "Chek.Room_idRoom, Room.number, Room.content, Room.price AS priceRoom, Room.stars, Room.idStatus"
-							+ "FROM Service JOIN Chek"
-							+ "ON Service.Chek_idChek=Chek.idChek"
-							+ "left JOIN Guest"
-							+ "ON Chek.Guest_idGuest=Guest.idGuest"
-							+ "LEFT JOIN Room"
-							+ "ON Chek.Room_idRoom=Room.idRoom ORDER BY name;");
+					.executeQuery("select Service.idService, Service.name, Service.price AS priceService,"
+							+" Service.Chek_idChek, Chek.date_in_settle, Chek.date_out_settle, Chek.status,"
+							+" Chek.Guest_idGuest, Guest.name AS nameGuest,Guest.pasport,"
+							+" Chek.Room_idRoom, Room.number, Room.content, Room.price AS priceRoom, Room.stars, Room.idStatus"
+							+" from Service join Chek"
+							+" on Service.Chek_idChek=Chek.idChek"
+							+" left join Guest"
+							+" on Chek.Guest_idGuest=Guest.idGuest"
+							+" left join Room"
+							+" on Chek.Room_idRoom=Room.idRoom ORDER BY name;");
 			while (result.next()) {
 				serviceList.add(parseResultSet(result));
 			}
@@ -246,15 +246,15 @@ public class ServiceDao implements IServiceDao {
 			result = statement
 					.executeQuery("SELECT Service.idService, Service.name, Service.price AS priceService,"
 							+ " Service.Chek_idChek, Chek.date_in_settle, Chek.date_out_settle, Chek.status,"
-							+ "Chek.Guest_idGuest, Guest.name AS nameGuest,"
-							+ "Chek.Room_idRoom, Room.number, Room.content, Room.price AS priceRoom, Room.stars, Room.idStatus"
-							+ "FROM Service JOIN Chek"
-							+ "ON Service.Chek_idChek=Chek.idChek"
-							+ "left JOIN Guest"
-							+ "ON Chek.Guest_idGuest=Guest.idGuest"
-							+ "LEFT JOIN Room"
-							+ "ON Chek.Room_idRoom=Room.idRoom "
-							+ "Where Guest.idGuest=" + idGuest + ";");
+							+ " Chek.Guest_idGuest, Guest.name AS nameGuest,"
+							+ " Chek.Room_idRoom, Room.number, Room.content, Room.price AS priceRoom, Room.stars, Room.idStatus"
+							+ " FROM Service JOIN Chek"
+							+ " ON Service.Chek_idChek=Chek.idChek"
+							+ " left JOIN Guest"
+							+ " ON Chek.Guest_idGuest=Guest.idGuest"
+							+ " LEFT JOIN Room"
+							+ " ON Chek.Room_idRoom=Room.idRoom "
+							+ " Where Guest.idGuest=" + idGuest + ";");
 			while (result.next()) {
 				serviceList.add(parseResultSet(result));
 			}

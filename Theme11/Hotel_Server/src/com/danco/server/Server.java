@@ -35,8 +35,7 @@ public class Server{
 					admin);
 
 			try {
-				
-				
+						
 				serverSocket = new ServerSocket(port);
 				System.out.println("Waiting for a client...");
 
@@ -48,13 +47,11 @@ public class Server{
 						// create thread for connect client
 						client = new ThreadForNewClient(clientSocket, protocol);
 						DependencyInjection.getInstance().getDI(client);
-						client.thread.start();					
-										
+						client.thread.start();														
 				}
 			} catch (Exception e) {
 				LOGGER.error(e.getMessage());
-			} finally {
-				
+			} finally {				
 				clientSocket.close();
 				serverSocket.close();
 				admin.saveData();
@@ -63,5 +60,4 @@ public class Server{
 			LOGGER.error(e.getMessage());
 		}
 	}
-
 }

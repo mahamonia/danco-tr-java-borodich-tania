@@ -27,16 +27,16 @@ import com.danco.model.entity.Status;
 public class ServiceAdmin implements IServiceAdmin {
 
 	@ConfigProperty(configName = "jdbc_config.properties", propertyName = "driver", type = "String")
-	private String driver = "com.mysql.jdbc.Driver";
+	private String driver;
 
 	@ConfigProperty(configName = "jdbc_config.properties", propertyName = "url", type = "String")
-	private String url = "jdbc:mysql://localhost:3306/Hotel_service";
+	private String url;
 
 	@ConfigProperty(configName = "jdbc_config.properties", propertyName = "userName", type = "String")
-	private String userName = "root";
+	private String userName;
 
 	@ConfigProperty(configName = "jdbc_config.properties", propertyName = "userPassvord", type = "String")
-	private String userPassvord = "root";
+	private String userPassvord;
 
 	@Injection
 	private IControllerRoom contRoom;
@@ -60,7 +60,8 @@ public class ServiceAdmin implements IServiceAdmin {
 
 	@Override
 	public void initData() {
-
+		
+		annotation.processAnnotation(this);
 		try {
 			Class.forName(driver).newInstance();
 		} catch (Exception e) {
@@ -72,6 +73,7 @@ public class ServiceAdmin implements IServiceAdmin {
 
 		annotation.processAnnotation(contGuest);
 		annotation.processAnnotation(contRoom);
+		
 
 	}
 

@@ -17,7 +17,7 @@ public class ProcessorAnnotation implements IProcessorAnnotation {
 
 	private static final String TYPE_INTEGER = "int";
 	private static final String TYPE_BOOLEAN = "boolean";
-	private static final String TYPE_STRING = "String";
+	private static final String TYPE_STRING = "java.lang.String";
 	
 	public static Map<String, IProcessorProperty> createdPropertys = new HashMap<String, IProcessorProperty>();
 	
@@ -68,7 +68,7 @@ public class ProcessorAnnotation implements IProcessorAnnotation {
 					Type typeField = field.getType();
 
 					// change value
-					switch (typeField.toString()) {
+					switch (typeField.getTypeName()) {
 					case TYPE_INTEGER:
 						field.set(object, Integer.parseInt(value));
 						break;
