@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.danco.model.entity.Guest;
 
-public interface IGuestDao extends BaseDao<Guest>{
+public interface IGuestDao extends IBaseDao<Guest>{
 
 	public List<Guest> getListGuestSortedByName(Connection connect) ;
 

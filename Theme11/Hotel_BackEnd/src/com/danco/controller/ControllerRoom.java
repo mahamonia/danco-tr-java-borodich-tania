@@ -121,7 +121,6 @@ public class ControllerRoom implements IControllerRoom {
 		try {
 			if (statusRoom == true) {
 				room.setStatus(status);
-				//roomDao.update(connect, room);
 			} else {
 				System.out.println(MESSAGE_1);
 			}
@@ -167,23 +166,4 @@ public class ControllerRoom implements IControllerRoom {
 		utility.exportData(roomDao.getList(connect));
 	}
 }
-
-
-
-// public List<Guest> printRoomThemGuests() {
-//
-// List<Guest> newGuestList = new ArrayList<>();
-//
-// // try {
-// //
-// // //List<Guest> guestList = room.getGuestList();
-// // for (int i = guestList.size(); i > guestList.size() - 3; i--) {
-// // newGuestList.add(guestList.get(i));
-// // }
-// // } catch (Exception e) {
-// // LOGGER.error(e.getMessage());
-// // }
-// return newGuestList;
-// }
-
 

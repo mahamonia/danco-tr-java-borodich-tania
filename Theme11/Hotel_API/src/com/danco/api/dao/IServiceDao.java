@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.danco.model.entity.Service;
 
-public interface IServiceDao extends BaseDao<Service> {
+public interface IServiceDao extends IBaseDao<Service> {
 	
 	public List<Service> getListServiceSortedByPrice(Connection connect);
 

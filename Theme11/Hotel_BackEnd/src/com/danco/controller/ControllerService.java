@@ -23,7 +23,6 @@ public class ControllerService implements IControllerService {
 	private IServiceDao serviceDao;
 
 	public ControllerService() {
-		//this.serviceDao = serviceDao;
 	}
 
 	@Override

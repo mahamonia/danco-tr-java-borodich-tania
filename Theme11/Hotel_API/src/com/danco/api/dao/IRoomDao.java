@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.danco.model.entity.Room;
 
-public interface IRoomDao extends BaseDao<Room> {
+public interface IRoomDao extends IBaseDao<Room> {
 
 	public List<Room> getListRoomSortedByContetn(Connection connect);
 

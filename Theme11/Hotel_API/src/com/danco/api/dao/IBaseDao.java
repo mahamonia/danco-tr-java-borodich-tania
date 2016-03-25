@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.danco.model.entity.BaseModel;
 
-public interface BaseDao<T extends BaseModel> {
+public interface IBaseDao<T extends BaseModel> {
 
 	public void create(Connection connect, T model);
 	
