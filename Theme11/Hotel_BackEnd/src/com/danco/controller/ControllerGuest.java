@@ -56,32 +56,60 @@ public class ControllerGuest implements IControllerGuest {
 
 	@Override
 	public Guest getGuest(Connection connect, int idGuest) {
-		return guestDao.getById(connect, idGuest);
+		Guest guest = null;
+		try {
+			guest = guestDao.getById(connect, idGuest);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+		return guest;
 	}
 
 	@Override
 	public List<Guest> getListGuest(Connection connect) {
-		return guestDao.getList(connect);
+		List<Guest> list = null;
+		try {
+			list = guestDao.getList(connect);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+		return list;
 	}
 
 	@Override
-	public List<Guest> getListGuestSortedByName(Connection connect) {
-		return guestDao.getListGuestSortedByName(connect);
+	public List<Guest> getListGuestSorted(Connection connect, String param) {
+		List<Guest> list = null;
+		try {
+			list = guestDao.getListGuestSorted(connect, param);
+		}catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+		return list;
 	}
 
 	@Override
 	public int getAmountGuest(Connection connect) {
-		return guestDao.getList(connect).size()+1;
+		int amount = 0;
+		try {
+			amount = guestDao.getList(connect).size() + 1;
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+		return amount;
 	}
 
 	@Override
-	public List<Guest> importGuestsList(Connection connect) {
+	public List<Guest> importGuestsList() {
 		return utility.importData();
 	}
 
 	@Override
 	public void exportGuestsList(Connection connect) {
-		utility.exportData(guestDao.getList(connect));
+		try {
+			utility.exportData(guestDao.getList(connect));
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
 
 	}
 

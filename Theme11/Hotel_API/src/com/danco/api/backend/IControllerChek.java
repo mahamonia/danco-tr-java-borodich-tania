@@ -19,7 +19,7 @@ public interface IControllerChek {
 
 	public List<Chek> getListChek(Connection connect);
 	
-	public List<Chek> getListChekSortedByDateOutSettle(Connection connect);
+	public List<Chek> getListChekSortedBy(Connection connect, String param);
 	
 	public void changeStatusChek(Connection connect, int idChek, String status);
 	

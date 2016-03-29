@@ -25,7 +25,7 @@ public class ParseUtilityCSVForService implements IParseUtilityCSVForService{
 		String[][] tempServices = fileService.readFromFile();
 		List<Service> servicesList = new ArrayList<>();
 		
-		for (int i = 0; i < tempServices.length; i++) {
+		for (int i = 1; i < tempServices.length; i++) {
 			int id = Integer.valueOf(tempServices[i][0]);
 			String name = tempServices[i][1];
 			int price = Integer.valueOf(tempServices[i][2]);
@@ -45,8 +45,10 @@ public class ParseUtilityCSVForService implements IParseUtilityCSVForService{
 	public void exportData(List<Service> servicesList) { // write in CSV
 		StringBuilder strTemp = new StringBuilder();
 		String[] strServices = new String[servicesList.size()];
-		
-		for (int i = 0; i < strServices.length; i++) {
+		strTemp.append("Id;").append("Name;").append("Pasport;").append("Price;");
+		strServices[0] = strTemp.toString();
+		strTemp.delete(0, Integer.MAX_VALUE);
+		for (int i = 1; i < strServices.length; i++) {
 			strTemp.append(servicesList.get(i).getId()+";");
 			strTemp.append(servicesList.get(i).getName()+";");
 			strTemp.append(servicesList.get(i).getPrice()+";");

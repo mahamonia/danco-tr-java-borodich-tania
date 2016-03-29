@@ -18,24 +18,8 @@ public interface IControllerRoom {
 
 	public List<Room> getListRoom(Connection connect);
 
-	public List<Room> getListRoomSortedByContetn(Connection connect);
+	public List<Room> getListRoomSortedBy(Connection connect, String status, String param);
 
-	public List<Room> getListRoomSortedByNumber(Connection connect);
-
-	public List<Room> getListRoomSortedByPrice(Connection connect);
-
-	public List<Room> getListRoomSortedByStars(Connection connect);
-
-	public List<Room> getListRoomFree(Connection connect);
-	
-	public List<Room> getListRoomFreeSortedByContetn(Connection connect);
-
-	public List<Room> getListRoomFreeSortedByNumber(Connection connect);
-
-	public List<Room> getListRoomFreeSortedByPrice(Connection connect);
-
-	public List<Room> getListRoomFreeSortedByStars(Connection connect);
-	
 	public int getAmountRoomFree(Connection connect);
 
 	public void changeRoomStatus (Connection connect, Room room, Status status);
@@ -44,7 +28,7 @@ public interface IControllerRoom {
 
 	public Room cloneRoom(Connection connect, int idRoom);
 
-	public List<Room> importRoomsList(Connection connect);
+	public List<Room> importRoomsList();
 
 	public void exportRoomsList(Connection connect);
 

@@ -2,14 +2,12 @@ package com.danco.services;
 
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.danco.annotation.ConfigProperty;
 import com.danco.annotation.Injection;
 import com.danco.api.backend.IControllerChek;
 import com.danco.api.backend.IControllerService;
@@ -17,6 +15,7 @@ import com.danco.api.backend.IControllerGuest;
 import com.danco.api.backend.IControllerRoom;
 import com.danco.api.backend.IProcessorAnnotation;
 import com.danco.api.backend.IServiceAdmin;
+import com.danco.api.backend.IUtilityForConnectDB;
 import com.danco.dependency.DependencyInjection;
 import com.danco.model.entity.Chek;
 import com.danco.model.entity.Guest;
@@ -26,18 +25,6 @@ import com.danco.model.entity.Status;
 
 public class ServiceAdmin implements IServiceAdmin {
 
-	@ConfigProperty(configName = "jdbc_config.properties", propertyName = "driver", type = "String")
-	private String driver;
-
-	@ConfigProperty(configName = "jdbc_config.properties", propertyName = "url", type = "String")
-	private String url;
-
-	@ConfigProperty(configName = "jdbc_config.properties", propertyName = "userName", type = "String")
-	private String userName;
-
-	@ConfigProperty(configName = "jdbc_config.properties", propertyName = "userPassvord", type = "String")
-	private String userPassvord;
-
 	@Injection
 	private IControllerRoom contRoom;
 	@Injection
@@ -46,163 +33,124 @@ public class ServiceAdmin implements IServiceAdmin {
 	private IControllerChek contChek;
 	@Injection
 	private IControllerService contService;
-
 	@Injection
 	private IProcessorAnnotation annotation;
+	@Injection
+	private IUtilityForConnectDB source;
 
 	private static final Logger LOGGER = LogManager
 			.getLogger(ServiceAdmin.class);
-
-	private Connection connection;
 
 	public ServiceAdmin() {
 	}
 
 	@Override
 	public void initData() {
-		
+
 		annotation.processAnnotation(this);
-		try {
-			Class.forName(driver).newInstance();
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-		}
 
 		DependencyInjection.getInstance().getDI(contGuest, contRoom,
-				contService, contChek);
+				contService, contChek, source);
 
 		annotation.processAnnotation(contGuest);
 		annotation.processAnnotation(contRoom);
-		
+		annotation.processAnnotation(source);
+		source.loadDriver();
 
-	}
-
-	@Override
-	public void saveData() {
-		// ----- NOTHING ------
 	}
 
 	// ==== GUEST =====
 
-	private Connection getConnection() {
-		Connection connection = null;
-		try {
-			connection = DriverManager.getConnection(url, userName,
-					userPassvord);
-		} catch (SQLException e) {
-			LOGGER.error(e.getMessage());
-		}
-		return connection;
-	}
-
-	private void closeConnection(Connection connection) {
-		try {
-			if (connection != null) {
-				connection.close();
-			}
-		} catch (SQLException e) {
-			LOGGER.error(e.getMessage());
-		}
-	}
-
 	@Override
 	public void createGuest(Guest guest) {
-		connection = getConnection();
+		Connection connection = source.getConnection();
 		contGuest.createGuest(connection, guest);
-		closeConnection(connection);
+		source.closeConnection(connection);
 	}
 
 	@Override
 	public Guest getGuestById(int id) {
 		Guest guest = null;
-		connection = getConnection();
+		Connection connection = source.getConnection();
 		guest = contGuest.getGuest(connection, id);
-		closeConnection(connection);
+		source.closeConnection(connection);
 		return guest;
 	}
 
 	@Override
 	public List<Guest> getListGuest() {
-		connection = getConnection();
+		Connection connection = source.getConnection();
 		List<Guest> list = contGuest.getListGuest(connection);
-		closeConnection(connection);
+		source.closeConnection(connection);
 		return list;
-
 	}
 
 	@Override
 	public void deleteGuest(int idGuest) {
-		connection = getConnection();
+		Connection connection = source.getConnection();
 		contGuest.deleteGuest(connection, idGuest);
-		closeConnection(connection);
+		source.closeConnection(connection);
 	}
 
 	@Override
 	public void settleGuestInRoom(int idGuest, int idRoom, String dateInSettle,
 			String dateOutSettle) {
-
-		synchronized (contRoom) {
-			try {
-				connection = getConnection();
-				connection.setAutoCommit(false);
-
+		Connection connection = null;
+		try {
+			connection = source.getConnection();
+			connection.setAutoCommit(false);
+			synchronized (contRoom) {
 				Room room = contRoom.getRoom(connection, idRoom);
 				if (room.getStatus() != Status.FREE) {
 					System.out.println("Sorry, room not free!");
 				} else {
 					Guest guest = contGuest.getGuest(connection, idGuest);
-
 					Chek chek = new Chek(Date.valueOf(dateInSettle),
-							Date.valueOf(dateOutSettle), false, guest, room);
-
+							Date.valueOf(dateOutSettle), guest, room);
 					contChek.createChek(connection, chek);
 					Service service = new Service("Settle guest in room",
 							room.getPrice());
 					service.setChek(chek);
 					contService.createService(connection, service);
-
 					contRoom.changeRoomStatus(connection, room, Status.NOTFREE);
 					contRoom.updateRoom(connection, room);
 				}
 				connection.commit();
-
-			} catch (SQLException e) {
-				if (connection != null) {
-					try {
-						System.err.print("Transaction is being rolled back");
-						connection.rollback();
-						closeConnection(connection);
-					} catch (SQLException excep) {
-						LOGGER.error(e.getMessage());
-					}
-				}
-				LOGGER.error(e.getMessage());
 			}
+		} catch (Exception e) {
+			if (connection != null) {
+				try {
+					System.err.print("Transaction is being rolled back");
+					connection.rollback();
+					source.closeConnection(connection);
+				} catch (SQLException ex) {
+					LOGGER.error(ex.getMessage());
+				}
+			}
+			LOGGER.error(e.getMessage());
 		}
 	}
 
 	@Override
 	public void addServiceForGuest(int idGuest, int idService) {
 
+		Connection connection = null;
 		try {
-			connection = getConnection();
+			connection = source.getConnection();
 			connection.setAutoCommit(false);
-
 			Chek chek = contChek.getChekForIdGuest(connection, idGuest);
-
 			Service service = contService.getService(connection, idService);
 			service.setChek(chek);
 			contService.updateService(connection, service);
-
 			connection.commit();
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			if (connection != null) {
 				try {
 					System.err.print("Transaction is being rolled back");
 					connection.rollback();
-					closeConnection(connection);
-				} catch (SQLException excep) {
-					LOGGER.error(e.getMessage());
+					source.closeConnection(connection);
+				} catch (SQLException ex) {
+					LOGGER.error(ex.getMessage());
 				}
 			}
 			LOGGER.error(e.getMessage());
@@ -211,56 +159,53 @@ public class ServiceAdmin implements IServiceAdmin {
 
 	@Override
 	public void settleGuestOutRoom(int idGuest) {
-		synchronized (contRoom) {
-			try {
-				connection = getConnection();
-				connection.setAutoCommit(false);
-
+		Connection connection = null;
+		try {
+			connection = source.getConnection();
+			connection.setAutoCommit(false);
+			synchronized (contRoom) {
 				// 1. guest pay the check
 				Chek chek = contChek.getChekForIdGuest(connection, idGuest);
 				chek.setStatus(true);
 				contChek.updateChek(connection, chek);
-
 				// 2. change room status
 				contRoom.changeRoomStatus(connection, chek.getRoom(),
 						Status.FREE);
 				contRoom.updateRoom(connection, chek.getRoom());
 				connection.commit();
-
-			} catch (SQLException e) {
-				if (connection != null) {
-					try {
-						System.err.print("Transaction is being rolled back");
-						connection.rollback();
-						closeConnection(connection);
-					} catch (SQLException excep) {
-						LOGGER.error(e.getMessage());
-					}
-				}
-				LOGGER.error(e.getMessage());
 			}
+		} catch (Exception e) {
+			if (connection != null) {
+				try {
+					System.err.print("Transaction is being rolled back");
+					connection.rollback();
+					source.closeConnection(connection);
+				} catch (SQLException ex) {
+					LOGGER.error(ex.getMessage());
+				}
+			}
+			LOGGER.error(e.getMessage());
 		}
 	}
 
 	@Override
 	public Room getRoomInLiveGuest(int idGuest) {
 		Room room = null;
+		Connection connection = null;
 		try {
-			connection = getConnection();
+			connection = source.getConnection();
 			connection.setAutoCommit(false);
-
 			int idRoom = contChek.getRoomInLiveGuest(connection, idGuest);
 			room = contRoom.getRoom(connection, idRoom);
 			connection.commit();
-
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			if (connection != null) {
 				try {
 					System.err.print("Transaction is being rolled back");
 					connection.rollback();
-					closeConnection(connection);
-				} catch (SQLException excep) {
-					LOGGER.error(e.getMessage());
+					source.closeConnection(connection);
+				} catch (SQLException ex) {
+					LOGGER.error(ex.getMessage());
 				}
 			}
 			LOGGER.error(e.getMessage());
@@ -270,138 +215,172 @@ public class ServiceAdmin implements IServiceAdmin {
 
 	@Override
 	public List<Guest> printGuestsSortedByName() {
-		connection = getConnection();
-		List<Guest> list = contGuest.getListGuestSortedByName(connection);
-		closeConnection(connection);
+		Connection connection = source.getConnection();
+		List<Guest> list = contGuest.getListGuestSorted(connection, "name");
+		source.closeConnection(connection);
 		return list;
 	}
 
 	@Override
 	public int getAmountGuest() {
-		connection = getConnection();
+		Connection connection = source.getConnection();
 		int amount = contGuest.getAmountGuest(connection);
-		closeConnection(connection);
+		source.closeConnection(connection);
 		return amount;
 	}
 
 	@Override
 	public void importGuestsList() {
-		connection = getConnection();
-		contGuest.importGuestsList(connection);
-		closeConnection(connection);
+		synchronized (contGuest) {
+			Connection connection = null;
+			try {
+				connection = source.getConnection();
+				connection.setAutoCommit(false);
+				List<Guest> listFromDB = contGuest.getListGuest(connection);
+				List<Guest> listImport = contGuest.importGuestsList();
+				for (int i = 0; i < listImport.size(); i++) {
+					for (int j = 0; j < listFromDB.size(); j++) {
+						if (listImport.get(i).getId() == listFromDB.get(j)
+								.getId()) {
+							contGuest
+									.updateGuest(connection, listImport.get(i));
+						}
+					}
+				}
+				connection.commit();
+			} catch (Exception e) {
+				if (connection != null) {
+					try {
+						System.err.print("Transaction is being rolled back");
+						connection.rollback();
+						source.closeConnection(connection);
+					} catch (SQLException ex) {
+						LOGGER.error(ex.getMessage());
+					}
+				}
+				LOGGER.error(e.getMessage());
+			}
+		}
 	}
 
 	@Override
 	public void exportGuestsList() {// write in CSV
-		connection = getConnection();
+		Connection connection = source.getConnection();
 		contGuest.exportGuestsList(connection);
-		closeConnection(connection);
+		source.closeConnection(connection);
 	}
 
 	// ======= ROOM ======
 
 	@Override
 	public void createRoom(Room room) {
-		connection = getConnection();
+		Connection connection = source.getConnection();
 		synchronized (contRoom) {
 			contRoom.createRoom(connection, room);
 		}
-		closeConnection(connection);
+		source.closeConnection(connection);
 
 	}
 
 	@Override
 	public List<Room> getListRoom() {
-		connection = getConnection();
+		Connection connection = source.getConnection();
 		List<Room> list = contRoom.getListRoom(connection);
-		closeConnection(connection);
+		source.closeConnection(connection);
 		return list;
 	}
 
 	@Override
 	public List<Room> getListRoomSortedByContent() {
-		connection = getConnection();
-		List<Room> list = contRoom.getListRoomSortedByContetn(connection);
-		closeConnection(connection);
+		Connection connection = source.getConnection();
+		List<Room> list = contRoom.getListRoomSortedBy(connection, "",
+				"content");
+		source.closeConnection(connection);
 		return list;
 	}
 
 	@Override
 	public List<Room> getListRoomSortedByNumber() {
-		connection = getConnection();
-		List<Room> list = contRoom.getListRoomSortedByNumber(connection);
-		closeConnection(connection);
+		Connection connection = source.getConnection();
+		List<Room> list = contRoom
+				.getListRoomSortedBy(connection, "", "number");
+		source.closeConnection(connection);
 		return list;
 	}
 
 	@Override
 	public List<Room> getListRoomSortedByPrice() {
-		connection = getConnection();
-		List<Room> list = contRoom.getListRoomSortedByPrice(connection);
-		closeConnection(connection);
+		Connection connection = source.getConnection();
+		List<Room> list = contRoom.getListRoomSortedBy(connection, "", "price");
+		source.closeConnection(connection);
 		return list;
 	}
 
 	@Override
 	public List<Room> getListRoomSortedByStars() {
-		connection = getConnection();
-		List<Room> list = contRoom.getListRoomFreeSortedByStars(connection);
-		closeConnection(connection);
+		Connection connection = source.getConnection();
+		List<Room> list = contRoom.getListRoomSortedBy(connection, "", "stars");
+		source.closeConnection(connection);
 		return list;
 	}
 
 	@Override
 	public List<Room> getListRoomFree() {
-		connection = getConnection();
-		List<Room> list = contRoom.getListRoomFree(connection);
-		closeConnection(connection);
+		Connection connection = source.getConnection();
+		List<Room> list = contRoom.getListRoomSortedBy(connection, "1", "id");
+		source.closeConnection(connection);
 		return list;
 	}
 
 	@Override
 	public List<Room> getListRoomFreeSortedByContent() {
-		connection = getConnection();
-		List<Room> list = contRoom.getListRoomFreeSortedByContetn(connection);
-		closeConnection(connection);
+		Connection connection = source.getConnection();
+		List<Room> list = contRoom.getListRoomSortedBy(connection, "1",
+				"content");
+		source.closeConnection(connection);
 		return list;
 	}
 
 	@Override
 	public List<Room> getListRoomFreeSortedByNumber() {
-		connection = getConnection();
-		List<Room> list = contRoom.getListRoomFreeSortedByNumber(connection);
-		closeConnection(connection);
+		Connection connection = source.getConnection();
+		List<Room> list = contRoom.getListRoomSortedBy(connection, "1",
+				"number");
+		source.closeConnection(connection);
 		return list;
 	}
 
 	@Override
 	public List<Room> getListRoomFreeSortedByPrice() {
-		connection = getConnection();
-		List<Room> list = contRoom.getListRoomFreeSortedByPrice(connection);
-		closeConnection(connection);
+		Connection connection = source.getConnection();
+		List<Room> list = contRoom
+				.getListRoomSortedBy(connection, "1", "price");
+		source.closeConnection(connection);
 		return list;
 	}
 
 	@Override
 	public List<Room> getListRoomFreeSortedByStars() {
-		connection = getConnection();
-		List<Room> list = contRoom.getListRoomFreeSortedByStars(connection);
-		closeConnection(connection);
+		Connection connection = source.getConnection();
+		List<Room> list = contRoom
+				.getListRoomSortedBy(connection, "1", "stars");
+		source.closeConnection(connection);
 		return list;
 	}
 
 	@Override
 	public int getAmountRoomFree() {
-		connection = getConnection();
+		Connection connection = source.getConnection();
 		int amount = contRoom.getAmountRoomFree(connection);
-		closeConnection(connection);
+		source.closeConnection(connection);
 		return amount;
 	}
 
 	@Override
 	public void changeRoomStatus(int idRoom, String status) {
+		Connection connection = null;
 		try {
-			connection = getConnection();
+			connection = source.getConnection();
 			connection.setAutoCommit(false);
 			synchronized (contRoom) {
 				Room room = contRoom.getRoom(connection, idRoom);
@@ -410,14 +389,14 @@ public class ServiceAdmin implements IServiceAdmin {
 				contRoom.updateRoom(connection, room);
 			}
 			connection.commit();
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			if (connection != null) {
 				try {
 					System.err.print("Transaction is being rolled back");
 					connection.rollback();
-					closeConnection(connection);
-				} catch (SQLException excep) {
-					LOGGER.error(e.getMessage());
+					source.closeConnection(connection);
+				} catch (SQLException ex) {
+					LOGGER.error(ex.getMessage());
 				}
 			}
 			LOGGER.error(e.getMessage());
@@ -426,8 +405,9 @@ public class ServiceAdmin implements IServiceAdmin {
 
 	@Override
 	public void changeRoomPrice(int idRoom, int price) {
+		Connection connection = null;
 		try {
-			connection = getConnection();
+			connection = source.getConnection();
 			connection.setAutoCommit(false);
 			synchronized (contRoom) {
 				Room room = contRoom.getRoom(connection, idRoom);
@@ -435,14 +415,14 @@ public class ServiceAdmin implements IServiceAdmin {
 				contRoom.updateRoom(connection, room);
 			}
 			connection.commit();
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			if (connection != null) {
 				try {
 					System.err.print("Transaction is being rolled back");
 					connection.rollback();
-					closeConnection(connection);
-				} catch (SQLException excep) {
-					LOGGER.error(e.getMessage());
+					source.closeConnection(connection);
+				} catch (SQLException ex) {
+					LOGGER.error(ex.getMessage());
 				}
 			}
 			LOGGER.error(e.getMessage());
@@ -451,135 +431,194 @@ public class ServiceAdmin implements IServiceAdmin {
 
 	@Override
 	public void cloneRoom(int idRoom) {
-		connection = getConnection();
+		Connection connection = source.getConnection();
 		contRoom.cloneRoom(connection, idRoom);
-		closeConnection(connection);
+		source.closeConnection(connection);
 	}
 
 	@Override
 	public void importRoomsList() {
-		connection = getConnection();
-		contRoom.importRoomsList(connection);
-		closeConnection(connection);
+		Connection connection = null;
+		try {
+			connection = source.getConnection();
+			connection.setAutoCommit(false);
+			synchronized (contRoom) {
+				List<Room> listFromDB = contRoom.getListRoom(connection);
+				List<Room> listImport = contRoom.importRoomsList();
+
+				for (int i = 0; i < listImport.size(); i++) {
+					for (int j = 0; j < listFromDB.size(); j++) {
+						if (listImport.get(i).getId() == listFromDB.get(j)
+								.getId()) {
+							contRoom.updateRoom(connection, listImport.get(i));
+						}
+					}
+				}
+			}
+			connection.commit();
+		} catch (Exception e) {
+			if (connection != null) {
+				try {
+					System.err.print("Transaction is being rolled back");
+					connection.rollback();
+					source.closeConnection(connection);
+				} catch (SQLException ex) {
+					LOGGER.error(ex.getMessage());
+				}
+			}
+			LOGGER.error(e.getMessage());
+		}
 	}
 
 	@Override
 	public void exportRoomsList() {// write in CSV
-		connection = getConnection();
+		Connection connection = source.getConnection();
 		contRoom.exportRoomsList(connection);
-		closeConnection(connection);
+		source.closeConnection(connection);
 	}
 
 	// ========= SERVICE ===============
 
 	@Override
 	public void createService(Service service) {
-		connection = getConnection();
+		Connection connection = source.getConnection();
 		contService.createService(connection, service);
-		closeConnection(connection);
+		source.closeConnection(connection);
 	}
 
 	@Override
 	public Service getServiceById(int idService) {
-		connection = getConnection();
+		Connection connection = source.getConnection();
 		Service service = contService.getService(connection, idService);
-		closeConnection(connection);
+		source.closeConnection(connection);
 		return service;
 	}
 
 	@Override
 	public List<Service> getListService() {
-		connection = getConnection();
+		Connection connection = source.getConnection();
 		List<Service> list = contService.getListService(connection);
-		closeConnection(connection);
+		source.closeConnection(connection);
 		return list;
 
 	}
 
 	@Override
 	public List<Service> printServicesSortedByName() {
-		connection = getConnection();
-		List<Service> list = contService.getServiceSortedByName(connection);
-		closeConnection(connection);
+		Connection connection = source.getConnection();
+		List<Service> list = contService.getServiceSortedBy(connection,
+				"nameServcie");
+		source.closeConnection(connection);
 		return list;
 	}
 
 	@Override
 	public List<Service> printServicesSortedByPrice() {
-		connection = getConnection();
-		List<Service> list = contService.getServiceSortedByPrice(connection);
-		closeConnection(connection);
+		Connection connection = source.getConnection();
+		List<Service> list = contService.getServiceSortedBy(connection,
+				"priceService");
+		source.closeConnection(connection);
 		return list;
 	}
 
 	@Override
 	public List<Service> getGuestThemServices(int idGuest) {
-		connection = getConnection();
+		Connection connection = source.getConnection();
 		List<Service> list = contService.getGuestThemServices(connection,
 				idGuest);
-		closeConnection(connection);
+		source.closeConnection(connection);
 		return list;
 	}
 
 	@Override
 	public void changeServicePrice(int idService, int price) {
-		connection = getConnection();
+		Connection connection = source.getConnection();
 		contService.changePrice(connection, idService, price);
-		closeConnection(connection);
+		source.closeConnection(connection);
 	}
 
 	@Override
 	public void importServicesList() {
-		connection = getConnection();
-		contService.importServicesList(connection);
-		closeConnection(connection);
+		Connection connection = null;
+		try {
+			connection = source.getConnection();
+			connection.setAutoCommit(false);
+			synchronized (contService) {
+				List<Service> listFromDB = contService
+						.getListService(connection);
+				List<Service> listImport = contService.importServicesList();
+
+				for (int i = 0; i < listImport.size(); i++) {
+					for (int j = 0; j < listFromDB.size(); j++) {
+						if (listImport.get(i).getId() == listFromDB.get(j)
+								.getId()) {
+							contService.updateService(connection,
+									listImport.get(i));
+						}
+					}
+				}
+			}
+			connection.commit();
+		} catch (Exception e) {
+			if (connection != null) {
+				try {
+					System.err.print("Transaction is being rolled back");
+					connection.rollback();
+					source.closeConnection(connection);
+				} catch (SQLException ex) {
+					LOGGER.error(ex.getMessage());
+				}
+			}
+			LOGGER.error(e.getMessage());
+		}
 	}
 
 	@Override
 	public void exportServicesList() {// write in CSV
-		connection = getConnection();
+		Connection connection = source.getConnection();
 		contService.exportServicesList(connection);
-		closeConnection(connection);
+		source.closeConnection(connection);
 	}
 
 	// ========= CHECK =============
 
 	@Override
 	public void createChek(Chek chek) {
-		connection = getConnection();
+		Connection connection = source.getConnection();
 		contChek.createChek(connection, chek);
-		closeConnection(connection);
+		source.closeConnection(connection);
 	}
 
 	@Override
 	public Chek getChekById(int idChek) {
-		connection = getConnection();
+		Connection connection = source.getConnection();
 		Chek chek = contChek.getChek(connection, idChek);
-		closeConnection(connection);
+		source.closeConnection(connection);
 		return chek;
 	}
 
 	@Override
 	public List<Chek> getListChek() {
-		connection = getConnection();
+		Connection connection = source.getConnection();
 		List<Chek> list = contChek.getListChek(connection);
-		closeConnection(connection);
+		source.closeConnection(connection);
 		return list;
 	}
 
 	@Override
 	public List<Chek> getListChekSortedByDateOutSettle() {
-		connection = getConnection();
-		List<Chek> list = contChek.getListChekSortedByDateOutSettle(connection);
-		closeConnection(connection);
+		Connection connection = source.getConnection();
+		List<Chek> list = contChek.getListChekSortedBy(connection,
+				"date_out_settle");
+		source.closeConnection(connection);
 		return list;
 	}
 
 	@Override
 	public int getSumChek(int idGuest) {
-		connection = getConnection();
+		Connection connection = source.getConnection();
 		int sum = contService.getServiceSumPrice(connection, idGuest);
-		closeConnection(connection);
+		source.closeConnection(connection);
 		return sum;
 	}
 }

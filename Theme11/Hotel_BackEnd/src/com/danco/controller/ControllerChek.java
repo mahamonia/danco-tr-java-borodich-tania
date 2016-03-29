@@ -33,41 +33,84 @@ public class ControllerChek implements IControllerChek {
 
 	@Override
 	public void updateChek(Connection connect, Chek chek) {
-		chekDao.update(connect, chek);
+		try {
+			chekDao.update(connect, chek);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
 	}
 
 	@Override
 	public void deleteChek(Connection connect, int idChek) {
-		chekDao.delete(connect, idChek);
+		try {
+			chekDao.delete(connect, idChek);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
 	}
 
 	@Override
 	public List<Chek> getListChek(Connection connect) {
-		return chekDao.getList(connect);
+		List<Chek> checkList = null;
+		try {
+			checkList =  chekDao.getList(connect);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+		return checkList;
 	}
-	public List<Chek> getListChekSortedByDateOutSettle(Connection connect) {
-		return chekDao.getListChekSortedByDateOutSettle(connect);
+	public List<Chek> getListChekSortedBy(Connection connect, String param) {
+		List<Chek> checkList = null;
+		try {
+			checkList = chekDao.getListChekSorted(connect, param);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+		return checkList;
 	}
 	
 	@Override
 	public Chek getChek(Connection connect, int idChek) {
-		return chekDao.getById(connect, idChek);
+		Chek check = null;
+		try {
+			check = chekDao.getById(connect, idChek);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+		return check;
 	}
 
 	@Override
 	public Chek getChekForIdGuest(Connection connect, int idGuest) {		
-		return chekDao.getChekForIdGuest(connect, idGuest);
+		Chek check = null;
+		try {
+			check = chekDao.getChekForIdGuest(connect, idGuest);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+		return check;
 	}
 
 	@Override
 	public void changeStatusChek(Connection connect, int idCheck, String status) {
-		Chek check = chekDao.getById(connect, idCheck);
-		check.setStatus(Boolean.getBoolean(status));
+		Chek check = null;
+		try {
+			check = chekDao.getById(connect, idCheck);
+			check.setStatus(Boolean.getBoolean(status));
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+		
 	}
 
 	@Override
 	public int getRoomInLiveGuest(Connection connect, int idGuest) {
-		Chek check = chekDao.getChekForIdGuest(connect, idGuest);
+		Chek check = null;
+		try {
+			check = chekDao.getChekForIdGuest(connect, idGuest);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
 		return check.getRoom().getId();
 	}
 

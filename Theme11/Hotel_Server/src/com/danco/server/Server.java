@@ -1,8 +1,8 @@
 package com.danco.server;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,7 +11,7 @@ import com.danco.api.backend.IServiceAdmin;
 import com.danco.dependency.DependencyInjection;
 import com.danco.services.ServiceAdmin;
 
-public class Server{
+public class Server {
 
 	private final static Logger LOGGER = LogManager.getLogger(Server.class);
 	private static boolean isWorking = true;
@@ -27,37 +27,34 @@ public class Server{
 			IServiceAdmin admin = new ServiceAdmin();
 			DependencyInjection.getInstance().getDI(admin);
 			// add admin in list created objects
-			DependencyInjection.createdObjects.put("com.danco.api.backend.IServiceAdmin", admin);
-			
+			DependencyInjection.createdObjects.put(
+					"com.danco.api.backend.IServiceAdmin", admin);
 			admin.initData();
-						
+
 			ProtocolFromUiToBackEnd protocol = new ProtocolFromUiToBackEnd(
 					admin);
 
-			try {
-						
-				serverSocket = new ServerSocket(port);
-				System.out.println("Waiting for a client...");
+			serverSocket = new ServerSocket(port);
+			System.out.println("Waiting for a client...");
 
-				while (isWorking) {
-					
-						clientSocket = serverSocket.accept();
-						System.out.println("Got a client ...");
-						
-						// create thread for connect client
-						client = new ThreadForNewClient(clientSocket, protocol);
-						DependencyInjection.getInstance().getDI(client);
-						client.thread.start();														
-				}
-			} catch (Exception e) {
-				LOGGER.error(e.getMessage());
-			} finally {				
-				clientSocket.close();
-				serverSocket.close();
-				admin.saveData();
-			}		
+			while (isWorking) {
+				clientSocket = serverSocket.accept();
+				System.out.println("Got a client ...");
+
+				// create thread for connect client
+				client = new ThreadForNewClient(clientSocket, protocol);
+				DependencyInjection.getInstance().getDI(client);
+				client.thread.start();
+			}
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
+		} finally {
+			try {
+				clientSocket.close();
+				serverSocket.close();
+			} catch (IOException e) {
+				LOGGER.error(e.getMessage());
+			}
 		}
 	}
 }

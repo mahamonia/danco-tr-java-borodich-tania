@@ -33,7 +33,7 @@ public class ItemPrintServiceThemPriceSortedByPrice extends ItemOperating {
 					.dataProcessing(str);
 			System.out.println(MESSAGE_1);
 			for (int i = 0; i < serviceList.size(); i++) {
-				System.out.println(i+". "+serviceList.get(i).getName() + MESSAGE_2
+				System.out.println((i+1)+". "+serviceList.get(i).getName() + MESSAGE_2
 						+ serviceList.get(i).getPrice());
 			}
 

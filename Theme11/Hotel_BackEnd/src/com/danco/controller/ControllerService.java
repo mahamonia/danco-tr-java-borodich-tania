@@ -54,32 +54,57 @@ public class ControllerService implements IControllerService {
 
 	@Override
 	public Service getService(Connection connect, int idService) {
-		return serviceDao.getById(connect, idService);
+		Service service = null;
+		try {
+			service = serviceDao.getById(connect, idService);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+		return service;
 	}
 
 	@Override
 	public List<Service> getListService(Connection connect) {
-		return serviceDao.getList(connect);
+		List<Service> list = null;
+		try {
+			list = serviceDao.getList(connect);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+		return list;
 	}
 
 	public List<Service> getGuestThemServices(Connection connect, int idGuest) {
-		return serviceDao.getGuestThemServices(connect, idGuest);
+		List<Service> list = null;
+		try {
+			list = serviceDao.getGuestThemServices(connect, idGuest);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+		return list;
 
 	}
 
 	@Override
-	public List<Service> getServiceSortedByPrice(Connection connect) {
-		return serviceDao.getListServiceSortedByPrice(connect);
-	}
-
-	@Override
-	public List<Service> getServiceSortedByName(Connection connect) {
-		return serviceDao.getListServiceSortedByName(connect);
+	public List<Service> getServiceSortedBy(Connection connect, String param) {
+		List<Service> list = null;
+		try {
+			list = serviceDao.getListServiceSorted(connect, param);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+		return list;
 	}
 
 	@Override
 	public int getServiceSumPrice(Connection connect, int idGuest) {
-		return serviceDao.getSumServiceForGuest(connect, idGuest);
+		int sum = 0;
+		try {
+			sum = serviceDao.getSumServiceForGuest(connect, idGuest);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+		return sum;
 	}
 
 	@Override
@@ -92,12 +117,16 @@ public class ControllerService implements IControllerService {
 	}
 
 	@Override
-	public List<Service> importServicesList(Connection connect) {
-		return utility.importData();
+	public List<Service> importServicesList() {
+		return utility.importData();		
 	}
 
 	@Override
 	public void exportServicesList(Connection connect) {
-		utility.exportData(serviceDao.getList(connect));
+		try {
+			utility.exportData(serviceDao.getList(connect));
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
 	}
 }

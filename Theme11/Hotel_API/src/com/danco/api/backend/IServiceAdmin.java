@@ -11,8 +11,6 @@ public interface IServiceAdmin {
 
 	public void initData();
 
-	public void saveData();
-
 	// G U E S T
 
 	public void createGuest(Guest guest);

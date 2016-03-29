@@ -17,11 +17,11 @@ public interface IControllerGuest {
 
 	public List<Guest> getListGuest(Connection con);
 
-	public List<Guest> getListGuestSortedByName(Connection con);
+	public List<Guest> getListGuestSorted(Connection connect, String param);
 
 	public int getAmountGuest(Connection con);
 
-	public List<Guest> importGuestsList(Connection con);
+	public List<Guest> importGuestsList();
 
 	public void exportGuestsList(Connection con);
 

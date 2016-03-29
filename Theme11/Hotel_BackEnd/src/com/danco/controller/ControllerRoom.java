@@ -58,62 +58,47 @@ public class ControllerRoom implements IControllerRoom {
 
 	@Override
 	public Room getRoom(Connection connect, int idRoom) {
-		return roomDao.getById(connect, idRoom);
+		Room room = null;
+		try {
+			room = roomDao.getById(connect, idRoom);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+		return room;
 	}
 
 	@Override
 	public List<Room> getListRoom(Connection connect) {
-		return roomDao.getList(connect);
+		List<Room> list = null;
+		try {
+			list = roomDao.getList(connect);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+		return list;
 	}
 
 	@Override
-	public List<Room> getListRoomSortedByContetn(Connection connect) {
-		return roomDao.getListRoomSortedByContetn(connect);
-	}
-
-	@Override
-	public List<Room> getListRoomSortedByNumber(Connection connect) {
-		return roomDao.getListRoomSortedByNumber(connect);
-	}
-
-	@Override
-	public List<Room> getListRoomSortedByPrice(Connection connect) {
-		return roomDao.getListRoomSortedByPrice(connect);
-	}
-
-	@Override
-	public List<Room> getListRoomSortedByStars(Connection connect) {
-		return roomDao.getListRoomSortedByStars(connect);
-	}
-
-	@Override
-	public List<Room> getListRoomFree(Connection connect) {
-		return roomDao.getListFreeRoom(connect);
-	}
-
-	@Override
-	public List<Room> getListRoomFreeSortedByContetn(Connection connect) {
-		return roomDao.getListRoomFreeSortedByContetn(connect);
-	}
-
-	@Override
-	public List<Room> getListRoomFreeSortedByNumber(Connection connect) {
-		return roomDao.getListRoomFreeSortedByNumber(connect);
-	}
-
-	@Override
-	public List<Room> getListRoomFreeSortedByPrice(Connection connect) {
-		return roomDao.getListRoomFreeSortedByPrice(connect);
-	}
-
-	@Override
-	public List<Room> getListRoomFreeSortedByStars(Connection connect) {
-		return roomDao.getListRoomFreeSortedByStars(connect);
+	public List<Room> getListRoomSortedBy(Connection connect, String status,
+			String param) {
+		List<Room> list = null;
+		try {
+			list = roomDao.getListRoomSorted(connect, status, param);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+		return list;
 	}
 
 	@Override
 	public int getAmountRoomFree(Connection connect) {
-		return roomDao.getListFreeRoom(connect).size();
+		int amount = 0;
+		try {
+			amount = roomDao.getListRoomSorted(connect, "1", "id").size()+1;
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+		return amount;
 	}
 
 	@Override
@@ -143,13 +128,9 @@ public class ControllerRoom implements IControllerRoom {
 	public Room cloneRoom(Connection connect, int idRoom) {
 		Room clon = null;
 		try {
-
 			clon = roomDao.getById(connect, idRoom).clone();
-			int idForNewRoom = roomDao.getIdForNewModel(connect);
-			clon.setId(idForNewRoom);
-
-		} catch (CloneNotSupportedException e) {
-			LOGGER.error(e.getMessage());
+			clon.setId(0);
+			roomDao.create(connect, clon);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
@@ -157,13 +138,16 @@ public class ControllerRoom implements IControllerRoom {
 	}
 
 	@Override
-	public List<Room> importRoomsList(Connection connect) {
+	public List<Room> importRoomsList() {
 		return utility.importData();
 	}
 
 	@Override
 	public void exportRoomsList(Connection connect) {
-		utility.exportData(roomDao.getList(connect));
+		try {
+			utility.exportData(roomDao.getList(connect));
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
 	}
 }
-

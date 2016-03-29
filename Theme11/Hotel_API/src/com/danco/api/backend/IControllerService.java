@@ -19,15 +19,13 @@ public interface IControllerService {
 	
 	public List<Service> getGuestThemServices(Connection con, int idGuest);
 
-	public List<Service> getServiceSortedByPrice(Connection con);
-
-	public List<Service> getServiceSortedByName(Connection con);
+	public List<Service> getServiceSortedBy(Connection con, String param);
 
 	public int getServiceSumPrice(Connection con, int idGuest);
 
 	public void changePrice(Connection con, int idService, int price);
 
-	public List<Service> importServicesList(Connection con);
+	public List<Service> importServicesList();
 
 	public void exportServicesList(Connection con);
 
