@@ -17,7 +17,6 @@ public class ItemSettle extends ItemOperating {
 	private static final String MESSAGE_2 = "Id room";
 	private static final String MESSAGE_3 = "Date in settle";
 	private static final String MESSAGE_4 = "Date out settle";
-	private static final String MESSAGE_5 = "Message";
 	
 	private static final Logger LOGGER = LogManager.getLogger(ItemSettle.class);
 
@@ -45,8 +44,7 @@ public class ItemSettle extends ItemOperating {
 			StringBuilder str = new StringBuilder();
 			str.append(PROTOCOL).append(idGuest).append(SEPARATOR).append(idRoom).append(SEPARATOR).append(dateInSettle).append(SEPARATOR).append(dateOutSettle);
 			
-			//выводим результат		
-			System.out.println(MESSAGE_5 + processing.dataProcessing(str));
+			System.out.println(processing.dataProcessing(str));
 
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());

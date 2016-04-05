@@ -15,7 +15,6 @@ public class ItemChangePriceRoom extends ItemOperating {
 	private static final String SEPARATOR =";";
 	private static final String MESSAGE_1 ="Id room";
 	private static final String MESSAGE_2 ="price..";
-	private static final String MESSAGE_3 ="Message";
 	private static final Logger LOGGER = LogManager
 			.getLogger(ItemChangePriceRoom.class);
 
@@ -38,7 +37,7 @@ public class ItemChangePriceRoom extends ItemOperating {
 			StringBuilder str = new StringBuilder();
 			str.append(PROTOCOL).append(idRoom).append(SEPARATOR).append(price);
 			
-			System.out.println(MESSAGE_3 + processing.dataProcessing(str));	
+			System.out.println(processing.dataProcessing(str));
 
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());

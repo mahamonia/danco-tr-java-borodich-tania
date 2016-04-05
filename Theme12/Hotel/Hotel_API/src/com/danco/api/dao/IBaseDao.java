@@ -1,22 +1,23 @@
 package com.danco.api.dao;
 
-import java.sql.SQLException;
-import java.util.List;
-
 import org.hibernate.Session;
 
 import com.danco.model.entity.BaseModel;
 
 public interface IBaseDao<T extends BaseModel> {
 
-	public void create(Session session, T model)throws SQLException;
+	default void create(Session session, T model)throws Exception {
+		session.save(model);
+	}
 
-	public void update(Session session, T model)throws SQLException;
+	default void update(Session session, T model)throws Exception {
+		session.update(model);
+	}
 
-	public void delete(Session session, int idModel)throws SQLException;
+	default void delete(Session session, T model)throws Exception {
+		session.delete(model);
+	}
 
-	public T getById(Session session, int idModel)throws SQLException;
-
-	public List<T> getList(Session session)throws SQLException;
+	public T getById(Session session, int idModel)throws Exception ;
 
 }

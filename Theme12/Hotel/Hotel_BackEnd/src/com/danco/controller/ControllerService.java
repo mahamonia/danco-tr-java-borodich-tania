@@ -46,7 +46,7 @@ public class ControllerService implements IControllerService {
 	@Override
 	public void deleteService(Session session, int idService) {
 		try {
-			serviceDao.delete(session, idService);
+			serviceDao.delete(session, serviceDao.getById(session, idService));
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
@@ -57,6 +57,7 @@ public class ControllerService implements IControllerService {
 		Service service = null;
 		try {
 			service = serviceDao.getById(session, idService);
+			System.out.println();
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
@@ -64,10 +65,10 @@ public class ControllerService implements IControllerService {
 	}
 
 	@Override
-	public List<Service> getListService(Session session) {
+	public List<Service> getListService(Session session, String param) {
 		List<Service> list = null;
 		try {
-			list = serviceDao.getList(session);
+			list = serviceDao.getList(session, param);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
@@ -83,17 +84,6 @@ public class ControllerService implements IControllerService {
 		}
 		return list;
 
-	}
-
-	@Override
-	public List<Service> getServiceSortedBy(Session session, String param) {
-		List<Service> list = null;
-		try {
-			list = serviceDao.getListServiceSorted(session, param);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-		}
-		return list;
 	}
 
 	@Override
@@ -124,7 +114,7 @@ public class ControllerService implements IControllerService {
 	@Override
 	public void exportServicesList(Session session) {
 		try {
-			utility.exportData(serviceDao.getList(session));
+			utility.exportData(serviceDao.getList(session, "id"));
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}

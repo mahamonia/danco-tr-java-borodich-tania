@@ -81,9 +81,11 @@ public class ProtocolFromUiToBackEnd {
 			}
 			Method m = cl.getMethod(nameMetod, paramTypes);
 			rezult = (Object)m.invoke(this.admin, args);
+			rezult = (String)((rezult!=null)? rezult : "Server error");
 
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
+			System.out.println(e.getCause());
 		}
 		return rezult;
 	}

@@ -17,7 +17,6 @@ public class ItemCreateRoom extends ItemOperating {
 	private static final String MESSAGE_2 = "Content...";
 	private static final String MESSAGE_3 = "Stars...";
 	private static final String MESSAGE_4 = "Price...";
-	private static final String MESSAGE_5 = "Message";
 	private static final Logger LOGGER = LogManager
 			.getLogger(ItemCreateRoom.class);
 
@@ -48,7 +47,7 @@ public class ItemCreateRoom extends ItemOperating {
 					.append(content).append(SEPARATOR).append(stars)
 					.append(SEPARATOR).append(price);
 			
-			System.out.println(MESSAGE_5 + processing.dataProcessing(str));
+			System.out.println(processing.dataProcessing(str));
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}

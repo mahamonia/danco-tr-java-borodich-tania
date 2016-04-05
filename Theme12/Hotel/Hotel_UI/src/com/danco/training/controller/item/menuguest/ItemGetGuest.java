@@ -8,12 +8,13 @@ import org.apache.logging.log4j.Logger;
 
 import com.danco.api.ui.IProcessing;
 import com.danco.model.entity.Guest;
+import com.danco.model.entity.Service;
 import com.danco.training.controller.item.itemmenu.ItemOperating;
 import com.danco.training.controller.menu.Menu;
 
 public class ItemGetGuest extends ItemOperating {
 
-	private static final String PROTOCOL = "1;"+"getGuestById"+";";
+	private static final String PROTOCOL = "1;"+"getServiceById"+";";
 	private static final String SEPARATOR =";";
 	private static final String MESSAGE_1 = "Id guest";
 	
@@ -36,10 +37,11 @@ public class ItemGetGuest extends ItemOperating {
 			str.append(PROTOCOL).append(idGuest).append(SEPARATOR);
 			
 			
-			Guest guest = (Guest)processing.dataProcessing(str);
-			
-			System.out.println(guest.getName());
-
+		//	Guest guest = (Guest)processing.dataProcessing(str);
+			Service guest = (Service)processing.dataProcessing(str);
+//			
+//			System.out.println(" date in settle "+guest.getDateInSettle());
+			System.out.println(guest.getName()+", chek date- "+guest.getChek().getDateInSettle());
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}

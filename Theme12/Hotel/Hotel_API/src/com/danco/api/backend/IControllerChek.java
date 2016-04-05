@@ -18,9 +18,7 @@ public interface IControllerChek {
 	
 	public Chek getChekForIdGuest(Session session, int idGuest);
 
-	public List<Chek> getListChek(Session session);
-	
-	public List<Chek> getListChekSortedBy(Session session, String param);
+	public List<Chek> getListChek(Session session, String param);
 	
 	public void changeStatusChek(Session session, int idChek, String status);
 	

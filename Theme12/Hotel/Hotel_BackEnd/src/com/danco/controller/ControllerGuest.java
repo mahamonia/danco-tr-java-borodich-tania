@@ -48,7 +48,7 @@ public class ControllerGuest implements IControllerGuest {
 	@Override
 	public void deleteGuest(Session session, int idGuest) {
 		try {
-			guestDao.delete(session, idGuest);
+			guestDao.delete(session, guestDao.getById(session, idGuest));
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
@@ -66,22 +66,11 @@ public class ControllerGuest implements IControllerGuest {
 	}
 
 	@Override
-	public List<Guest> getListGuest(Session session) {
+	public List<Guest> getListGuest(Session session, String param) {
 		List<Guest> list = null;
 		try {
-			list = guestDao.getList(session);
+			list = guestDao.getList(session, param);
 		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-		}
-		return list;
-	}
-
-	@Override
-	public List<Guest> getListGuestSorted(Session session, String param) {
-		List<Guest> list = null;
-		try {
-			list = guestDao.getListGuestSorted(session, param);
-		}catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
 		return list;
@@ -91,7 +80,7 @@ public class ControllerGuest implements IControllerGuest {
 	public int getAmountGuest(Session session) {
 		int amount = 0;
 		try {
-			amount = guestDao.getList(session).size() + 1;
+			amount = guestDao.getList(session, "id").size() + 1;
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
@@ -106,11 +95,9 @@ public class ControllerGuest implements IControllerGuest {
 	@Override
 	public void exportGuestsList(Session session) {
 		try {
-			utility.exportData(guestDao.getList(session));
+			utility.exportData(guestDao.getList(session, "id"));
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
-
 	}
-
 }

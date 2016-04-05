@@ -9,7 +9,6 @@ import com.danco.training.controller.menu.Menu;
 
 public class ItemExportService extends ItemOperating {
 	private static final String PROTOCOL = "0" + ";" + "exportServicesList";
-	private static final String MESSAGE = "Message ";
 	private static final Logger LOGGER = LogManager
 			.getLogger(ItemExportService.class);
 
@@ -22,7 +21,7 @@ public class ItemExportService extends ItemOperating {
 		try {
 			StringBuilder str = new StringBuilder();
 			str.append(PROTOCOL);
-			System.out.println(MESSAGE + processing.dataProcessing(str));
+			System.out.println(processing.dataProcessing(str));
 
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());

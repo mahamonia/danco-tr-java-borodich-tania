@@ -13,7 +13,6 @@ import com.danco.training.controller.menu.Menu;
 public class ItemForCloningRoom extends ItemOperating {
 	private static final String PROTOCOL = "1" + ";" + "cloneRoom" + ";";
 	private static final String MESSAGE_1 = "Id room..";
-	private static final String MESSAGE_2 = "Message";
 	private static final Logger LOGGER = LogManager
 			.getLogger(ItemForCloningRoom.class);
 
@@ -32,7 +31,7 @@ public class ItemForCloningRoom extends ItemOperating {
 			StringBuilder str = new StringBuilder();
 			str.append(PROTOCOL).append(idRoom);
 		
-			System.out.println(MESSAGE_2 + processing.dataProcessing(str));
+			System.out.println(processing.dataProcessing(str));
 
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());

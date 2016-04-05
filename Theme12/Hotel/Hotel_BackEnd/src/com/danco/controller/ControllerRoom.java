@@ -50,7 +50,7 @@ public class ControllerRoom implements IControllerRoom {
 	@Override
 	public void deleteRoom(Session session, int idRoom) {
 		try {
-			roomDao.delete(session, idRoom);
+			roomDao.delete(session, roomDao.getById(session, idRoom));
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
@@ -68,22 +68,10 @@ public class ControllerRoom implements IControllerRoom {
 	}
 
 	@Override
-	public List<Room> getListRoom(Session session) {
+	public List<Room> getListRoom(Session session, String status, String param) {
 		List<Room> list = null;
 		try {
-			list = roomDao.getList(session);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-		}
-		return list;
-	}
-
-	@Override
-	public List<Room> getListRoomSortedBy(Session session, String status,
-			String param) {
-		List<Room> list = null;
-		try {
-			list = roomDao.getListRoomSorted(session, status, param);
+			list = roomDao.getList(session, status, param);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
@@ -94,7 +82,7 @@ public class ControllerRoom implements IControllerRoom {
 	public int getAmountRoomFree(Session session) {
 		int amount = 0;
 		try {
-			amount = roomDao.getListRoomSorted(session, "1", "id").size()+1;
+			amount = roomDao.getList(session, "1", "id").size()+1;
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
@@ -145,7 +133,7 @@ public class ControllerRoom implements IControllerRoom {
 	@Override
 	public void exportRoomsList(Session session) {
 		try {
-			utility.exportData(roomDao.getList(session));
+			utility.exportData(roomDao.getList(session, "", "id"));
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}

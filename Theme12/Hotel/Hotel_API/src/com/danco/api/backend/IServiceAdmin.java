@@ -13,20 +13,18 @@ public interface IServiceAdmin {
 
 	// G U E S T
 
-	public void createGuest(Guest guest);
+	public String createGuest(Guest guest);
 
 	public Guest getGuestById(int id);
 
 	public List<Guest> getListGuest();
 
-	public void deleteGuest(int id);
-
-	public void settleGuestInRoom(int idGuest, int idRoom, String dateInSettle,
+	public String settleGuestInRoom(int idGuest, int idRoom, String dateInSettle,
 			String dateOutSettle);
 
-	public void addServiceForGuest(int idGuest, int idService);
+	public String addServiceForGuest(int idGuest, int idService);
 
-	public void settleGuestOutRoom(int idGuest);
+	public String settleGuestOutRoom(int idGuest);
 
 	public Room getRoomInLiveGuest(int idGuest);
 
@@ -34,13 +32,13 @@ public interface IServiceAdmin {
 
 	public int getAmountGuest();
 
-	public void importGuestsList();
+	public String importGuestsList();
 
-	public void exportGuestsList();
+	public String exportGuestsList();
 
 	// R O O M
 
-	public void createRoom(Room room);
+	public String createRoom(Room room);
 
 	public List<Room> getListRoom();
 
@@ -64,19 +62,19 @@ public interface IServiceAdmin {
 
 	public int getAmountRoomFree();
 
-	public void changeRoomStatus(int idRoom, String status);
+	public String changeRoomStatus(int idRoom, String status);
 
-	public void changeRoomPrice(int idRoom, int price);
+	public String changeRoomPrice(int idRoom, int price);
 
-	public void cloneRoom(int idRoom);
+	public String cloneRoom(int idRoom);
 
-	public void importRoomsList();
+	public String importRoomsList();
 
-	public void exportRoomsList();
+	public String exportRoomsList();
 
 	// S E R V I C E
 
-	public void createService(Service service);
+	public String createService(Service service);
 
 	public Service getServiceById(int idService);
 
@@ -88,15 +86,15 @@ public interface IServiceAdmin {
 
 	public List<Service> getGuestThemServices(int idGuest);
 
-	public void changeServicePrice(int idService, int price);
+	public String changeServicePrice(int idService, int price);
 
-	public void importServicesList();
+	public String importServicesList();
 
-	public void exportServicesList();
+	public String exportServicesList();
 	
 	// C H E C K
 	
-	public void createChek(Chek chek);
+	public String createChek(Chek chek);
 
 	public Chek getChekById(int idChek);
 

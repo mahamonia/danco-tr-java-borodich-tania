@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `hotel_service`.`Room` (
   `content` INT NULL,
   `stars` INT NULL,
   `price` INT NULL,
-  `Status` ENUM('free', 'notfree', 'onrepair') NULL DEFAULT 'free',
+  `Status` ENUM('FREE', 'NOTFREE', 'ONREPAIR') NULL DEFAULT 'FREE',
   PRIMARY KEY (`idRoom`),
   UNIQUE INDEX `idRoom_UNIQUE` (`idRoom` ASC))
 ENGINE = InnoDB;
@@ -52,8 +52,8 @@ DROP TABLE IF EXISTS `hotel_service`.`Chek` ;
 
 CREATE TABLE IF NOT EXISTS `hotel_service`.`Chek` (
   `idChek` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `date_in_settle` DATE NULL,
-  `date_out_settle` DATE NULL,
+  `dateInSettle` DATE NULL,
+  `dateOutSettle` DATE NULL,
   `status` TINYINT(0) NULL DEFAULT 0,
   `Guest_idGuest` INT UNSIGNED NOT NULL,
   `Room_idRoom` INT NOT NULL,
@@ -123,16 +123,16 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hotel_service`;
-INSERT INTO `hotel_service`.`Room` (`idRoom`, `number`, `content`, `stars`, `price`, `Status`) VALUES (1, 1, 2, 3, 3, 'free');
-INSERT INTO `hotel_service`.`Room` (`idRoom`, `number`, `content`, `stars`, `price`, `Status`) VALUES (2, 2, 3, 3, 5, 'notfree');
-INSERT INTO `hotel_service`.`Room` (`idRoom`, `number`, `content`, `stars`, `price`, `Status`) VALUES (3, 3, 2, 4, 4, 'notfree');
-INSERT INTO `hotel_service`.`Room` (`idRoom`, `number`, `content`, `stars`, `price`, `Status`) VALUES (4, 4, 3, 3, 3, 'free');
-INSERT INTO `hotel_service`.`Room` (`idRoom`, `number`, `content`, `stars`, `price`, `Status`) VALUES (5, 5, 4, 4, 5, 'notfree');
-INSERT INTO `hotel_service`.`Room` (`idRoom`, `number`, `content`, `stars`, `price`, `Status`) VALUES (6, 6, 2, 3, 5, 'free');
-INSERT INTO `hotel_service`.`Room` (`idRoom`, `number`, `content`, `stars`, `price`, `Status`) VALUES (7, 7, 3, 4, 5, 'free');
-INSERT INTO `hotel_service`.`Room` (`idRoom`, `number`, `content`, `stars`, `price`, `Status`) VALUES (8, 8, 3, 5, 8, 'notfree');
-INSERT INTO `hotel_service`.`Room` (`idRoom`, `number`, `content`, `stars`, `price`, `Status`) VALUES (9, 9, 4, 3, 5, 'free');
-INSERT INTO `hotel_service`.`Room` (`idRoom`, `number`, `content`, `stars`, `price`, `Status`) VALUES (10, 10, 3, 4, 7, 'free');
+INSERT INTO `hotel_service`.`Room` (`idRoom`, `number`, `content`, `stars`, `price`, `Status`) VALUES (1, 1, 2, 3, 3, 'FREE');
+INSERT INTO `hotel_service`.`Room` (`idRoom`, `number`, `content`, `stars`, `price`, `Status`) VALUES (2, 2, 3, 3, 5, 'NOTFREE');
+INSERT INTO `hotel_service`.`Room` (`idRoom`, `number`, `content`, `stars`, `price`, `Status`) VALUES (3, 3, 2, 4, 4, 'NOTFREE');
+INSERT INTO `hotel_service`.`Room` (`idRoom`, `number`, `content`, `stars`, `price`, `Status`) VALUES (4, 4, 3, 3, 3, 'FREE');
+INSERT INTO `hotel_service`.`Room` (`idRoom`, `number`, `content`, `stars`, `price`, `Status`) VALUES (5, 5, 4, 4, 5, 'NOTFREE');
+INSERT INTO `hotel_service`.`Room` (`idRoom`, `number`, `content`, `stars`, `price`, `Status`) VALUES (6, 6, 2, 3, 5, 'FREE');
+INSERT INTO `hotel_service`.`Room` (`idRoom`, `number`, `content`, `stars`, `price`, `Status`) VALUES (7, 7, 3, 4, 5, 'FREE');
+INSERT INTO `hotel_service`.`Room` (`idRoom`, `number`, `content`, `stars`, `price`, `Status`) VALUES (8, 8, 3, 5, 8, 'NOTFREE');
+INSERT INTO `hotel_service`.`Room` (`idRoom`, `number`, `content`, `stars`, `price`, `Status`) VALUES (9, 9, 4, 3, 5, 'FREE');
+INSERT INTO `hotel_service`.`Room` (`idRoom`, `number`, `content`, `stars`, `price`, `Status`) VALUES (10, 10, 3, 4, 7, 'FREE');
 
 COMMIT;
 
@@ -142,10 +142,10 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `hotel_service`;
-INSERT INTO `hotel_service`.`Chek` (`idChek`, `date_in_settle`, `date_out_settle`, `status`, `Guest_idGuest`, `Room_idRoom`) VALUES (1, '2013.03.01', '2013.03.20', 0, 1, 2);
-INSERT INTO `hotel_service`.`Chek` (`idChek`, `date_in_settle`, `date_out_settle`, `status`, `Guest_idGuest`, `Room_idRoom`) VALUES (2, '2013.04.01', '2013.04.05', 0, 2, 3);
-INSERT INTO `hotel_service`.`Chek` (`idChek`, `date_in_settle`, `date_out_settle`, `status`, `Guest_idGuest`, `Room_idRoom`) VALUES (3, '2013.02.01', '2013.02.02', 0, 3, 5);
-INSERT INTO `hotel_service`.`Chek` (`idChek`, `date_in_settle`, `date_out_settle`, `status`, `Guest_idGuest`, `Room_idRoom`) VALUES (4, '2013.03.02', '2013.03.30', 0, 4, 8);
+INSERT INTO `hotel_service`.`Chek` (`idChek`, `dateInSettle`, `dateOutSettle`, `status`, `Guest_idGuest`, `Room_idRoom`) VALUES (1, '2013-03-01', '2013-03-20', 0, 1, 2);
+INSERT INTO `hotel_service`.`Chek` (`idChek`, `dateInSettle`, `dateOutSettle`, `status`, `Guest_idGuest`, `Room_idRoom`) VALUES (2, '2013-04-01', '2013-04-05', 0, 2, 3);
+INSERT INTO `hotel_service`.`Chek` (`idChek`, `dateInSettle`, `dateOutSettle`, `status`, `Guest_idGuest`, `Room_idRoom`) VALUES (3, '2013-02-01', '2013-02-02', 0, 3, 5);
+INSERT INTO `hotel_service`.`Chek` (`idChek`, `dateInSettle`, `dateOutSettle`, `status`, `Guest_idGuest`, `Room_idRoom`) VALUES (4, '2013-03-02', '2013-03-30', 0, 4, 8);
 
 COMMIT;
 

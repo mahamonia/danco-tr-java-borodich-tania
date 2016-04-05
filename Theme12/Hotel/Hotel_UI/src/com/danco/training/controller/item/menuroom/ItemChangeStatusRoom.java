@@ -15,7 +15,6 @@ public class ItemChangeStatusRoom extends ItemOperating {
 	private static final String SEPARATOR =";";
 	private static final String MESSAGE_1 = "Id room";
 	private static final String MESSAGE_2 = "status..";
-	private static final String MESSAGE_3 = "Message";
 	
 	private static final Logger LOGGER = LogManager
 			.getLogger(ItemChangeStatusRoom.class);
@@ -38,7 +37,7 @@ public class ItemChangeStatusRoom extends ItemOperating {
 			StringBuilder str = new StringBuilder();
 			str.append(PROTOCOL).append(idRoom).append(SEPARATOR).append(status);
 			
-			System.out.println(MESSAGE_3 + processing.dataProcessing(str));
+			System.out.println(processing.dataProcessing(str));
 			
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());

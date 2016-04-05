@@ -17,9 +17,7 @@ public interface IControllerRoom {
 
 	public Room getRoom(Session session, int idRoom);
 
-	public List<Room> getListRoom(Session session);
-
-	public List<Room> getListRoomSortedBy(Session session, String status, String param);
+	public List<Room> getListRoom(Session session, String status, String param);
 
 	public int getAmountRoomFree(Session session);
 

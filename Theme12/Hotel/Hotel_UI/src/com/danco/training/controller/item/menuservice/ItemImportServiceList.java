@@ -9,7 +9,6 @@ import com.danco.training.controller.menu.Menu;
 
 public class ItemImportServiceList extends ItemOperating {
 	private static final String PROTOCOL = "0" + ";" + "importServicesList";
-	private static final String MESSAGE = "Message ";
 
 	private static final Logger LOGGER = LogManager
 			.getLogger(ItemImportServiceList.class);
@@ -23,7 +22,7 @@ public class ItemImportServiceList extends ItemOperating {
 		try {
 			StringBuilder str = new StringBuilder();
 			str.append(PROTOCOL);
-			System.out.println(MESSAGE + processing.dataProcessing(str));
+			System.out.println(processing.dataProcessing(str));
 
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());

@@ -10,18 +10,12 @@
 		<property name="hibernate.connection.username">root</property>
 		<property name="hibernate.connection.password">root</property>
 		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
-		<property name="show_sql">false</property>
+		<property name="show_sql">true</property>
 
 		<mapping class="com.danco.model.entity.Room" />
 		<mapping class="com.danco.model.entity.Guest" />
 		<mapping class="com.danco.model.entity.Chek" />
-		<mapping class="com.danco.model.entity.Service" />
-		
-		  <!-- cache settings -->
-        <class-cache class="org.hibernate.auction.Item" usage="read-write"/>
-        <class-cache class="org.hibernate.auction.Bid" usage="read-only"/>
-        <collection-cache collection="org.hibernate.auction.Item.bids" usage="read-write"/>
-		
+		<mapping class="com.danco.model.entity.Service" />	
 
 	</session-factory>
 </hibernate-configuration>

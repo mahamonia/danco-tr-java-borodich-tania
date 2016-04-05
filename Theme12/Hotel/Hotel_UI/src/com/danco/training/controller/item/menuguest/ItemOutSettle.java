@@ -13,7 +13,6 @@ import com.danco.training.controller.menu.Menu;
 public class ItemOutSettle extends ItemOperating {
 	private static final String PROTOCOL = "1"+";"+"settleGuestOutRoom"+";";
 	private static final String MESSAGE_1 = "Id guest";
-	private static final String MESSAGE_2 = "Message";
 	
 	private static final Logger LOGGER = LogManager.getLogger(ItemOutSettle.class);
 
@@ -33,8 +32,7 @@ public class ItemOutSettle extends ItemOperating {
 			StringBuilder str = new StringBuilder();
 			str.append(PROTOCOL).append(idGuest);
 			
-			//выводим результат		
-			System.out.println(MESSAGE_2 + processing.dataProcessing(str));
+			System.out.println(processing.dataProcessing(str));
 			
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());

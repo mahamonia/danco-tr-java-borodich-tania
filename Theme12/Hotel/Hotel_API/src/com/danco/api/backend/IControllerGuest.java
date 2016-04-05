@@ -16,9 +16,7 @@ public interface IControllerGuest {
 
 	public Guest getGuest(Session session, int idGuest);
 
-	public List<Guest> getListGuest(Session session);
-
-	public List<Guest> getListGuestSorted(Session session, String param);
+	public List<Guest> getListGuest(Session session, String param);
 
 	public int getAmountGuest(Session session);
 

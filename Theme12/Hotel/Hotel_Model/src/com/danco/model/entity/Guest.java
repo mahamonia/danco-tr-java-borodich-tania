@@ -3,33 +3,36 @@ package com.danco.model.entity;
 import java.util.List;
 
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "Guest", uniqueConstraints = {
-		@UniqueConstraint(columnNames = "name"),
-		@UniqueConstraint(columnNames = "pasport") })
+@Table(name = "Guest")
 public class Guest extends BaseModel {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -736915922230762330L;
-	@Column(name = "name",unique = true)
+	
+	@Id
+	@GeneratedValue
+	@Column(name = "idGuest")
+	private int id;
+
+	@Column(name = "name")
 	private String name;
 
-	@Column(name = "pasport", unique = true)
+	@Column(name = "pasport")
 	private String pasport;
 
-	@OneToMany(targetEntity = Chek.class, mappedBy = "guests")
+	@OneToMany(mappedBy = "guest")
 	private List<Chek> chekList;
 
-	public Guest(){
-		
+	public Guest(){		
 	}
 	
 	public Guest(String name, String pasport) {
@@ -37,9 +40,18 @@ public class Guest extends BaseModel {
 		this.pasport = pasport;
 
 		this.chekList = null;
-
 	}
 
+	@Override
+	public int getId() {
+		return id;
+	}
+
+	@Override
+	public void setId(int id) {
+		this.id = id;
+	}
+	
 	public String getName() {
 		return name;
 	}

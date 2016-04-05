@@ -3,10 +3,11 @@ package com.danco.model.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 @Entity
 @Table(name = "Service")
@@ -15,28 +16,41 @@ public class Service extends BaseModel{
 	 * 
 	 */
 	private static final long serialVersionUID = 2916383920457058904L;
+
+	@Id
+	@GeneratedValue
+	@Column(name = "idService")
+	private int id;
 	
-	@Column(name = "name", unique = true)
+	@Column(name = "name")
 	private String name;
 	
-	@Column(name = "price", unique = true)
+	@Column(name = "price")
 	private int price;
 	
-
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "Chek_idChek", nullable = false)
-	private Chek cheks;
+	private Chek chek;
 	
-	public Service(){
-		
+	public Service(){		
 	}
 	
 	public Service(String name, int price) {
 		this.name = name;
 		this.price = price;
-		this.cheks = null;
+		this.chek = null;
 	}
 
+	@Override
+	public int getId() {
+		return id;
+	}
+
+	@Override
+	public void setId(int id) {
+		this.id = id;
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -54,11 +68,11 @@ public class Service extends BaseModel{
 	}
 
 	public Chek getChek() {
-		return cheks;
+		return chek;
 	}
 
 	public void setChek(Chek chek) {
-		this.cheks = chek;
+		this.chek = chek;
 	}
 
 	public static long getSerialversionuid() {

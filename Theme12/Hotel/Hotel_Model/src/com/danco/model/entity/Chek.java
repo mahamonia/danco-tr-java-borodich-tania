@@ -1,48 +1,54 @@
 package com.danco.model.entity;
 
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
-@Table(name = "Chek", uniqueConstraints = {
-		@UniqueConstraint(columnNames = "dateInSettle"),
-		@UniqueConstraint(columnNames = "dateOutSettle"), 
-		@UniqueConstraint(columnNames = "status") })
+@Table(name = "Chek")
 public class Chek extends BaseModel {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -7745966000797087829L;
-	@Column(name = "dateInSettle", unique = true)
+	
+	@Id
+	@GeneratedValue
+	@Column(name = "idChek")
+	private int id;
+	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "dateInSettle")
 	private Date dateInSettle;
 	
-	@Column(name = "dateOutSettle", unique = true)
+	@Temporal(TemporalType.DATE)
+	@Column(name = "dateOutSettle")
 	private Date dateOutSettle;
 	
-	@Column(name = "status", unique = true)
+	@Column(name = "status")
 	private boolean status;
 	
-
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "Guest_idGuest", nullable = false)
-	private Guest guests;
+	private Guest guest;
 	
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Room_idRoom", nullable = false)
 	private Room room;
 	
-	@OneToMany(targetEntity = com.danco.model.entity.Service.class, mappedBy = "cheks",fetch = FetchType.LAZY )
+	@OneToMany(mappedBy = "chek",fetch = FetchType.EAGER)
 	private List<Service> serviceList;
 
 	public Chek(){
@@ -54,13 +60,23 @@ public class Chek extends BaseModel {
 
 		this.dateInSettle = dateInSettle;
 		this.dateOutSettle = dateOutSettle;
-		this.guests = guest;
+		this.guest = guest;
 		this.room = room;
 		
 		this.serviceList = new ArrayList<Service>();
 
 	}
 
+	@Override
+	public int getId() {
+		return id;
+	}
+
+	@Override
+	public void setId(int id) {
+		this.id = id;
+	}
+	
 	public Date getDateInSettle() {
 		return dateInSettle;
 	}
@@ -86,11 +102,11 @@ public class Chek extends BaseModel {
 	}
 
 	public Guest getGuest() {
-		return guests;
+		return guest;
 	}
 
 	public void setGuest(Guest guest) {
-		this.guests = guest;
+		this.guest = guest;
 	}
 
 	public Room getRoom() {
@@ -112,6 +128,8 @@ public class Chek extends BaseModel {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+
+	
 
 
 }

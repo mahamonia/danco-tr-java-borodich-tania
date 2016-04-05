@@ -15,7 +15,6 @@ public class ItemRegistry extends ItemOperating {
 	private static final String SEPARATOR =";";
 	private static final String MESSAGE_1 = "Name...";
 	private static final String MESSAGE_2 = "Pasport...";
-	private static final String MESSAGE_4 = "Message ";
 	private static final Logger LOGGER = LogManager.getLogger(ItemRegistry.class);
 
 	public ItemRegistry(String name, IProcessing processing) {
@@ -34,9 +33,8 @@ public class ItemRegistry extends ItemOperating {
 			
 			StringBuilder str = new StringBuilder();
 			str.append(PROTOCOL).append(name).append(SEPARATOR).append(pasport);
-			
-			//выводим результат		
-			System.out.println(MESSAGE_4 + processing.dataProcessing(str));
+	
+			System.out.println(processing.dataProcessing(str));
 
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());

@@ -9,7 +9,6 @@ import com.danco.training.controller.menu.Menu;
 
 public class ItemImportRoomList extends ItemOperating {
 	private static final String PROTOCOL = "0"+";"+"importRoomsList";
-	private static final String MESSAGE_1 ="Message";
 	private static final Logger LOGGER = LogManager
 			.getLogger(ItemImportRoomList.class);
 
@@ -23,7 +22,7 @@ public class ItemImportRoomList extends ItemOperating {
 			StringBuilder str = new StringBuilder();
 			str.append(PROTOCOL);
 			
-			System.out.println(MESSAGE_1 + processing.dataProcessing(str));
+			System.out.println(processing.dataProcessing(str));
 
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());

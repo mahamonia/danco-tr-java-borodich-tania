@@ -43,26 +43,17 @@ public class ControllerChek implements IControllerChek {
 	@Override
 	public void deleteChek(Session session, int idChek) {
 		try {
-			chekDao.delete(session, idChek);
+			chekDao.delete(session, chekDao.getById(session, idChek));
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
 	}
 
 	@Override
-	public List<Chek> getListChek(Session session) {
+	public List<Chek> getListChek(Session session, String param) {
 		List<Chek> checkList = null;
 		try {
-			checkList =  chekDao.getList(session);
-		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
-		}
-		return checkList;
-	}
-	public List<Chek> getListChekSortedBy(Session session, String param) {
-		List<Chek> checkList = null;
-		try {
-			checkList = chekDao.getListChekSorted(session, param);
+			checkList =  chekDao.getList(session, param);
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
@@ -99,8 +90,7 @@ public class ControllerChek implements IControllerChek {
 			check.setStatus(Boolean.getBoolean(status));
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
-		}
-		
+		}		
 	}
 
 	@Override

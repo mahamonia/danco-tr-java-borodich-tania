@@ -16,11 +16,9 @@ public interface IControllerService {
 
 	public Service getService(Session session, int idService);
 
-	public List<Service> getListService(Session session);
+	public List<Service> getListService(Session session, String param);
 	
 	public List<Service> getGuestThemServices(Session session, int idGuest);
-
-	public List<Service> getServiceSortedBy(Session session, String param);
 
 	public int getServiceSumPrice(Session session, int idGuest);
 

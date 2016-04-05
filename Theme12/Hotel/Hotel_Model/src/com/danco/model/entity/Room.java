@@ -4,50 +4,60 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "Room",uniqueConstraints = {
-		@UniqueConstraint(columnNames = "number"),
-		@UniqueConstraint(columnNames = "content"),
-		@UniqueConstraint(columnNames = "stars"),
-		@UniqueConstraint(columnNames = "price") })
+@Table(name = "Room")
 public class Room extends BaseModel implements Cloneable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -6490565046509298682L;
-	@Column(name = "number",unique = true)
-	private int number;
 	
-	@Column(name = "content", unique = true)
+	@Id
+	@GeneratedValue
+	@Column(name = "idRoom")
+	private int id;
+
+	@Column(name = "number")
+	private int number;
+
+	@Column(name = "content")
 	private int content;
 	
 	@Enumerated(EnumType.STRING)
-	@Column(columnDefinition="enum('free','notfree','onrepair')")
+	@Column(columnDefinition="enum('FREE','NOTFREE','ONREPAIR')")
 	private Status status;
-	
-	@Column(name = "stars", unique = true)
+
+	@Column(name = "stars")
 	private int stars;
-	
-	@Column(name = "price", unique = true)
+
+	@Column(name = "price")
 	private int price;
 
 	public Room(){
-		
 	}
 	
 	public Room(int number, int content, Status status, int stars, int price) {
-
 		this.number = number;
 		this.content = content;
 		this.status = status;
 		this.stars = stars;
 		this.price = price;
-
 	}
 
+	@Override
+	public int getId() {
+		return id;
+	}
+
+	@Override
+	public void setId(int id) {
+		this.id = id;
+	}
+	
 	public int getNumber() {
 		return number;
 	}
