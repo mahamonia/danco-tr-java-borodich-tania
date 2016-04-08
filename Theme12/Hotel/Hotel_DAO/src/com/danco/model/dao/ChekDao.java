@@ -35,9 +35,11 @@ public class ChekDao implements IChekDao {
 			throws Exception {
 		Criteria crit = session.createCriteria(Chek.class);
 
+		//"fild" fild  берем как у сущности из класса, а не в базе 
 		Chek chek = (Chek) crit.add(Restrictions.and(
-				Restrictions.eq("Guest_idGuest", idGuest),
-				Restrictions.eq("status", false)));
+				Restrictions.eq("guest.id", idGuest),
+				Restrictions.eq("status", false))).list().get(0);
+		chek.getId();
 
 		return chek;
 	}

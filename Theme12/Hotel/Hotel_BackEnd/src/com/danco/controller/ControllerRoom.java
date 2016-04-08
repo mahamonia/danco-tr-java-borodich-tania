@@ -82,7 +82,7 @@ public class ControllerRoom implements IControllerRoom {
 	public int getAmountRoomFree(Session session) {
 		int amount = 0;
 		try {
-			amount = roomDao.getList(session, "1", "id").size()+1;
+			amount = roomDao.getList(session, "FREE", "id").size()+1;
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}

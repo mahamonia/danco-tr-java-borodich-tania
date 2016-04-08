@@ -28,8 +28,8 @@ public class Service extends BaseModel{
 	@Column(name = "price")
 	private int price;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "Chek_idChek", nullable = false)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "Chek_idChek")
 	private Chek chek;
 	
 	public Service(){		

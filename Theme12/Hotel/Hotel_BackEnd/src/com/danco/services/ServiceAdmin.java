@@ -2,7 +2,6 @@ package com.danco.services;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Session;
@@ -300,7 +299,7 @@ public class ServiceAdmin implements IServiceAdmin {
 	public List<Room> getListRoomFree() {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
-		List<Room> list = contRoom.getListRoom(session, "1", "id");
+		List<Room> list = contRoom.getListRoom(session, "FREE", "id");
 		session.getTransaction().commit();
 		session.close();
 		return list;
@@ -310,7 +309,7 @@ public class ServiceAdmin implements IServiceAdmin {
 	public List<Room> getListRoomFreeSortedByContent() {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
-		List<Room> list = contRoom.getListRoom(session, "1", "content");
+		List<Room> list = contRoom.getListRoom(session, "FREE", "content");
 		session.getTransaction().commit();
 		session.close();
 		return list;
@@ -320,7 +319,7 @@ public class ServiceAdmin implements IServiceAdmin {
 	public List<Room> getListRoomFreeSortedByNumber() {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
-		List<Room> list = contRoom.getListRoom(session, "1", "number");
+		List<Room> list = contRoom.getListRoom(session, "FREE", "number");
 		session.getTransaction().commit();
 		session.close();
 		return list;
@@ -330,7 +329,7 @@ public class ServiceAdmin implements IServiceAdmin {
 	public List<Room> getListRoomFreeSortedByPrice() {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
-		List<Room> list = contRoom.getListRoom(session, "1", "price");
+		List<Room> list = contRoom.getListRoom(session, "FREE", "price");
 		session.getTransaction().commit();
 		session.close();
 		return list;
@@ -340,7 +339,7 @@ public class ServiceAdmin implements IServiceAdmin {
 	public List<Room> getListRoomFreeSortedByStars() {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
-		List<Room> list = contRoom.getListRoom(session, "1", "stars");
+		List<Room> list = contRoom.getListRoom(session, "FREE", "stars");
 		session.getTransaction().commit();
 		session.close();
 		return list;
@@ -463,7 +462,7 @@ public class ServiceAdmin implements IServiceAdmin {
 	public List<Service> printServicesSortedByName() {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
-		List<Service> list = contService.getListService(session, "nameServcie");
+		List<Service> list = contService.getListService(session, "name");
 		session.getTransaction().commit();
 		session.close();
 		return list;
@@ -474,7 +473,7 @@ public class ServiceAdmin implements IServiceAdmin {
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
 		List<Service> list = contService
-				.getListService(session, "priceService");
+				.getListService(session, "price");
 		session.getTransaction().commit();
 		session.close();
 		return list;

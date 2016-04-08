@@ -40,7 +40,7 @@ public class Chek extends BaseModel {
 	@Column(name = "status")
 	private boolean status;
 	
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "Guest_idGuest", nullable = false)
 	private Guest guest;
 	
@@ -48,7 +48,7 @@ public class Chek extends BaseModel {
 	@JoinColumn(name = "Room_idRoom", nullable = false)
 	private Room room;
 	
-	@OneToMany(mappedBy = "chek",fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "chek",fetch = FetchType.LAZY)
 	private List<Service> serviceList;
 
 	public Chek(){

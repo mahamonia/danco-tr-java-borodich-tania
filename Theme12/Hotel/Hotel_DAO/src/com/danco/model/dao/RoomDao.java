@@ -9,6 +9,7 @@ import org.hibernate.criterion.Restrictions;
 
 import com.danco.api.dao.IRoomDao;
 import com.danco.model.entity.Room;
+import com.danco.model.entity.Status;
 
 public class RoomDao implements IRoomDao {
 
@@ -29,7 +30,7 @@ public class RoomDao implements IRoomDao {
 		if (status.isEmpty()) {
 			roomList = (List<Room>) crit.addOrder(Order.asc(param)).list();
 		} else {
-			roomList = (List<Room>) crit.add(Restrictions.eq("status", status))
+			roomList = (List<Room>) crit.add(Restrictions.eq("status", Status.valueOf(status)))
 					.addOrder(Order.asc(param)).list();
 		}
 

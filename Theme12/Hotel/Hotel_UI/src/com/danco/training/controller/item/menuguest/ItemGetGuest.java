@@ -34,14 +34,11 @@ public class ItemGetGuest extends ItemOperating {
 			String idGuest = reader.readLine();
 			
 			StringBuilder str = new StringBuilder();
-			str.append(PROTOCOL).append(idGuest).append(SEPARATOR);
+			str.append(PROTOCOL).append(idGuest).append(SEPARATOR);			
 			
-			
-		//	Guest guest = (Guest)processing.dataProcessing(str);
-			Service guest = (Service)processing.dataProcessing(str);
-//			
-//			System.out.println(" date in settle "+guest.getDateInSettle());
-			System.out.println(guest.getName()+", chek date- "+guest.getChek().getDateInSettle());
+			Guest guest = (Guest)processing.dataProcessing(str);
+
+			System.out.println(guest.getName());
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
