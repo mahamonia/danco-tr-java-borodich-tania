@@ -1,0 +1,43 @@
+@charset "utf-8";
+body {
+	font-family: "Comic Sans MS";
+	color: navy;
+	background-color: 000000;
+	
+}
+
+table {padding:1;
+	   spacing:0;
+       width:90%;
+	   border-collapse:collapse;
+}
+
+th {font-family:sans-serif;
+	rowspan:2;
+    text-align:left;
+    background:000066;
+    color:white;
+}
+
+td {font-family:sans-serif;
+	border-top:ridge grey thin;
+	border-left:none;
+	border-right:none;
+	padding:3;
+}
+
+.formtd {
+	font-family:sans-serif;
+	border-top:solid black thin;
+	border-left:solid black thin;
+	border-right:solid black thin;
+	border-bottom:solid black thin;
+	padding:3;
+}
+
+.trone{
+background: #CCCCFF;
+}
+.trtwo{
+background: #CCCCCC;
+}
