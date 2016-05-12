@@ -28,6 +28,10 @@ public class ViewRoom extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+	}
+
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		admin = (IServiceAdmin)DependencyInjection.createdObjects.get("com.danco.api.backend.IServiceAdmin");
 		String param = request.getParameter("sort");
 		String status = request.getParameter("status");
@@ -37,11 +41,6 @@ public class ViewRoom extends HttpServlet {
 
 		request.setAttribute("list", list);
 		dispatcher.forward(request, response);
-	}
-
-	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 	}
 
 }

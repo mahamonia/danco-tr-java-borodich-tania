@@ -10,26 +10,20 @@
 <body>
 <p>
 	<h2>Hotel Administrator</h2>
-
 	<div class="menu">
 		<ul>
 			<li><a href="view/View.jsp">View data</a></li>		
-			<li><a href="Change.jsp">Change data</a></li>
+			<li>Change data</li>
 			<li><a href="add/Add.jsp">Add data</a></li>
-			<li><a href="settle/SettleInOut.jsp">Settle in/ settle out</a></li>
-				
+			<li><a href="settle/SettleInOut.jsp">Settle in/ settle out</a></li>			
 		</ul>
-	</div>
-	
-		<form action="Change">
+	</div>	
+		<form method = "post" action="Change">
 		<select name="combobox">
-			<option value="1">Guest</option> 
-			<option value="2">Room</option>
-			<option value="3">Service</option>
+			<option value="1">Room</option>
+			<option value="2">Service</option>
 		</select>
 		<input type="submit" value="OK">
 	</form>
-	
-
 </body>
 </html>

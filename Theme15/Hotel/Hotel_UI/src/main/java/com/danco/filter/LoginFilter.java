@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 public class LoginFilter implements Filter {
+	private FilterConfig filterConfig;
 
 	public LoginFilter() {
 	}
@@ -28,13 +29,22 @@ public class LoginFilter implements Filter {
 
 		if (session == null || session.getAttribute("user") == null) {
 			httpResponse.sendRedirect(httpRequest.getContextPath()
-					+ "/index.html"); // No log in user 
+					+ "/index.html"); // No log in user
 		}
-		chain.doFilter(httpRequest, httpResponse); // Log in user 
+		chain.doFilter(httpRequest, httpResponse); // Log in user
 		// continue request.
 	}
 
 	public void init(FilterConfig fConfig) throws ServletException {
+		this.filterConfig = fConfig;
+	}
+
+	public FilterConfig getFilterConfig() {
+		return filterConfig;
+	}
+
+	public void setFilterConfig(FilterConfig filterConfig) {
+		this.filterConfig = filterConfig;
 	}
 
 }

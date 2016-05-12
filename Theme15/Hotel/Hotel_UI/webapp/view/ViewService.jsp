@@ -18,7 +18,7 @@
 		</ul>
 	</div>
 	
-	<form action="ViewService">
+	<form method="post" action="ViewService">
    <fieldset class = "text">
    <legend>Select the type of sorting </legend>
     <input type="radio" name="sort" value="price">price <br>

@@ -19,27 +19,30 @@ import com.danco.services.ServiceAdmin;
  */
 public class ViewGuest extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-    private IServiceAdmin admin;
-    
-    public ViewGuest() {
-        super();
-        admin = new ServiceAdmin();
-       
-    }
+	private IServiceAdmin admin;
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		admin = (IServiceAdmin)DependencyInjection.createdObjects.get("com.danco.api.backend.IServiceAdmin");
-		List<Guest> list = (List<Guest>)admin.getListGuest();
-		response.setContentType("text/html");
-		RequestDispatcher dispatcher = request.getRequestDispatcher("view/ViewGuestTable.jsp");
-
-		request.setAttribute("list", list);
-		dispatcher.forward(request, response);
+	public ViewGuest() {
+		super();
+		admin = new ServiceAdmin();
 
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+
+	}
+
+	protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		admin = (IServiceAdmin) DependencyInjection.createdObjects
+				.get("com.danco.api.backend.IServiceAdmin");
+		List<Guest> list = (List<Guest>) admin.getListGuest();
+		response.setContentType("text/html");
+		RequestDispatcher dispatcher = request
+				.getRequestDispatcher("view/ViewGuestTable.jsp");
+
+		request.setAttribute("list", list);
+		dispatcher.forward(request, response);
 	}
 
 }

@@ -18,7 +18,7 @@
 		</ul>
 	</div>
 
-	<form action="ViewGuest">
+	<form method="post" action="ViewGuest">
    <fieldset class = "text">
    <legend>Select the type of sorting </legend>
     <input type="radio" name="sort" value="id">id <br>

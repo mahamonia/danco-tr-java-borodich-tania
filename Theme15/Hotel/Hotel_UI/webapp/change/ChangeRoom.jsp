@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -8,19 +8,19 @@
 <link rel="stylesheet" href="theme/style.css" type="text/css">
 </head>
 <body>
-<p>
-	<h2>Hotel Administrator</h2>
+	<h3>Change room</h3>
+	<form method="post" action="ChangeRoom">
 
-	<div class="menu">
-		<ul>
-			<li><a href="view/View.jsp">View data</a></li>		
-			<li><a href="Change.jsp">Change data</a></li>
-			<li><a href="add/Add.jsp">Add data</a></li>
-			<li><a href="settle/SettleInOut.jsp">Settle in/ settle out</a></li>
-				
-		</ul>
-	</div>
-	room .
-	<A href="main/main.jsp">Back </A>
+		Id room:<br> <input type="text" size="10" name="id"><br>
+		<fieldset class="text">
+			<legend>Select the type change </legend>
+			<input type="radio" name="change" value="price">price <br>
+			<input type="radio" name="change" value="status"> status<br>
+		</fieldset>
+		Value:<br> <input type="text" size="10" name="value"><br>
+		<br> <input type="submit" value="Change"><br>
+	</form>
+	<a href="view/View.jsp">Back</a>
+
 </body>
 </html>
