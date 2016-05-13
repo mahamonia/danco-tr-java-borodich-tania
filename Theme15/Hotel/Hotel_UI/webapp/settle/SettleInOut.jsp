@@ -9,17 +9,17 @@
 </head>
 <body>
 <p>
-	<h2>Hotel Administrator</h2>
-
 	<div class="menu">
 		<ul>
 			<li><a href="view/View.jsp">View data</a></li>		
 			<li><a href="change/Change.jsp">Change data</a></li>
 			<li><a href="add/Add.jsp">Add data</a></li>
-			<li><a href="SettleInOut.jsp">Settle in/ settle out</a></li>
-				
+			<li>Settle in/ settle out</a></li>				
 		</ul>
 	</div>
-input id guest
+<form method="post" action="../SettleInOut">
+			Input id guest:<br> <input type="text" size="40" name="id"><br>
+		<input type="submit" value="Next">
+	</form>
 </body>
 </html>

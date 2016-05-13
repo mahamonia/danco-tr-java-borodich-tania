@@ -8,18 +8,12 @@
 <link rel="stylesheet" href="theme/style.css" type="text/css">
 </head>
 <body>
-<p>
-	<h2>Hotel Administrator</h2>
-
-	<div class="menu">
-		<ul>
-			<li><a href="view/View.jsp">View data</a></li>		
-			<li><a href="change/Change.jsp">Change data</a></li>
-			<li><a href="add/Add.jsp">Add data</a></li>
-			<li><a href="SettleInOut.jsp">Settle in/ settle out</a></li>
-				
-		</ul>
-	</div>
-
+<h3>Settle guest</h3>
+	<form method="post" action="SettleIn">
+	Guest id = <input type="text" size="10" name="idGuest" value="<c:out value="${guest.getId()}" />" disabled>
+			Paid chek!
+		<input type="submit" value="Settle out">
+	</form>
+	<a href="view/View.jsp">Back</a>
 </body>
 </html>

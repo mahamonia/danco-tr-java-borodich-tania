@@ -70,23 +70,23 @@
     <url-pattern>/ViewService</url-pattern>
   </servlet-mapping>
   <filter>
-		<display-name>LoginFilter</display-name>
-		<filter-name>LoginFilter</filter-name>
-		<filter-class>com.danco.filter.LoginFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>LoginFilter</filter-name>
-		<url-pattern>/main/*</url-pattern>
-		<url-pattern>/view/*</url-pattern>
-		<url-pattern>/change/*</url-pattern>
-	</filter-mapping>
-	<filter>
-		<display-name>AuditFilter</display-name>
-		<filter-name>AuditFilter</filter-name>
-		<filter-class>com.danco.filter.AuditFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>AuditFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
+    <display-name>LoginFilter</display-name>
+    <filter-name>LoginFilter</filter-name>
+    <filter-class>com.danco.filter.LoginFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>LoginFilter</filter-name>
+    <url-pattern>/main/*</url-pattern>
+    <url-pattern>/view/*</url-pattern>
+    <url-pattern>/change/*</url-pattern>
+  </filter-mapping>
+  <filter>
+    <display-name>AuditFilter</display-name>
+    <filter-name>AuditFilter</filter-name>
+    <filter-class>com.danco.filter.AuditFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>AuditFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
 </web-app>

@@ -10,8 +10,6 @@
 </head>
 <body>
 <h3>View guest</h3>
- 
-
 <table>
 		<thead >
 			<tr>
