@@ -1,0 +1,11 @@
+<div id="menu" class="list-group" ng-controller="MenuController">
+<a href="#" class="list-group-item active">Rubric</a>
+<li ng-repeat="item in items"> 
+<div class="item {{ item.href }}" ng-class="{ active: activeMenu == item.href  }">
+  <a href="{{ item.href }}" class="list-group-item" ">{{item.name}} </a>
+  
+  </div>
+</li>
+</div>
+
+
