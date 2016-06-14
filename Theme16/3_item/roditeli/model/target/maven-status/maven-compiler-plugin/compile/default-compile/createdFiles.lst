@@ -1,0 +1,13 @@
+com\roditeli\model\MessageTheme.class
+com\roditeli\model\FamilyStatus.class
+com\roditeli\model\User.class
+com\roditeli\model\Children.class
+com\roditeli\model\CommentEvent.class
+com\roditeli\model\UserProfile.class
+com\roditeli\model\MessageUser.class
+com\roditeli\model\Theme.class
+com\roditeli\model\BaseModel.class
+com\roditeli\model\Adress.class
+com\roditeli\model\Authentication.class
+com\roditeli\model\Rubric.class
+com\roditeli\model\Event.class

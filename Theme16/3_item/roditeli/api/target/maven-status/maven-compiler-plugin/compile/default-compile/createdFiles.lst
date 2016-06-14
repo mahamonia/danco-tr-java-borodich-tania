@@ -1,0 +1,12 @@
+com\roditeli\api\service\IRubricService.class
+com\roditeli\api\dao\IMessageThemeDao.class
+com\roditeli\api\dao\IAuthenticationDao.class
+com\roditeli\api\dao\IMessageUserDao.class
+com\roditeli\api\dao\IUserProfileDao.class
+com\roditeli\api\dao\IUserDao.class
+com\roditeli\api\dao\IAdressDao.class
+com\roditeli\api\dao\IThemeDao.class
+com\roditeli\api\dao\IEventDao.class
+com\roditeli\api\dao\IChildrenDao.class
+com\roditeli\api\dao\ICommentEventDao.class
+com\roditeli\api\dao\IRubricDao.class

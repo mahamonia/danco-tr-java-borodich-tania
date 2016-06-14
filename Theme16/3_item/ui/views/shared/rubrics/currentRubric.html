@@ -1,0 +1,74 @@
+
+<div ng-controller="RubricController" metod="post">
+
+	<ul class="nav nav-tabs nav-justified">
+		<li class="active"><a data-toggle="tab" a-href="#menu1">All	themes</a></li>
+		<li><a data-toggle="tab" a-href="#menu2">My themes</a></li>
+	</ul>
+
+	<div class="tab-content">
+		<div id="menu1" class="tab-pane fade in active">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>Theme</th>
+						<th>Last message</th>
+						<th>Date</th>
+					</tr>
+				</thead>
+				<tbody>
+					<div ng-repeat="theme in themes">
+						<div ng-class="{ active: activeTheme == theme.id  }">
+							<a href="#/theme/id{{ theme.id}}" ng-click="selectTheme(this)">
+								<tr ng-repeat="theme in themes">
+									<td>{{theme.name}}</td>
+									<td>{{theme.message}}</td>
+									<td>{{theme.date}}</td>
+								</tr>
+							</a>
+						</div>
+					</div>
+				</tbody>
+			</table>
+		</div>
+
+		<div id="menu2" class="tab-pane fade">
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>Theme</th>
+						<th>Last message</th>
+						<th>Date</th>
+					</tr>
+				</thead>
+				<tbody>
+					<div ng-repeat="theme in themes">
+						<div ng-class="{ active: activeTheme == theme.id  }">
+							<a href="#/theme/id{{ theme.id}}" ng-click="selectTheme(this)">
+
+								<tr ng-repeat="theme in themes">
+									<td>{{theme.name}}</td>
+									<td>{{theme.message}}</td>
+									<td>{{theme.date}}</td>
+								</tr>
+							</a>
+						</div>
+					</div>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<form class="form-inline" role="form" method="put"	ng-submit="createTheme(newTheme)">
+		Create new theme
+		<div class="form-group">
+			<label>Input name theme: </label> 
+			<input type="text"	class="form-control" required="required" ng-model="newTheme.name">
+		</div>
+		<button type="submit" class="btn btn-default">Create</button>
+	</form>
+
+	<div ng-show="true">
+		<ng-include src="'views/shared/rubrics/currentTheme.html'"></ng-include>
+	</div>
+</div>

@@ -1,0 +1,12 @@
+com\roditeli\dao\RubricDao.class
+com\roditeli\dao\EventDao.class
+com\roditeli\dao\BaseModelDao.class
+com\roditeli\dao\MessageThemeDao.class
+com\roditeli\dao\AdressDao.class
+com\roditeli\dao\ThemeDao.class
+com\roditeli\dao\AuthenticationDao.class
+com\roditeli\dao\UserDao.class
+com\roditeli\dao\CommentEventDao.class
+com\roditeli\dao\ChildrenDao.class
+com\roditeli\dao\UserProfileDao.class
+com\roditeli\dao\MessageUserDao.class
