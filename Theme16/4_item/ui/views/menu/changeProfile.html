@@ -1,0 +1,111 @@
+<form ng-submit="changeProfile(currentUser, adress, childrenList)"
+	method="put">
+	<table>
+		<tr>
+			<th>name {{currentUser.profile.name}}</th>
+			<td><input type="text" name="name"
+				ng-model="currentUser.profile.name" ng-pattern="/^[A-z][A-z0-9]*$/"
+				required="required" />{{currentUser.profile.name}}</td>
+		</tr>
+
+		<tr>
+			<th>email</th>
+			<td><input type="text" name="email"
+				ng-model="currentUser.profile.email" ng-pattern="/^[A-z][A-z0-9]*$/"
+				required="required" />{{currentUser.profile.email}}</td>
+
+
+		</tr>
+		<div
+			ng-if="currentUser.profile.familyStatus === ('MOTHER' || 'GRANDMA') || undefined">
+			<tr>
+				<th>maidenName</th>
+				<td><input type="text" id="login" name="login"
+					ng-model="currentUser.profile.maidenName"
+					ng-pattern="/^[A-z][A-z0-9]*$/" required="required" />{{currentUser.profile.maidenName}}</td>
+			</tr>
+		</div>
+		<tr>
+			<th>Date birth</th>
+			<td><div>
+					<input id="datepicker" type="text" data-ng-datepicker
+						data-ng-options="datepickerOptions" data-ng-model="date">
+					<input id="datepickerMirror" type="text">{{currentUser.profile.dateBirth}}
+				</div></td>
+		</tr>
+		<tr>
+			<th>Family status</th>
+			<td>
+				<div class="form-group"
+					ng-class="{ 'has-error' : form.familyStatus.$invalid && !form.familyStatus.$pristine }">
+					<select ng-model="currentUser.profile.familyStatus">
+						<option value="MOTHER">MOTHER</option>
+						<option value="FATHER">FATHER</option>
+						<option value="GRANDMA">GRANDMA</option>
+						<option value="GRANDPA">GRANDPA</option>
+					</select> <span
+						ng-show="form.familyStatus.$dirty && form.familyStatus.$error.required"
+						class="help-block">familyStatus is required</span>
+				</div>
+			</td>
+
+		</tr>
+		<tr>
+
+			<th>Adress</th>
+			<td>Country<input type="text" name="country"
+				ng-model="adress.country" ng-pattern="/^[A-z][A-z0-9]*$/" />{{adress.country}}
+			</td>
+
+			<td>City<input type="text" name="city" ng-model="adress.city"
+				ng-pattern="/^[A-z][A-z0-9]*$/" />{{adress.city}}
+			</td>
+
+			<td>Street<input type="text" name="street"
+				ng-model="adress.street" ng-pattern="/^[A-z][A-z0-9]*$/" />{{adress.street}}
+			</td>
+
+			<td>House<input type="text" name="house" ng-model="adress.house"
+				ng-pattern="/^[A-z][A-z0-9]*$/" />{{adress.house}}
+			</td>
+
+			<td>Country<input type="text" name="login"
+				ng-model="adress.country" ng-pattern="/^[A-z][A-z0-9]*$/" />{{adress.country}}
+			</td>
+
+		</tr>
+		<tr ng-repeat="cildren in childrenList">
+			<th>Children</th>
+			<td><input type="text" name="children" ng-model="children.name"
+				ng-pattern="/^[A-z][A-z0-9]*$/" />{{children.name}}</td>
+
+			<td><div>
+					<input id="datepicker" type="text" data-ng-datepicker
+						data-ng-options="datepickerOptions"
+						data-ng-model="children.dateBirth">
+					<input
+						id="datepickerMirror" type="text">{{children.dateBirth}}
+				</div></td>
+				<button ng-click="">  add
+            </button>
+		</tr>
+
+		<tr ng-show="" >
+			<td><input type="text" name="children" ng-model="children.name"
+				ng-pattern="/^[A-z][A-z0-9]*$/" />{{children.name}}</td>
+
+			<td><div>
+					<input id="datepicker" type="text" data-ng-datepicker
+						data-ng-options="datepickerOptions"
+						data-ng-model="children.dateBirth">
+					<input
+						id="datepickerMirror" type="text">{{children.dateBirth}}
+				</div></td>
+
+				
+
+		</tr>
+	</table>
+
+	<input type="submit">
+</form>

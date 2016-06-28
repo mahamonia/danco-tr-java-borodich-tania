@@ -1,0 +1,13 @@
+ All dialogis
+<table class="table table-hover">
+	<div ng-class="{ active: activeDialo == message.id  }">
+		<a href="#/message/{{ message.id}}" ng-click="selectMessage(this)">
+			<tr ng-repeat="message in getMessagesCurrentUser">
+				<td>{{message.author.name}}</td>
+				<td>{{message.text}}</td>
+				<td>{{message.date}}</td>
+			</tr>
+		</a>
+	</div>
+</table>
+

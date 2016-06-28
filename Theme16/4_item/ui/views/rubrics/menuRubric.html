@@ -1,0 +1,11 @@
+<div class="list-group" ng-controller="RubricController">
+	<a href="" class="list-group-item active">Rubric</a>
+	<li ng-repeat="item in items">
+		<div ng-class="{ active: activeMenu == item.id  }">
+			<a ng-href="#/rubric/{{ item.id}}" ng-click="selectMenu(this)" 
+			class="list-group-item"">{{item.name}}</a>
+		</div>
+	</li>
+</div>
+
+

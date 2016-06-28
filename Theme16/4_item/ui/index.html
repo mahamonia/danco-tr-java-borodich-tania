@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="lib/angular.js"></script>
+<script src="lib/angular-loader.js"></script>
+<script src="lib/angular-resource.js"></script>
+<script src="lib/angular-route.js"></script>
+<script src="lib/bootstrap.js"></script>
+<script src="lib/ui-bootstrap-tpls-1.3.3.min.js"></script>
+
+<link rel="stylesheet" href="styles/bootstrap.css">
+<link rel="stylesheet" href="styles/bootstrap-theme.css">
+<link rel="stylesheet" href="styles/angular-csp.css">
+
+    <script data-require="ui-bootstrap@*" data-semver="0.12.1" src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.1.min.js"></script>
+
+</head>
+
+<body ng-app="app" ng-controller="ApplicationController">
+	<div ng-if="isAuthenticated" class="myContainer">
+		<div id="header">
+			<ng-include src="'views/shared/header.html'"> </ng-include>
+		</div>
+
+		<div id="sidebar">
+			<div class="col-sm-3">
+				<ng-include src="'views/shared/sidebar.html'"></ng-include>
+			</div>
+			<div class="col-sm-12" ng-view></div>
+
+		</div>
+	</div>
+
+	<div ng-if="!isAuthenticated">
+		<ng-include src="'views/login.html'"></ng-include>
+	</div>
+
+	<script src="js/app/app.js"></script>
+	<script src="js/app/controller/application-controller.js"></script>
+	<script src="js/app/controller/login-controller.js"></script>
+	<script src="js/app/controller/logOut-controller.js"></script>
+	<script src="js/app/controller/register-controller.js"></script>
+	<script src="js/app/service/auth-service.js"></script>
+
+    
+    <script src="js/app/controller/user-controller.js"></script>
+    <script src="js/app/service/user-service.js"></script>
+    <script src="js/app/service/event-service.js"></script>
+
+	<script src="js/app/controller/rubric-controller.js"></script>
+	<script src="js/app/service/rubric-service.js"></script>
+
+	<script src="js/app/controller/theme-controller.js"></script>
+	<script src="js/app/service/theme-service.js"></script>
+
+	<script src="js/app/controller/friends-controller.js"></script>
+	<script src="js/app/service/friends-service.js"></script>
+
+	<script src="js/app/controller/message-controller.js"></script>
+	<script src="js/app/service/message-service.js"></script>
+
+	<script src="js/app/controller/search-controller.js"></script>
+	<script src="js/app/service/search-service.js"></script>
+
+</body>
+</html>

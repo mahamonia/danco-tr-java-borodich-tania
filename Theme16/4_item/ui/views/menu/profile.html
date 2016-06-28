@@ -1,0 +1,30 @@
+<div class="conteiner">
+	<table>
+		<tr>
+			<td>{{currentUser.profile.name}} {{currentUser.profile.surname}}
+				<div
+					ng-if="currentUser.profile.familyStatus === ('MOTHER' || 'GRANDMA') || undefined">({{currentUser.profile.maidenName}})</div>
+			</td>
+		</tr>
+		<tr>
+			<th>Date birth:</th>
+			<td>{{currentUser.profile.dateBirth}}</td>
+
+		</tr>
+		<tr>
+			<th>Family status:</th>
+			<td>{{currentUser.profile.familyStatus}}</td>
+		</tr>
+		<tr ng-if="!currentUser.profile.adress">
+			<th>Adress:</th>
+			<td>{{currentUser.profile.adress}}</td>
+
+		</tr>
+		<tr ng-if="!childrenList" ng-repeat="cildren in childrenList">
+			<th>Children</th>
+			<td>{{children}}</td>
+		</tr>
+	</table>
+	<a href="#/changeProfile">редактировать профиль</a>
+
+</div>

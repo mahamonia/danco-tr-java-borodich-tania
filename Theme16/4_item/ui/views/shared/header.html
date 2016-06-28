@@ -1,0 +1,25 @@
+
+<div class="navbar navbar-default ">
+
+	<div class="container-fluid">
+		<div class="navbar-header">
+
+			<a class="navbar-brand" href="index.html"> Roditeli.com <img
+				src="images/logotip-jpg.png" width="150px" height="150px" /></a>
+
+		</div>
+		<div class="nav navbar-nav pull-right">
+			<a ng-click="logOut()" ng-controller="LogOutController">LogOut</a>
+		</div>
+
+		<ul class="nav navbar-nav pull-right">
+			<li><a href="#/profile">My profile {{currentUser.login}}</a></li>
+			<li><a href="#/message">My message<span class="badge">{{amountNewMessage}}</span></a></li>
+			<li><a href="#/friends">My friends</a></li>
+			<li><a href="#/search">Search</a></li>
+			<li><a href="#/adress">Adress</a></li>
+		</ul>
+	</div>
+
+</div>
+
